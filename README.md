@@ -1,59 +1,43 @@
-# EpmProgressMaker
+# EPM Progress Maker
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+Enterprise-ready Angular 21 project demonstrating a senior-level architecture for a team of multiple developers.
 
-## Development server
+## 🚀 Architectural Highlights
+- **Domain-Driven Structure**: Strict boundaries between `core`, `domains`, and `shared`.
+- **State Management**: Reactive data flow using **Angular Signals** and the **Facade Pattern**.
+- **Modern Tooling**: Vitest for ultra-fast testing, ESLint with Accessibility rules, and Prettier.
+- **Security**: Functional Guards and Interceptors for a robust Auth-Flow.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## 🛠️ Getting Started
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Development server
+Run `npm run start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+### Key Scripts
+- `npm run lint`: Execute ESLint static analysis.
+- `npm run format:fix`: Automatically fix code style via Prettier.
+- `npm run test`: Run unit tests using **Vitest**.
+- `npm run build`: Build the project for production.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 🏗️ Detailed Documentation
+For deep dives into our engineering decisions, please refer to:
+- [Architecture & DDD](./docs/architecture.md)
+- [State Management (Signals)](./docs/state-management.md)
+- [Testing Strategy](./docs/testing-strategy.md)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## 🧩 Standard Angular CLI Commands
+<details>
+<summary>Click to expand CLI reference</summary>
 
-## Building
+### Code scaffolding
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Further help
+To get more help on the Angular CLI use `ng help` or check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+</details>

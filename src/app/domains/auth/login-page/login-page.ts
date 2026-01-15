@@ -21,7 +21,7 @@ export class LoginPage {
 
   // Senior-Tip: Using a clean, reactive form group
   protected readonly loginForm = this.fb.nonNullable.group({
-    username: ['demo', [Validators.required, Validators.minLength(3)]],
+    username: ['Arne Winter', [Validators.required, Validators.minLength(3)]],
     password: ['password', [Validators.required]]
   });
 

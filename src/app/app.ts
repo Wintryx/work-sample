@@ -1,6 +1,7 @@
 import {Component, signal} from '@angular/core';
-import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {RouterOutlet} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
+import {HeaderComponent} from '@core/layout/header/header-component';
 
 /**
  * @description
@@ -10,7 +11,10 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatButtonModule],
+  imports: [RouterOutlet,
+    MatButtonModule,
+    HeaderComponent
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

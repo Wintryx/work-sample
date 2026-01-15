@@ -2,11 +2,14 @@
 //   (LocalStorage/SessionStorage), and the  Signal for the current State.
 //   ToDo: implement Keycloak-Library.
 
-import {Injectable, signal} from '@angular/core';
+import {inject, Injectable, PLATFORM_ID, signal} from '@angular/core';
 import {AuthState, AuthStatus} from './auth.models';
+import {isPlatformBrowser} from '@angular/common';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly STORAGE_KEY = 'epm_auth_token';
 
   // Initialize with Enum constant
@@ -19,6 +22,9 @@ export class AuthService {
   }
 
   private hydrate(): void {
+    // Only access localStorage if we are in the browser
+    if (!this.isBrowser) return;
+
     const token = localStorage.getItem(this.STORAGE_KEY);
     if (token) {
       this._state.set({

@@ -1,0 +1,39 @@
+<header class="h-16 border-b bg-white flex items-center px-6 justify-between sticky top-0 z-50">
+  <!-- Brand Logo -->
+  <div class="flex items-center gap-4 cursor-pointer" routerLink="/">
+    <div class="bg-indigo-600 text-white p-1.5 rounded-lg shadow-sm">
+      <mat-icon>bolt</mat-icon>
+    </div>
+    <div class="flex flex-col leading-tight">
+      <span class="font-bold text-slate-900 tracking-tight uppercase">EPM</span>
+      <span class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Progress Maker</span>
+    </div>
+  </div>
+
+  <!-- Navigation & Actions -->
+  <div class="flex items-center gap-3">
+    @if (authFacade.isAuthenticated()) {
+      <nav class="hidden md:flex items-center gap-1 mr-4">
+        <a routerLink="/dashboard"
+           routerLinkActive="bg-slate-100 text-indigo-700"
+           class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+          Dashboard
+        </a>
+      </nav>
+
+      <!-- User Profile Mock -->
+      <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+        <span class="text-sm font-medium text-slate-700">{{ authFacade.user()?.username }}</span>
+
+        <button mat-flat-button color="primary" (click)="onLogout()" class="!rounded-xl shadow-lg shadow-indigo-100">
+          <mat-icon class="mr-2">logout</mat-icon> Logout
+        </button>
+
+      </div>
+    } @else {
+      <button mat-flat-button color="primary" routerLink="/login" class="!rounded-xl shadow-lg shadow-indigo-100">
+        Sign In
+      </button>
+    }
+  </div>
+</header>

@@ -1,7 +1,7 @@
-import {Component, signal} from '@angular/core';
+import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
-import {HeaderComponent} from '@core/layout/header/header-component';
+import {HeaderComponent} from '@core/layout/header/header.component';
 
 /**
  * @description
@@ -19,6 +19,4 @@ import {HeaderComponent} from '@core/layout/header/header-component';
   styleUrl: './app.scss'
 })
 export class App {
-  // Title signal for the header or document title
-  protected readonly title = signal('EPM Progress Maker');
 }

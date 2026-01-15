@@ -24,12 +24,6 @@ export class DashboardPage implements OnInit {
   protected readonly facade = inject(DashboardFacade);
   private readonly router = inject(Router);
 
-  // // Define which columns to display
-  // protected readonly displayedColumns: string[] = ['id', 'title', 'status', 'progress', 'actions'];
-  //
-  // // Make Enum available to the template for conditional styling
-  // protected readonly ItemStatus = ItemStatus;
-
   ngOnInit(): void {
     this.facade.loadItems();
   }

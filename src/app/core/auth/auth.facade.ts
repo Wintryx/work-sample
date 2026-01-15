@@ -7,6 +7,7 @@
 import {computed, inject, Injectable} from '@angular/core';
 import {AuthService} from './auth.service';
 import {AuthStatus} from './auth.models';
+import {Router} from '@angular/router';
 
 /**
  * @description
@@ -16,6 +17,7 @@ import {AuthStatus} from './auth.models';
 @Injectable({providedIn: 'root'})
 export class AuthFacade {
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router); // Router injizieren
 
   // Computed signals for reactive UI updates
   readonly user = computed(() => {
@@ -27,12 +29,21 @@ export class AuthFacade {
     this.authService.state().status === AuthStatus.Authenticated
   );
 
+
   login(username: string, _password?: string): void {
-    // We only pass username for the mock, but the API is ready for password.
     this.authService.login(username);
+    // Centralized redirect after login
+    this.router.navigate(['/dashboard']);
   }
 
+  /**
+   * @description
+   * Centralized logout logic.
+   * Clears the state and ensures the user is redirected to a public page.
+   */
   logout(): void {
     this.authService.logout();
+    // Ensure the user is kicked out of protected areas immediately.
+    this.router.navigate(['/login']);
   }
 }

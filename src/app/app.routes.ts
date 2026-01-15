@@ -1,11 +1,12 @@
 import {Routes} from '@angular/router';
-import {authGuard} from '@core/auth';
+import {authGuard, publicGuard} from '@core/auth';
 
 export const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'dashboard'},
   // Public Routes
   {
     path: 'login',
+    canMatch: [publicGuard],
     loadComponent: () =>
       import('@domains/auth/login-page/login-page').then(m => m.LoginPage)
   },

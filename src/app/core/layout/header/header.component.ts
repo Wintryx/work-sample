@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {AuthFacade} from '@core/auth';
 import {MatIcon} from '@angular/material/icon';
 import {RouterLink, RouterLinkActive} from '@angular/router';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-header-component',
@@ -10,11 +10,10 @@ import {MatButton, MatIconButton} from '@angular/material/button';
     MatIcon,
     RouterLink,
     RouterLinkActive,
-    MatIconButton,
     MatButton
   ],
-  templateUrl: './header-component.html',
-  styleUrl: './header-component.scss',
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.scss',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

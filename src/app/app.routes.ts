@@ -3,6 +3,13 @@ import {authGuard} from '@core/auth';
 
 export const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'dashboard'},
+  // Public Routes
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('@domains/auth/login-page/login-page').then(m => m.LoginPage)
+  },
+  // Protected Routes
   {
     path: 'dashboard',
     canMatch: [authGuard],
@@ -18,5 +25,7 @@ export const routes: Routes = [
           import('@domains/dashboard').then(m => m.ItemDetailPage)
       }
     ]
-  }
+  },
+  // Fallback
+  {path: '**', redirectTo: 'dashboard'}
 ];

@@ -1,5 +1,5 @@
-// Restrict unauthorized Users to access i.Ex /dashboard.
-// Uses the AuthFacade internaly to check the current State.
+// Restrict unauthorized Users from access i.Ex /dashboard.
+// Uses the AuthFacade internally to check the current State.
 
 import {inject, PLATFORM_ID} from '@angular/core';
 import {CanMatchFn, Router} from '@angular/router';
@@ -11,7 +11,7 @@ import {isPlatformServer} from '@angular/common';
  * Functional Guard to protect routes.
  * Uses the AuthFacade to check authentication state.
  */
-export const authGuard: CanMatchFn = (_route, _segments) => {
+export const authGuard: CanMatchFn = () => {
   const authFacade = inject(AuthFacade);
   const router = inject(Router);
   const platformId = inject(PLATFORM_ID);

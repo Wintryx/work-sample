@@ -3,7 +3,7 @@ import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
 import {provideClientHydration, withEventReplay} from '@angular/platform-browser';
-import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptors} from '@angular/common/http';
 import {authInterceptor} from '@core/auth';
 import {mockBackendInterceptor} from '@core/http/mock-backend.interceptor';
 
@@ -16,6 +16,7 @@ export const appConfig: ApplicationConfig = {
      * Order matters: authInterceptor attaches token before mockBackend intercepts it.
      */
     provideHttpClient(
+      withFetch(),
       withInterceptors([
         authInterceptor,
         mockBackendInterceptor

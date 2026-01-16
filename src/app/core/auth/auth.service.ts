@@ -51,7 +51,9 @@ export class AuthService {
    * Authenticates a user. In a real-world scenario, this would involve
    * an OIDC provider like Keycloak.
    */
-  login(username: string): void {
+  login(username: string, _password?: string): void {
+    // Note: _password starts with an underscore to tell the linter
+    // that it is intentionally unused in this mock implementation.
     const session: AuthState = {
       status: AuthStatus.Authenticated,
       user: {id: `u-${Date.now()}`, username},

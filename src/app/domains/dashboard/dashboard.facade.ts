@@ -41,7 +41,18 @@ export class DashboardFacade {
   });
 
   // Public Signals for the UI (Computed to ensure read-only access)
-  readonly items = computed(() => this._state().items);
+  readonly items = computed(() => {
+    const state = this._state();
+
+    // Tip: Self-healing state.
+    // If someone accesses items but they are empty and we aren't already loading, trigger a load.
+    if (state.items.length === 0 && !state.loading && !state.error) {
+      // We use untracked or a setTimeout to avoid "computed side-effects" warnings
+      setTimeout(() => this.loadItems());
+    }
+
+    return state.items;
+  });
   readonly isLoading = computed(() => this._state().loading);
   readonly error = computed(() => this._state().error);
   readonly hasItems = computed(() => this._state().items.length > 0);

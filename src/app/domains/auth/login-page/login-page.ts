@@ -17,7 +17,7 @@ export class LoginPage {
   private readonly fb = inject(FormBuilder);
   private readonly authFacade = inject(AuthFacade);
 
-  // Senior-Tip: Using a clean, reactive form group
+  // Using a clean, reactive form group
   protected readonly loginForm = this.fb.nonNullable.group({
     username: ['Arne Winter', [Validators.required, Validators.minLength(3)]],
     password: ['password', [Validators.required]]

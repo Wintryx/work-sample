@@ -11,7 +11,7 @@
   border-bottom: none;
 }
 
-// Senior-Tip: Ensure accessible focus states for the rows
+// Ensure accessible focus states for the rows
 .mat-mdc-row:focus {
   outline: 2px solid theme('colors.indigo.500');
   outline-offset: -2px;

@@ -18,7 +18,7 @@ import {Component, input} from '@angular/core';
   `
 })
 export class StatusBadgeComponent {
-  // Senior-Tip: Using the new Signal-based inputs
+  // Using the new Signal-based inputs
   readonly status = input.required<ItemStatus>();
 
   protected badgeClasses() {

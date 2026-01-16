@@ -1,3 +1,122 @@
+/**
+ * @description
+ * Scoped styles for the ItemDetailPage.
+ * Optimized for Tailwind v4 and SCSS compatibility by using standard CSS
+ * properties for complex layouts.
+ */
+
+@reference "tailwindcss";
+
 :host {
   display: block;
+}
+
+.item-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.back-button {
+  // Use standard CSS color and specificity instead of @apply !important
+  color: var(--color-slate-500);
+
+  &:hover {
+    color: var(--color-slate-900);
+  }
+}
+
+.feature-card {
+  @apply max-w-3xl bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-xl;
+}
+
+.feature-card-header {
+  @apply p-8 border-b border-slate-50 flex justify-between items-start;
+  background-color: rgb(248 250 252 / 0.3); /* bg-slate-50/30 */
+}
+
+.header-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.category-label {
+  @apply text-xs font-bold text-indigo-600 uppercase tracking-widest;
+}
+
+.main-title {
+  @apply text-3xl font-black text-slate-900 tracking-tight;
+}
+
+.feature-card-body {
+  @apply p-8 grid grid-cols-1 md:grid-cols-2 gap-8;
+}
+
+.info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.property-label {
+  @apply text-xs font-bold text-slate-400 uppercase tracking-wider;
+  margin-bottom: 0.25rem;
+}
+
+.id-tag {
+  @apply font-mono text-slate-600 bg-slate-100 px-2 py-1 rounded inline-block text-sm;
+}
+
+.progress-display {
+  @apply flex items-center gap-3;
+}
+
+.progress-value {
+  @apply text-2xl font-bold text-slate-900;
+}
+
+.progress-track {
+  @apply flex-1 h-3 bg-slate-100 rounded-full overflow-hidden;
+}
+
+.progress-bar {
+  @apply h-full bg-indigo-600;
+  transition: width 1s ease-in-out;
+}
+
+.note-box {
+  @apply p-6 rounded-2xl border self-start;
+  background-color: rgb(238 242 255 / 0.5); /* bg-indigo-50/50 */
+  border-color: rgb(224 231 255 / 0.5); /* border-indigo-100/50 */
+}
+
+.note-title {
+  @apply text-indigo-900 font-bold text-sm flex items-center gap-2;
+  margin-bottom: 0.5rem;
+}
+
+.note-text {
+  @apply text-indigo-700 text-xs;
+  line-height: 1.625;
+}
+
+.empty-state {
+  @apply py-20 text-center bg-white rounded-3xl border-2 border-dashed border-slate-200;
+}
+
+.empty-icon {
+  @apply text-slate-200;
+  width: 64px !important;
+  height: 64px !important;
+  font-size: 64px !important;
+  margin-bottom: 1rem;
+}
+
+.empty-title {
+  @apply text-xl font-bold text-slate-900;
+}
+
+.empty-text {
+  @apply text-slate-500;
 }

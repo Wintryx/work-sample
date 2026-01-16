@@ -1,6 +1,6 @@
 import {inject, Injectable, PLATFORM_ID, signal} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
-import {AuthState, AuthStatus} from './auth.models';
+import {AUTH_COOKIE_NAME, AUTH_SESSION_KEY, AuthState, AuthStatus} from './auth.models';
 import {CookieService} from '@core/services/cookie.service';
 
 /**
@@ -19,7 +19,6 @@ export class AuthService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly cookieService = inject(CookieService);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
-  private readonly STORAGE_KEY = 'epm_auth_session';
 
   private readonly _state = signal<AuthState>({status: AuthStatus.Unauthenticated});
   readonly state = this._state.asReadonly();
@@ -35,7 +34,7 @@ export class AuthService {
     if (!this.isBrowser) return;
 
     try {
-      const savedSession = localStorage.getItem(this.STORAGE_KEY);
+      const savedSession = localStorage.getItem(AUTH_SESSION_KEY);
       if (savedSession) {
         const session = JSON.parse(savedSession) as Extract<AuthState, { status: AuthStatus.Authenticated }>;
         this._state.set(session);
@@ -61,8 +60,8 @@ export class AuthService {
     };
 
     if (this.isBrowser) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(session));
-      this.cookieService.set('epm_authenticated', 'true');
+      localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
+      this.cookieService.set(AUTH_COOKIE_NAME, 'true');
     }
 
     this._state.set(session);
@@ -73,8 +72,8 @@ export class AuthService {
    */
   logout(): void {
     if (this.isBrowser) {
-      localStorage.removeItem(this.STORAGE_KEY);
-      this.cookieService.delete('epm_authenticated');
+      localStorage.removeItem(AUTH_SESSION_KEY);
+      this.cookieService.delete(AUTH_COOKIE_NAME);
     }
     this._state.set({status: AuthStatus.Unauthenticated});
   }

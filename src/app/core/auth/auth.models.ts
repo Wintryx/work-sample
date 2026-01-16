@@ -7,6 +7,12 @@ export enum AuthStatus {
 }
 
 /**
+ * @description Global constants for authentication storage keys.
+ */
+export const AUTH_SESSION_KEY = 'epm_auth_session';
+export const AUTH_COOKIE_NAME = 'epm_authenticated';
+
+/**
  * @description Public User model.
  */
 export interface AuthUser {

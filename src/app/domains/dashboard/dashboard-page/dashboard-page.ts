@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Router} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
@@ -18,14 +18,15 @@ import {DashboardTableComponent} from '@domains/dashboard/components/dashboard-t
     DashboardTableComponent
   ],
   templateUrl: './dashboard-page.html',
-  styleUrl: './dashboard-page.scss'
+  styleUrl: './dashboard-page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardPage implements OnInit {
-  protected readonly facade = inject(DashboardFacade);
+  protected readonly dashboardFacade = inject(DashboardFacade);
   private readonly router = inject(Router);
 
   ngOnInit(): void {
-    this.facade.loadItems();
+    this.dashboardFacade.loadItems();
   }
 
   /**

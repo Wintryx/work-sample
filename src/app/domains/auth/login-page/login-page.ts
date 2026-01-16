@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
@@ -11,7 +11,8 @@ import {AuthFacade} from '@core/auth';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatFormFieldModule],
   templateUrl: './login-page.html',
-  styleUrl: './login-page.scss'
+  styleUrl: './login-page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginPage {
   private readonly fb = inject(FormBuilder);

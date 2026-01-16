@@ -1,6 +1,6 @@
-//   components only uses this Facade.
+//   components only use this Facade.
 //   Serves currentUser = computed(...), isAuthenticated = signal(...) and
-//   Methodes like login() oder logout().
+//   Methods like login() oder logout().
 //   Reason: Complexity reduction of the Service and App.
 
 
@@ -30,8 +30,8 @@ export class AuthFacade {
   );
 
 
-  login(username: string, _password?: string): void {
-    this.authService.login(username);
+  login(username: string, password?: string): void {
+    this.authService.login(username, password);
     // Centralized redirect after login
     this.router.navigate(['/dashboard']);
   }

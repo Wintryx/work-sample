@@ -13,10 +13,11 @@
  * - Exposes read-only computed signals to ensure unidirectional data flow.
  */
 
-import {computed, inject, Injectable, signal} from '@angular/core';
+import {computed, DestroyRef, inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DashboardItemDto} from './dashboard.models';
 import {finalize} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /**
  * @description Internal state for the Dashboard.
@@ -30,6 +31,7 @@ interface DashboardState {
 @Injectable({providedIn: 'root'})
 export class DashboardFacade {
   private readonly http = inject(HttpClient);
+  private readonly destroyRef = inject(DestroyRef);
 
   // Private state using a Signal
   private readonly _state = signal<DashboardState>({
@@ -53,6 +55,7 @@ export class DashboardFacade {
     this.http
       .get<DashboardItemDto[]>('/api/dashboard/items')
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         finalize(() => {
           this._state.update((s) => ({...s, loading: false}));
         }),

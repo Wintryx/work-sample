@@ -3,7 +3,7 @@
 
 import {inject, PLATFORM_ID} from '@angular/core';
 import {CanMatchFn, Router} from '@angular/router';
-import {AuthFacade} from './auth.facade';
+import {AuthFacade} from '../auth.facade';
 import {isPlatformServer} from '@angular/common';
 
 /**

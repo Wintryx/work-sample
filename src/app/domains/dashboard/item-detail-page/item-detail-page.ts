@@ -19,7 +19,7 @@ export class ItemDetailPage {
   private readonly dashboardFacade = inject(DashboardFacade);
 
   /**
-   * Senior-Feature: Angular automatically binds the ':id' from the URL
+   * Feature: Angular automatically binds the ':id' from the URL
    * to this input signal thanks to 'withComponentInputBinding()'.
    */
   readonly id = input.required<string>();

@@ -5,8 +5,8 @@
 
 
 import {computed, inject, Injectable} from '@angular/core';
-import {AuthService} from './auth.service';
-import {AuthStatus} from './auth.models';
+import {AuthService} from './data-access/auth.service';
+import {AuthStatus} from './data-access/auth.models';
 import {Router} from '@angular/router';
 
 /**

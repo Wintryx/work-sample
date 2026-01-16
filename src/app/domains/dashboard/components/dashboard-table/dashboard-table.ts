@@ -1,11 +1,11 @@
-import {Component, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {StatusBadgeComponent} from '@shared/ui/status-badge/status-badge';
-import {DashboardItemDto} from '../../dashboard.models';
+import {DashboardItemDto} from '@domains/dashboard';
 
 /**
  * @description
@@ -17,7 +17,8 @@ import {DashboardItemDto} from '../../dashboard.models';
   standalone: true,
   imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatProgressBarModule, StatusBadgeComponent],
   templateUrl: './dashboard-table.html',
-  styleUrl: './dashboard-table.scss'
+  styleUrl: './dashboard-table.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardTableComponent {
   readonly items = input.required<DashboardItemDto[]>();

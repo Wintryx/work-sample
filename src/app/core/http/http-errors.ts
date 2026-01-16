@@ -13,7 +13,17 @@ export interface ApiError {
  * @description
  * Helper to identify if a response matches our ApiError structure.
  */
-export function isApiError(error: any): error is ApiError {
-  return error && typeof error.status === 'number' &&
-    typeof error.message === 'string';
+export function isApiError(error: unknown): error is ApiError {
+  /**
+   * Tip: We check if the error is an object and not null first,
+   * then we safely verify the existence and type of its properties.
+   */
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'status' in error &&
+    typeof (error as Record<string, unknown>)['status'] === 'number' &&
+    'message' in error &&
+    typeof (error as Record<string, unknown>)['message'] === 'string'
+  );
 }

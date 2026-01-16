@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {ItemStatus} from '@domains/dashboard/dashboard.models';
-import {Component, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 
 /**
  * @description
@@ -11,6 +11,7 @@ import {Component, input} from '@angular/core';
   selector: 'app-status-badge',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <span [ngClass]="badgeClasses()" class="px-2.5 py-1 rounded-full text-xs font-bold border uppercase">
       {{ status() }}

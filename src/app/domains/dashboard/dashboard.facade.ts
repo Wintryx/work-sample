@@ -18,6 +18,8 @@ import {HttpClient} from '@angular/common/http';
 import {DashboardItemDto} from './dashboard.models';
 import {finalize} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {isApiError} from '@core/http/http-errors';
+import {API_BASE_URL} from '@core/http/api.tokens';
 
 /**
  * @description Internal state for the Dashboard.
@@ -32,6 +34,7 @@ interface DashboardState {
 export class DashboardFacade {
   private readonly http = inject(HttpClient);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly baseUrl = inject(API_BASE_URL);
 
   // Private state using a Signal
   private readonly _state = signal<DashboardState>({
@@ -63,8 +66,10 @@ export class DashboardFacade {
   loadItems(): void {
     this._state.update((s) => ({...s, loading: true, error: null}));
 
+    const url = `${this.baseUrl}/dashboard/items`;
+
     this.http
-      .get<DashboardItemDto[]>('/api/dashboard/items')
+      .get<DashboardItemDto[]>(url)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {
@@ -75,11 +80,21 @@ export class DashboardFacade {
         next: (items) => {
           this._state.update((s) => ({...s, items}));
         },
-        error: (err) => {
-          this._state.update((s) => ({
-            ...s,
-            error: err.message || 'Failed to load dashboard data',
-          }));
+        error: (err: unknown) => {
+          /**
+           * Tip: Using the Type Guard to safely handle structured backend errors.
+           * This demonstrates robust communication between Frontend and API.
+           */
+          let message = 'An unexpected error occurred';
+
+          if (isApiError(err)) {
+            message = err.message;
+          } else if (err instanceof Error) {
+            message = err.message;
+          }
+
+          this._state.update((s) => ({...s, error: message}));
+
         },
       });
   }

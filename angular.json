@@ -17,11 +17,15 @@
           "standalone": true,
           "changeDetection": "OnPush",
           "skipTests": false,
-          "flat": true
+          "flat": true,
+          "displayBlock": true
         },
         "@schematics/angular:directive": {
           "standalone": true,
           "skipTests": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": true
         }
       },
       "root": "",

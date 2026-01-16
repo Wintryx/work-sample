@@ -1,6 +1,8 @@
 import {HttpInterceptorFn, HttpResponse} from '@angular/common/http';
 import {delay, of} from 'rxjs';
 import {DashboardItemDto, ItemStatus} from '@domains/dashboard/dashboard.models';
+import {inject} from '@angular/core';
+import {API_BASE_URL} from '@core/http/api.tokens';
 
 /**
  * @description
@@ -19,8 +21,9 @@ const MOCK_DASHBOARD_DATA: DashboardItemDto[] = [
  */
 export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
   const {url, method} = req;
+  const baseUrl = inject(API_BASE_URL);
 
-  if (url.endsWith('/api/dashboard/items') && method === 'GET') {
+  if (url.endsWith(`${baseUrl}/dashboard/items`) && method === 'GET') {
     return of(new HttpResponse({
       status: 200,
       body: MOCK_DASHBOARD_DATA

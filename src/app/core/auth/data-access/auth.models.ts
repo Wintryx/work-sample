@@ -2,15 +2,15 @@
  * @description Authentication status constants to avoid magic strings.
  */
 export enum AuthStatus {
-  Authenticated = 'AUTHENTICATED',
-  Unauthenticated = 'UNAUTHENTICATED',
+  Authenticated = "AUTHENTICATED",
+  Unauthenticated = "UNAUTHENTICATED",
 }
 
 /**
  * @description Global constants for authentication storage keys.
  */
-export const AUTH_SESSION_KEY = 'epm_auth_session';
-export const AUTH_COOKIE_NAME = 'epm_authenticated';
+export const AUTH_SESSION_KEY = "epm_auth_session";
+export const AUTH_COOKIE_NAME = "epm_authenticated";
 
 /**
  * @description Public User model.

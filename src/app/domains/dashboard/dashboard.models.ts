@@ -4,9 +4,9 @@
  * Using an Enum for better readability and refactoring support.
  */
 export enum ItemStatus {
-  Todo = 'todo',
-  InProgress = 'in-progress',
-  Done = 'done',
+  Todo = "todo",
+  InProgress = "in-progress",
+  Done = "done",
 }
 
 /**

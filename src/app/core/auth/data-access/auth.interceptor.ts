@@ -1,9 +1,9 @@
 // Attached the Authorization: Bearer <token> Header on
 // outgoing API-Requests.
 
-import {HttpInterceptorFn} from '@angular/common/http';
-import {inject} from '@angular/core';
-import {AuthService} from './auth.service';
+import { HttpInterceptorFn } from "@angular/common/http";
+import { inject } from "@angular/core";
+import { AuthService } from "./auth.service";
 
 /**
  * @function authInterceptor
@@ -18,7 +18,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const authReq = req.clone({
-    setHeaders: {Authorization: `Bearer ${token}`}
+    setHeaders: { Authorization: `Bearer ${token}` },
   });
 
   return next(authReq);

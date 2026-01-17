@@ -6,24 +6,29 @@
     </div>
     <div class="flex flex-col leading-tight text-left">
       <span class="font-bold text-slate-900 tracking-tight uppercase">EPM</span>
-      <span class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Progress Maker</span>
+      <span class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]"
+        >Progress Maker</span
+      >
     </div>
   </div>
 
   <!-- Navigation & Actions Section -->
   <div class="flex items-center gap-6">
-
     <!-- System time serves as a subtle 'Live-Signal' for the user -->
-    <div class="hidden lg:flex items-center text-slate-400 text-xs font-medium bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 shadow-inner">
+    <div
+      class="hidden lg:flex items-center text-slate-400 text-xs font-medium bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 shadow-inner"
+    >
       <mat-icon class="!text-[14px] !h-[14px] !w-[14px] mr-2">schedule</mat-icon>
       {{ currentTime() | dateFormat }}
     </div>
 
     @if (authFacade.isAuthenticated()) {
       <nav class="hidden md:flex items-center gap-1">
-        <a routerLink="/dashboard"
-           routerLinkActive="bg-slate-100 text-indigo-700"
-           class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="bg-slate-100 text-indigo-700"
+          class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+        >
           Dashboard
         </a>
       </nav>
@@ -32,12 +37,22 @@
       <div class="flex items-center gap-4 pl-6 border-l border-slate-200">
         <span class="text-sm font-medium text-slate-700">{{ authFacade.user()?.username }}</span>
 
-        <button mat-flat-button color="primary" (click)="onLogout()" class="!rounded-xl shadow-lg shadow-indigo-100">
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="onLogout()"
+          class="!rounded-xl shadow-lg shadow-indigo-100"
+        >
           <mat-icon class="mr-2">logout</mat-icon> Logout
         </button>
       </div>
     } @else {
-      <button mat-flat-button color="primary" routerLink="/login" class="!rounded-xl shadow-lg shadow-indigo-100">
+      <button
+        mat-flat-button
+        color="primary"
+        routerLink="/login"
+        class="!rounded-xl shadow-lg shadow-indigo-100"
+      >
         Sign In
       </button>
     }

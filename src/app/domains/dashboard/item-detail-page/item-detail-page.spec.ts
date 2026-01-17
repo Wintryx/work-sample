@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ItemDetailPage } from './item-detail-page';
+import { ItemDetailPage } from "./item-detail-page";
 
-describe('ItemDetailPage', () => {
+describe("ItemDetailPage", () => {
   let component: ItemDetailPage;
   let fixture: ComponentFixture<ItemDetailPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ItemDetailPage]
-    })
-    .compileComponents();
+      imports: [ItemDetailPage],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ItemDetailPage);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -3,20 +3,22 @@
 // components according to the Material 3 design spec.
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
-@use '@angular/material' as mat;
-/* Tailwind Directives */
-@use 'tailwindcss';
+@use "@angular/material" as mat;
+@use "tailwindcss";
+@use "styles/notifications";
 
 html {
   height: 100%;
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
 }
 
 body {
@@ -38,7 +40,8 @@ body {
 }
 
 /* Global Styles */
-html, body {
+html,
+body {
   height: 100%;
 }
 

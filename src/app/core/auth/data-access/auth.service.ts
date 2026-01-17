@@ -1,7 +1,7 @@
-import {inject, Injectable, PLATFORM_ID, signal} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
-import {AUTH_COOKIE_NAME, AUTH_SESSION_KEY, AuthState, AuthStatus} from './auth.models';
-import {CookieService} from '@core/services/cookie.service';
+import { inject, Injectable, PLATFORM_ID, signal } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { AUTH_COOKIE_NAME, AUTH_SESSION_KEY, AuthState, AuthStatus } from "./auth.models";
+import { CookieService } from "@core/services/cookie.service";
 
 /**
  * @description
@@ -14,13 +14,13 @@ import {CookieService} from '@core/services/cookie.service';
  *    a cookie is used to notify server-side guards about the auth status.
  *    This prevents "auth-flicker" and incorrect redirects during initial hydration.
  */
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: "root" })
 export class AuthService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly cookieService = inject(CookieService);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  private readonly _state = signal<AuthState>({status: AuthStatus.Unauthenticated});
+  private readonly _state = signal<AuthState>({ status: AuthStatus.Unauthenticated });
   readonly state = this._state.asReadonly();
 
   constructor() {
@@ -36,11 +36,14 @@ export class AuthService {
     try {
       const savedSession = localStorage.getItem(AUTH_SESSION_KEY);
       if (savedSession) {
-        const session = JSON.parse(savedSession) as Extract<AuthState, { status: AuthStatus.Authenticated }>;
+        const session = JSON.parse(savedSession) as Extract<
+          AuthState,
+          { status: AuthStatus.Authenticated }
+        >;
         this._state.set(session);
       }
     } catch (e) {
-      console.error('AuthService: Failed to restore session', e);
+      console.error("AuthService: Failed to restore session", e);
       this.logout();
     }
   }
@@ -55,13 +58,13 @@ export class AuthService {
     // that it is intentionally unused in this mock implementation.
     const session: AuthState = {
       status: AuthStatus.Authenticated,
-      user: {id: `u-${Date.now()}`, username},
-      token: `mock-jwt-${Date.now()}`
+      user: { id: `u-${Date.now()}`, username },
+      token: `mock-jwt-${Date.now()}`,
     };
 
     if (this.isBrowser) {
       localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
-      this.cookieService.set(AUTH_COOKIE_NAME, 'true');
+      this.cookieService.set(AUTH_COOKIE_NAME, "true");
     }
 
     this._state.set(session);
@@ -75,7 +78,7 @@ export class AuthService {
       localStorage.removeItem(AUTH_SESSION_KEY);
       this.cookieService.delete(AUTH_COOKIE_NAME);
     }
-    this._state.set({status: AuthStatus.Unauthenticated});
+    this._state.set({ status: AuthStatus.Unauthenticated });
   }
 
   /**

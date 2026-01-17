@@ -5,38 +5,35 @@
       <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Project Progress</h2>
       <p class="text-slate-500 text-sm">Monitor and track current development milestones.</p>
     </div>
-    <button mat-flat-button color="primary" (click)="dashboardFacade.loadItems()">
+    <button mat-flat-button color="primary" (click)="dashboardFacade.refresh()">
       <mat-icon class="mr-2">refresh</mat-icon> Refresh Data
     </button>
   </header>
 
   <!-- Global Error Display -->
   @if (dashboardFacade.error()) {
-    <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 flex items-center gap-3">
-      <mat-icon>error_outline</mat-icon>
-      <span>{{ dashboardFacade.error() }}</span>
-    </div>
+  <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 flex items-center gap-3">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ dashboardFacade.error() }}</span>
+  </div>
   }
 
   <!-- Main Content Card -->
   <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
     @if (dashboardFacade.isLoading()) {
-      <mat-progress-bar mode="indeterminate" class="absolute top-0 w-full"></mat-progress-bar>
+    <mat-progress-bar mode="indeterminate" class="absolute top-0 w-full"></mat-progress-bar>
     }
 
     <!-- Delegating the complex table rendering to the dumb component -->
-    <app-dashboard-table
-      [items]="dashboardFacade.items()"
-      (selectItem)="navigateToDetail($event)">
+    <app-dashboard-table [items]="dashboardFacade.items()" (selectItem)="navigateToDetail($event)">
     </app-dashboard-table>
 
     <!-- Empty State -->
     @if (!dashboardFacade.isLoading() && !dashboardFacade.hasItems()) {
-      <div class="py-20 text-center flex flex-col items-center justify-center">
-        <mat-icon class="text-slate-200 !h-16 !w-16 !text-6xl mb-4">analytics</mat-icon>
-        <p class="text-slate-400 font-medium">No progress items found.</p>
-      </div>
+    <div class="py-20 text-center flex flex-col items-center justify-center">
+      <mat-icon class="text-slate-200 !h-16 !w-16 !text-6xl mb-4">analytics</mat-icon>
+      <p class="text-slate-400 font-medium">No progress items found.</p>
+    </div>
     }
   </div>
 </div>
-

@@ -1,10 +1,10 @@
 // Restrict unauthorized Users from access i.Ex /dashboard.
 // Uses the AuthFacade internally to check the current State.
 
-import {inject, PLATFORM_ID} from '@angular/core';
-import {CanMatchFn, Router} from '@angular/router';
-import {AuthFacade} from '../auth.facade';
-import {isPlatformServer} from '@angular/common';
+import { inject, PLATFORM_ID } from "@angular/core";
+import { CanMatchFn, Router } from "@angular/router";
+import { AuthFacade } from "../auth.facade";
+import { isPlatformServer } from "@angular/common";
 
 /**
  * @description
@@ -23,7 +23,7 @@ export const authGuard: CanMatchFn = () => {
   }
 
   // Im Browser haben wir den vollen State aus localStorage/hydrate()
-  return authFacade.isAuthenticated() ? true : router.parseUrl('/login');
+  return authFacade.isAuthenticated() ? true : router.parseUrl("/login");
 };
 
 /**
@@ -38,5 +38,5 @@ export const publicGuard: CanMatchFn = () => {
 
   if (isPlatformServer(platformId)) return true;
 
-  return authFacade.isAuthenticated() ? router.parseUrl('/dashboard') : true;
+  return authFacade.isAuthenticated() ? router.parseUrl("/dashboard") : true;
 };

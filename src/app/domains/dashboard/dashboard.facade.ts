@@ -13,15 +13,15 @@
  * - Exposes read-only computed signals to ensure unidirectional data flow.
  */
 
-import { computed, DestroyRef, inject, Injectable, signal } from "@angular/core";
-import { HttpClient, HttpContext } from "@angular/common/http";
-import { DashboardItemDto } from "./dashboard.models";
-import { finalize } from "rxjs";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { API_BASE_URL } from "@core/http/api.tokens";
-import { NOTIFICATION_TICKET, NotificationTypeEnum } from "@core/notifications/notification.models";
-import { NotificationService } from "@core/notifications/notification.service";
-import { parseErrorMessage } from "@core/http/http-errors";
+import {computed, DestroyRef, inject, Injectable, signal} from "@angular/core";
+import {HttpClient, HttpContext} from "@angular/common/http";
+import {DashboardItemDto} from "./dashboard.models";
+import {finalize} from "rxjs";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {API_BASE_URL} from "@core/http/api.tokens";
+import {NOTIFICATION_TICKET, NotificationTypeEnum} from "@core/notifications/notification.models";
+import {NotificationService} from "@core/notifications/notification.service";
+import {parseErrorMessage} from "@core/http/http-errors";
 
 /**
  * @description Internal state for the Dashboard.
@@ -32,7 +32,7 @@ interface DashboardState {
   error: string | null;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({providedIn: "root"})
 export class DashboardFacade {
   private readonly http = inject(HttpClient);
   private readonly destroyRef = inject(DestroyRef);
@@ -67,27 +67,27 @@ export class DashboardFacade {
    * @description Fetches items from the mock backend.
    */
   loadItems(ticketId: string | null = null): void {
-    this._state.update((s) => ({ ...s, loading: true, error: null }));
+    this._state.update((s) => ({...s, loading: true, error: null}));
 
     const url = `${this.baseUrl}/dashboard/items`;
 
     const context = new HttpContext().set(NOTIFICATION_TICKET, ticketId);
 
     this.http
-      .get<DashboardItemDto[]>(url, { context })
+      .get<DashboardItemDto[]>(url, {context})
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {
-          this._state.update((s) => ({ ...s, loading: false }));
+          this._state.update((s) => ({...s, loading: false}));
         }),
       )
       .subscribe({
         next: (items) => {
-          this._state.update((s) => ({ ...s, items }));
+          this._state.update((s) => ({...s, items}));
         },
         error: (err: unknown) => {
           const message = parseErrorMessage(err, "Failed to load dashboard data");
-          this._state.update((s) => ({ ...s, error: message }));
+          this._state.update((s) => ({...s, error: message}));
         },
       });
   }
@@ -102,5 +102,23 @@ export class DashboardFacade {
       clearExisting: true,
     });
     this.loadItems(ticket);
+  }
+
+  /**
+   * @description
+   * Debug method to simulate a failing API request.
+   * Demonstrates automated error toast via notificationInterceptor.
+   */
+  triggerError(): void {
+    // We don't even need a ticket here, because our interceptor
+    // catches ALL HttpErrors if we want, or we use a System ticket.
+    const url = `${this.baseUrl}/debug/error`;
+
+    this.http.get(url, {
+      context: new HttpContext().set(NOTIFICATION_TICKET, "DEBUG_ERROR")
+    }).subscribe({
+      error: (err) => console.log("Facade received error:", err)
+    });
+
   }
 }

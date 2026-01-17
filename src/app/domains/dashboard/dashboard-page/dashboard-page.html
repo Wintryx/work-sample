@@ -5,6 +5,12 @@
       <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Project Progress</h2>
       <p class="text-slate-500 text-sm">Monitor and track current development milestones.</p>
     </div>
+
+    <!-- Debug Button -->
+    <button mat-stroked-button color="warn" (click)="dashboardFacade.triggerError()" class="!rounded-xl">
+      <mat-icon class="mr-2">bug_report</mat-icon> Simulate Error
+    </button>
+
     <button mat-flat-button color="primary" (click)="dashboardFacade.refresh()">
       <mat-icon class="mr-2">refresh</mat-icon> Refresh Data
     </button>

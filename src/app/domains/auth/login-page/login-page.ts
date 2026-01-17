@@ -21,15 +21,15 @@ export class LoginPage {
   // Using a clean, reactive form group
   protected readonly loginForm = this.fb.nonNullable.group({
     username: ["Arne Winter", [Validators.required, Validators.minLength(3)]],
-    password: ["password", [Validators.required]],
+    password: ["epm", [Validators.required]],
   });
 
   protected onSubmit(): void {
     if (this.loginForm.valid) {
-      const { username } = this.loginForm.getRawValue();
+      const { username, password } = this.loginForm.getRawValue();
 
       // Execute login via Facade
-      this.authFacade.login(username);
+      this.authFacade.login(username, password);
     }
   }
 }

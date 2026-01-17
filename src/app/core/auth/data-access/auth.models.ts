@@ -26,3 +26,9 @@ export interface AuthUser {
 export type AuthState =
   | { status: AuthStatus.Authenticated; user: AuthUser; token: string }
   | { status: AuthStatus.Unauthenticated };
+
+/**
+ * @description
+ * Result model for auth actions to decouple UI feedback from service logic.
+ */
+export type AuthResult = { ok: true } | { ok: false; message: string };

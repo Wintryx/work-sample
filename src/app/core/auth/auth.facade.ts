@@ -7,6 +7,7 @@ import { computed, inject, Injectable } from "@angular/core";
 import { AuthService } from "./data-access/auth.service";
 import { AuthStatus } from "./data-access/auth.models";
 import { Router } from "@angular/router";
+import { NotificationService } from "@core/notifications/notification.service";
 
 /**
  * @description
@@ -17,6 +18,7 @@ import { Router } from "@angular/router";
 export class AuthFacade {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router); // Router injizieren
+  private readonly notificationService = inject(NotificationService);
 
   // Computed signals for reactive UI updates
   readonly user = computed(() => {
@@ -29,7 +31,11 @@ export class AuthFacade {
   );
 
   login(username: string, password?: string): void {
-    this.authService.login(username, password);
+    const result = this.authService.login(username, password);
+    if (!result.ok) {
+      this.notificationService.fail(null, result.message);
+      return;
+    }
     // Centralized redirect after login
     this.router.navigate(["/dashboard"]);
   }

@@ -53,14 +53,15 @@ export class AuthService {
    * Authenticates a user. In a real-world scenario, this would involve
    * an OIDC provider like Keycloak.
    */
-  login(username: string, _password?: string): void {
-    // Note: _password starts with an underscore to tell the linter
-    // that it is intentionally unused in this mock implementation.
-    const session: AuthState = {
-      status: AuthStatus.Authenticated,
-      user: { id: `u-${Date.now()}`, username },
-      token: `mock-jwt-${Date.now()}`,
-    };
+  login(username: string, password?: string): AuthResult {
+    if (password !== "epm") {
+      console.warn("AuthService: Invalid password for mock login");
+      this.logout();
+      return { ok: false, message: "Invalid password. Hint: epm." };
+    }
+    if (!this.isBrowser) {
+      return { ok: false, message: "Login is only available in the browser." };
+    }
 
     if (this.isBrowser) {
       localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));

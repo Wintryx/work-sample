@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
-import { MatButtonModule } from "@angular/material/button";
-import { HeaderComponent } from "@core/layout/header/header.component";
-import { FooterComponent } from "@core/layout/footer/footer-component";
+import {ChangeDetectionStrategy, Component} from "@angular/core";
+import {RouterOutlet} from "@angular/router";
+import {MatButtonModule} from "@angular/material/button";
+import {HeaderComponent} from "@core/layout/header/header.component";
+import {FooterComponent} from "@core/layout/footer/footer-component";
 
 /**
  * @description
@@ -18,22 +18,4 @@ import { FooterComponent } from "@core/layout/footer/footer-component";
   styleUrl: "./app.scss",
 })
 export class App {
-  // private readonly notificationService = inject(NotificationService);
-  //
-  // constructor() {
-  //
-  //   /**
-  //    * Using a global effect to handle cross-cutting concerns like Toasts.
-  //    * This decouples the actual data-loading logic from the UI feedback.
-  //    */
-  //   effect(() => {
-  //     const action = this.notificationService.lastNotificationPayload();
-  //
-  //     if (action?.type === Action.Refresh) {
-  //       this.notificationService.success('Dashboard data updated successfully.', {
-  //         clearExisting: true
-  //       });
-  //     }
-  //   });
-  // }
 }

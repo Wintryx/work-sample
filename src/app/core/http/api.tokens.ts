@@ -1,4 +1,4 @@
-import { InjectionToken } from "@angular/core";
+import {InjectionToken} from "@angular/core";
 
 /**
  * @description
@@ -7,5 +7,5 @@ import { InjectionToken } from "@angular/core";
  */
 export const API_BASE_URL = new InjectionToken<string>("API_BASE_URL", {
   providedIn: "root",
-  factory: () => "/api", // Default base path
+  factory: () => "/api/v1", // Default base path
 });

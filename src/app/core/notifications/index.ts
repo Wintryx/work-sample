@@ -14,8 +14,8 @@ export * from "./notification.service";
  * @publicApi
  * Essential models and constants needed to interface with the notification system.
  */
-export { Action, NOTIFICATION_TICKET } from "./notification.models";
-export type { NotificationType, NotificationOptions } from "./notification.models";
+export {NOTIFICATION_TICKET} from "./notification.models";
+export type {NotificationType, NotificationOptions} from "./notification.models";
 
 /**
  * @internalApi

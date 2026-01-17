@@ -27,12 +27,6 @@ export interface NotificationOptions {
   action?: string;
 }
 
-export enum Action {
-  System = "SYSTEM",
-  User = "USER",
-  Refresh = "REFRESH",
-}
-
 /**
  * @description Represents a structured message internally.
  */

@@ -13,13 +13,15 @@
  * - Exposes read-only computed signals to ensure unidirectional data flow.
  */
 
-import {computed, DestroyRef, inject, Injectable, signal} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {DashboardItemDto} from './dashboard.models';
-import {finalize} from 'rxjs';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {isApiError} from '@core/http/http-errors';
-import {API_BASE_URL} from '@core/http/api.tokens';
+import { computed, DestroyRef, inject, Injectable, signal } from "@angular/core";
+import { HttpClient, HttpContext } from "@angular/common/http";
+import { DashboardItemDto } from "./dashboard.models";
+import { finalize } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { API_BASE_URL } from "@core/http/api.tokens";
+import { NOTIFICATION_TICKET, NotificationTypeEnum } from "@core/notifications/notification.models";
+import { NotificationService } from "@core/notifications/notification.service";
+import { parseErrorMessage } from "@core/http/http-errors";
 
 /**
  * @description Internal state for the Dashboard.
@@ -30,13 +32,13 @@ interface DashboardState {
   error: string | null;
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: "root" })
 export class DashboardFacade {
   private readonly http = inject(HttpClient);
   private readonly destroyRef = inject(DestroyRef);
   private readonly baseUrl = inject(API_BASE_URL);
+  private readonly notificationService = inject(NotificationService);
 
-  // Private state using a Signal
   private readonly _state = signal<DashboardState>({
     items: [],
     loading: false,
@@ -56,6 +58,7 @@ export class DashboardFacade {
 
     return state.items;
   });
+
   readonly isLoading = computed(() => this._state().loading);
   readonly error = computed(() => this._state().error);
   readonly hasItems = computed(() => this._state().items.length > 0);
@@ -63,38 +66,28 @@ export class DashboardFacade {
   /**
    * @description Fetches items from the mock backend.
    */
-  loadItems(): void {
-    this._state.update((s) => ({...s, loading: true, error: null}));
+  loadItems(ticketId: string | null = null): void {
+    this._state.update((s) => ({ ...s, loading: true, error: null }));
 
     const url = `${this.baseUrl}/dashboard/items`;
 
+    const context = new HttpContext().set(NOTIFICATION_TICKET, ticketId);
+
     this.http
-      .get<DashboardItemDto[]>(url)
+      .get<DashboardItemDto[]>(url, { context })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {
-          this._state.update((s) => ({...s, loading: false}));
+          this._state.update((s) => ({ ...s, loading: false }));
         }),
       )
       .subscribe({
         next: (items) => {
-          this._state.update((s) => ({...s, items}));
+          this._state.update((s) => ({ ...s, items }));
         },
         error: (err: unknown) => {
-          /**
-           * Tip: Using the Type Guard to safely handle structured backend errors.
-           * This demonstrates robust communication between Frontend and API.
-           */
-          let message = 'An unexpected error occurred';
-
-          if (isApiError(err)) {
-            message = err.message;
-          } else if (err instanceof Error) {
-            message = err.message;
-          }
-
-          this._state.update((s) => ({...s, error: message}));
-
+          const message = parseErrorMessage(err, "Failed to load dashboard data");
+          this._state.update((s) => ({ ...s, error: message }));
         },
       });
   }
@@ -103,6 +96,11 @@ export class DashboardFacade {
    * @description Example of a domain-specific action.
    */
   refresh(): void {
-    this.loadItems();
+    const ticket = this.notificationService.register({
+      message: "Dashboard data updated.",
+      type: NotificationTypeEnum.Success,
+      clearExisting: true,
+    });
+    this.loadItems(ticket);
   }
 }

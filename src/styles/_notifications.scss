@@ -1,0 +1,88 @@
+@use "@angular/material" as mat;
+
+/**
+ * @description
+ * Official Material 3 Styling for SnackBars.
+ * Tokens updated to match the latest Angular Material 3 specifications.
+ */
+.notification-success {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: var(--color-green-600),
+      supporting-text-color: white,
+      button-color: white,
+      // Fix: Changed from button-label-text-color
+    )
+  );
+}
+
+.notification-error {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: var(--color-red-600),
+      supporting-text-color: white,
+      button-color: white,
+      // Fix: Changed from button-label-text-color
+    )
+  );
+}
+
+.notification-warning {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: var(--color-amber-500),
+      supporting-text-color: #1e293b,
+      button-color: #1e293b,
+      // Fix: Changed from button-label-text-color
+    )
+  );
+}
+
+.notification-info {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: var(--color-slate-800),
+      supporting-text-color: white,
+      button-color: var(--color-indigo-400),
+      // Fix: Changed from button-label-text-color
+    )
+  );
+}
+
+///**
+// * @description
+// * Notification Branding for Material SnackBars.
+// * Modularized into a partial for better maintainability.
+// */
+//
+//.notification-success {
+//  @include mat.snack-bar-overrides((
+//    container-color: var(--color-green-600),
+//    supporting-text-color: white,
+//    button-color: white,
+//  ));
+//}
+//
+//.notification-error {
+//  @include mat.snack-bar-overrides((
+//    container-color: var(--color-red-600),
+//    supporting-text-color: white,
+//    button-color: white,
+//  ));
+//}
+//
+//.notification-warning {
+//  @include mat.snack-bar-overrides((
+//    container-color: var(--color-amber-500),
+//    supporting-text-color: #1e293b,
+//    button-color: #1e293b,
+//  ));
+//}
+//
+//.notification-info {
+//  @include mat.snack-bar-overrides((
+//    container-color: var(--color-slate-800),
+//    supporting-text-color: white,
+//    button-color: var(--color-indigo-400),
+//  ));
+//}

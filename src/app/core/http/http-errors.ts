@@ -19,11 +19,29 @@ export function isApiError(error: unknown): error is ApiError {
    * then we safely verify the existence and type of its properties.
    */
   return (
-    typeof error === 'object' &&
+    typeof error === "object" &&
     error !== null &&
-    'status' in error &&
-    typeof (error as Record<string, unknown>)['status'] === 'number' &&
-    'message' in error &&
-    typeof (error as Record<string, unknown>)['message'] === 'string'
+    "status" in error &&
+    typeof (error as Record<string, unknown>)["status"] === "number" &&
+    "message" in error &&
+    typeof (error as Record<string, unknown>)["message"] === "string"
   );
+}
+
+/**
+ * @description
+ * Extracts a human-readable error message from various error types.
+ * Centralizes error parsing logic to keep facades and interceptors clean.
+ */
+export function parseErrorMessage(
+  error: unknown,
+  fallback = "An unexpected error occurred",
+): string {
+  if (isApiError(error)) {
+    return error.message;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return fallback;
 }

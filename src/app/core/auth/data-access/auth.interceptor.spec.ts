@@ -1,9 +1,9 @@
-import { TestBed } from "@angular/core/testing";
-import { HttpClient, provideHttpClient, withInterceptors } from "@angular/common/http";
-import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { authInterceptor } from "./auth.interceptor";
-import { AuthService } from "./auth.service";
+import {TestBed} from "@angular/core/testing";
+import {HttpClient, provideHttpClient, withInterceptors} from "@angular/common/http";
+import {HttpTestingController, provideHttpClientTesting} from "@angular/common/http/testing";
+import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+import {authInterceptor} from "@core/auth";
+import {AuthService} from "./auth.service";
 
 /**
  * @description
@@ -26,7 +26,7 @@ describe("authInterceptor", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        { provide: AuthService, useValue: authServiceMock },
+        {provide: AuthService, useValue: authServiceMock},
         provideHttpClient(withInterceptors([authInterceptor])),
         provideHttpClientTesting(),
       ],

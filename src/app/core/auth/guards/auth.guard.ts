@@ -1,10 +1,11 @@
 // Restrict unauthorized Users from access i.Ex /dashboard.
 // Uses the AuthFacade internally to check the current State.
 
-import { inject, PLATFORM_ID } from "@angular/core";
-import { CanMatchFn, Router } from "@angular/router";
-import { AuthFacade } from "../auth.facade";
-import { isPlatformServer } from "@angular/common";
+import {inject, PLATFORM_ID, REQUEST} from "@angular/core";
+import {CanMatchFn, Router} from "@angular/router";
+import {AUTH_COOKIE_NAME, AuthFacade} from "@core/auth";
+import {isPlatformServer} from "@angular/common";
+import {parse} from "cookie";
 
 /**
  * @description
@@ -17,12 +18,19 @@ export const authGuard: CanMatchFn = () => {
   const platformId = inject(PLATFORM_ID);
 
   if (isPlatformServer(platformId)) {
-    // Auf dem Server prüfen wir normalerweise den Request-Header nach dem Cookie.
-    // Für die Arbeitsprobe: Wir erlauben den Render-Pass, damit der Client hydriert.
-    return true;
+    const req = inject(REQUEST, { optional: true }) as { headers?: { cookie?: string } } | null;
+    // In SSR/prerender, REQUEST can be null; allow render pass to avoid crashes.
+    if (!req?.headers?.cookie) {
+      return true;
+    }
+    // Cookie acts as a lightweight SSR signal to avoid redirect flicker on first render.
+    const cookies = parse(req.headers.cookie);
+    return cookies != null && cookies[AUTH_COOKIE_NAME] === "true"
+      ? true
+      : router.parseUrl("/login");
   }
 
-  // Im Browser haben wir den vollen State aus localStorage/hydrate()
+  // In the browser we rely on hydrate() restoring state from localStorage.
   return authFacade.isAuthenticated() ? true : router.parseUrl("/login");
 };
 

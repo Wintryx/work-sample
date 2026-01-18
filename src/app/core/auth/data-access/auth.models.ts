@@ -1,3 +1,18 @@
+import {InjectionToken} from "@angular/core";
+
+/**
+ * @description Configuration contract for the OIDC/Auth infrastructure.
+ */
+export interface AuthConfig {
+  oidcIssuer: string;
+  audience: string;
+  stateKeyPrefix: string;
+  nonceKeyPrefix: string;
+}
+
+export const AUTH_CONFIG = new InjectionToken<AuthConfig>("AUTH_CONFIG")
+
+
 /**
  * @description Authentication status constants to avoid magic strings.
  */
@@ -15,7 +30,7 @@ export const AUTH_COOKIE_NAME = "epm_authenticated";
 /**
  * @description Public User model.
  */
-export interface AuthUser {
+interface AuthUser {
   id: string;
   username: string;
 }
@@ -32,6 +47,7 @@ export const AuthErrorState = {
   BROWSER_ONLY: "BROWSER_ONLY",
   OIDC_FLOW_FAILED: "OIDC_FLOW_FAILED",
 } as const;
+
 export type AuthErrorState = (typeof AuthErrorState)[keyof typeof AuthErrorState];
 
 /**

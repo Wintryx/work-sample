@@ -30,8 +30,10 @@ export * from "./data-access/auth.interceptor";
 export * from "./data-access/auth.models";
 
 /**
- * @internalApi
- * Configuration Injection Token and Interface.
- * Required to provide the specific OIDC settings at the application root level.
+ * @publicApi
+ * Functional provider hub for the Authentication infrastructure.
+ * Encapsulates all auth-related dependency injection tokens and services
+ * into a unified bootstrap function.
  */
-export * from "./auth.config";
+export * from "./data-access/auth.providers";
+

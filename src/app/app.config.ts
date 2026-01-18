@@ -4,26 +4,22 @@ import {provideRouter, withComponentInputBinding} from "@angular/router";
 import {routes} from "./app.routes";
 import {provideClientHydration, withEventReplay} from "@angular/platform-browser";
 import {provideHttpClient, withFetch, withInterceptors} from "@angular/common/http";
-import {AUTH_CONFIG, authInterceptor} from "@core/auth";
+import {authInterceptor, provideAuth} from "@core/auth";
 import {mockBackendInterceptor} from "@core/http/mock-backend.interceptor";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {notificationInterceptor} from "@core/notifications/notification.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    {
-      provide: AUTH_CONFIG,
-      useValue: {
-        oidcIssuer: "https://fake-idp.example",
-        audience: "epm-progress-maker",
-        stateKeyPrefix: "epm_oidc_state",
-        nonceKeyPrefix: "epm_oidc_nonce"
-      }
-    },
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
+    provideAuth({
+      oidcIssuer: "https://fake-idp.example",
+      audience: "epm-progress-maker",
+      stateKeyPrefix: "epm_oidc_state",
+      nonceKeyPrefix: "epm_oidc_nonce"
+    }),
     importProvidersFrom(MatSnackBarModule),
-
     provideHttpClient(
       withFetch(),
       /**

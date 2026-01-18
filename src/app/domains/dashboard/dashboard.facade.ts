@@ -14,14 +14,13 @@
  */
 
 import {computed, DestroyRef, inject, Injectable, signal} from "@angular/core";
-import {HttpClient, HttpContext} from "@angular/common/http";
 import {DashboardItemDto} from "./dashboard.models";
 import {finalize} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {API_BASE_URL} from "@core/http/api.tokens";
-import {NOTIFICATION_TICKET, NotificationTypeEnum} from "@core/notifications/notification.models";
+import {NotificationTypeEnum} from "@core/notifications/notification.models";
 import {NotificationService} from "@core/notifications/notification.service";
 import {parseErrorMessage} from "@core/http/http-errors";
+import {DASHBOARD_API} from "./data-access/dashboard.providers";
 
 /**
  * @description Internal state for the Dashboard.
@@ -34,9 +33,8 @@ interface DashboardState {
 
 @Injectable({providedIn: "root"})
 export class DashboardFacade {
-  private readonly http = inject(HttpClient);
+  private readonly api = inject(DASHBOARD_API);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly baseUrl = inject(API_BASE_URL);
   private readonly notificationService = inject(NotificationService);
 
   private readonly _state = signal<DashboardState>({
@@ -64,17 +62,13 @@ export class DashboardFacade {
   readonly hasItems = computed(() => this._state().items.length > 0);
 
   /**
-   * @description Fetches items from the mock backend.
+   * @description Fetches items from the dashboard API.
    */
   loadItems(ticketId: string | null = null): void {
     this._state.update((s) => ({...s, loading: true, error: null}));
 
-    const url = `${this.baseUrl}/dashboard/items`;
-
-    const context = new HttpContext().set(NOTIFICATION_TICKET, ticketId);
-
-    this.http
-      .get<DashboardItemDto[]>(url, {context})
+    this.api
+      .loadItems(ticketId)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {
@@ -110,13 +104,9 @@ export class DashboardFacade {
    * Demonstrates automated error toast via notificationInterceptor.
    */
   triggerError(): void {
-    // We don't even need a ticket here, because our interceptor
-    // catches ALL HttpErrors if we want, or we use a System ticket.
-    const url = `${this.baseUrl}/debug/error`;
-
-    this.http.get(url, {
-      context: new HttpContext().set(NOTIFICATION_TICKET, "DEBUG_ERROR")
-    }).subscribe({
+    const request$ = this.api.triggerError?.("DEBUG_ERROR");
+    if (!request$) return;
+    request$.subscribe({
       error: (err) => console.log("Facade received error:", err)
     });
 

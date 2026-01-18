@@ -10,6 +10,9 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {notificationInterceptor} from "@core/notifications/notification.interceptor";
 import {API_BASE_URL} from "@core/http/api.tokens";
 import {environment} from "@env/environment";
+import {DashboardApiHttp} from "@domains/dashboard/data-access/dashboard.api.http";
+import {DashboardApiMock} from "@domains/dashboard/data-access/dashboard.api.mock";
+import {provideDashboardApi} from "@domains/dashboard/data-access/dashboard.providers";
 
 
 export const appConfig: ApplicationConfig = {
@@ -23,6 +26,7 @@ export const appConfig: ApplicationConfig = {
       stateKeyPrefix: "epm_oidc_state",
       nonceKeyPrefix: "epm_oidc_nonce"
     }),
+    ...provideDashboardApi(environment.useMockApi ? DashboardApiMock : DashboardApiHttp),
     importProvidersFrom(MatSnackBarModule),
     provideHttpClient(
       withFetch(),
@@ -32,7 +36,11 @@ export const appConfig: ApplicationConfig = {
        * 2. Notification: Listens for success/error events to show Snackbars.
        * 3. MockBackend: Simulates the server response (must be last to catch the modified request).
        */
-      withInterceptors([authInterceptor, notificationInterceptor, mockBackendInterceptor]),
+      withInterceptors([
+        authInterceptor,
+        notificationInterceptor,
+        ...(environment.useMockApi ? [mockBackendInterceptor] : []),
+      ]),
     ),
     provideClientHydration(withEventReplay()),
   ],

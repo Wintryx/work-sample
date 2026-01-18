@@ -27,8 +27,18 @@ export type AuthState =
   | { status: AuthStatus.Authenticated; user: AuthUser; token: string }
   | { status: AuthStatus.Unauthenticated };
 
+export const AuthErrorState = {
+  INVALID_PASSWORD: "INVALID_PASSWORD",
+  BROWSER_ONLY: "BROWSER_ONLY",
+  OIDC_FLOW_FAILED: "OIDC_FLOW_FAILED",
+} as const;
+export type AuthErrorState = (typeof AuthErrorState)[keyof typeof AuthErrorState];
+
 /**
  * @description
- * Result model for auth actions to decouple UI feedback from service logic.
+ * Discriminated Union for Auth results.
+ * Provides absolute type safety for success and error branches.
  */
-export type AuthResult = { ok: true } | { ok: false; message: string };
+export type AuthResult =
+  | { success: true; status: AuthStatus.Authenticated; }
+  | { success: false; status: AuthStatus.Unauthenticated; authErrorState: AuthErrorState; message: string };

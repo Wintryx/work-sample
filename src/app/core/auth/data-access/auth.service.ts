@@ -1,6 +1,6 @@
 import {inject, Injectable, PLATFORM_ID, signal} from "@angular/core";
 import {isPlatformBrowser} from "@angular/common";
-import {AUTH_COOKIE_NAME, AUTH_SESSION_KEY, AuthResult, AuthState, AuthStatus} from "@core/auth";
+import {AUTH_COOKIE_NAME, AUTH_SESSION_KEY, AuthErrorState, AuthResult, AuthState, AuthStatus} from "@core/auth";
 import {CookieService} from "@core/services/cookie.service";
 
 /**
@@ -34,7 +34,12 @@ export class AuthService {
   }
 
   /**
-   * @description Restores session from localStorage during client-side hydration.
+   * @description
+   * Re-initializes the session state from `localStorage` on application startup.
+   *
+   * This method runs only in the browser (client-side) to restore the user's
+   * previous session, allowing for a seamless "Stay Logged In" experience.
+   * * Note: Server-side validation relies on the `epm_authenticated` cookie instead.
    */
   private hydrate(): void {
     if (!this.isBrowser) return;
@@ -56,18 +61,37 @@ export class AuthService {
 
   /**
    * @description
-   * Authenticates a user. In a real-world scenario, this would involve
-   * an OIDC provider like Keycloak.
+   * Authenticates a user.
+   *
+   * **MOCK IMPLEMENTATION NOTICE:**
+   * In this fake implementation, we accept `username` and `password` directly to
+   * simulate the Identity Provider's validation logic locally.
+   *
+   * **REAL WORLD OIDC:**
+   * In a real OIDC "Authorization Code Flow", this method would take NO arguments.
+   * Instead, it would redirect the browser to an external login page (e.g., Keycloak),
+   * ensuring the Angular app never handles the user's plain-text password.
+   *
    * @returns Result object with success flag or error message.
    */
-  login(username: string, password?: string): AuthResult {
+  login(username: string, password: string): AuthResult {
     if (password !== "epm") {
       console.warn("AuthService: Invalid password for mock login");
       this.logout();
-      return {ok: false, message: "Invalid password. Hint: epm."};
+      return {
+        success: false,
+        status: AuthStatus.Unauthenticated,
+        authErrorState: AuthErrorState.INVALID_PASSWORD,
+        message: "Invalid password. Hint: epm."
+      };
     }
     if (!this.isBrowser) {
-      return {ok: false, message: "Login is only available in the browser."};
+      return {
+        success: false,
+        status: AuthStatus.Unauthenticated,
+        authErrorState: AuthErrorState.BROWSER_ONLY,
+        message: "Login is only available in the browser."
+      };
     }
 
     try {
@@ -77,11 +101,16 @@ export class AuthService {
       localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
       this.cookieService.set(AUTH_COOKIE_NAME, "true");
       this._state.set(session);
-      return {ok: true};
+      return {success: true, status: AuthStatus.Authenticated};
     } catch (e) {
       console.error("AuthService: Fake OIDC login failed", e);
       this.logout();
-      return {ok: false, message: "Login failed. Please try again."};
+      return {
+        success: false,
+        status: AuthStatus.Unauthenticated,
+        authErrorState: AuthErrorState.OIDC_FLOW_FAILED,
+        message: "Login failed. Please try again."
+      };
     }
   }
 
@@ -108,7 +137,16 @@ export class AuthService {
 
   /**
    * @description
-   * Starts a fake OIDC flow by generating state/nonce and a mock auth code.
+   * Simulates the **OIDC Authorization Request**.
+   *
+   * In a real application, this method would construct a URL and redirect the browser
+   * to the Identity Provider (e.g., Keycloak).
+   *
+   * It generates two critical security parameters:
+   * 1. **State**: Protection against CSRF attacks. We save it locally to verify the callback later.
+   * 2. **Nonce**: Protection against Replay attacks. Ensures the token we get back was generated specifically for this request.
+   *
+   * @returns {Object} An object containing the generated parameters and a mock Authorization Code.
    */
   private startFakeOidcFlow(): { code: string; state: string; nonce: string } {
     const state = this.randomId("state");
@@ -121,7 +159,19 @@ export class AuthService {
 
   /**
    * @description
-   * Finalizes the fake OIDC flow by validating state/nonce and minting a token.
+   * Simulates the **OIDC Token Exchange**.
+   *
+   * This represents the step where the frontend sends the "Authorization Code"
+   * back to the backend to exchange it for an Access Token.
+   *
+   * **Security Check:**
+   * It validates that the `state` and `nonce` returned from the flow match
+   * the ones we stored in `sessionStorage` during the start phase.
+   * If they don't match, the flow is rejected (potential attack).
+   *
+   * @param params - The parameters returned from the "login screen" (code, state, nonce).
+   * @throws {Error} If state or nonce validation fails.
+   * @returns {AuthState} The authenticated session object including the signed JWT.
    */
   private finishFakeOidcFlow(params: {
     code: string;
@@ -160,7 +210,17 @@ export class AuthService {
 
   /**
    * @description
-   * Creates a base64url-encoded JWT-like string without a signature.
+   * Helper utility to construct a **JWT (JSON Web Token)**.
+   *
+   * Structure: `Header.Payload.Signature`
+   *
+   * **Note:** This creates an "unsigned" token (`alg: none`).
+   * While it is structurally valid base64url JSON and can be parsed by
+   * libraries like `jwt-decode`, it offers no cryptographic integrity
+   * and should **NEVER** be used in production environments.
+   *
+   * @param payload - The business data (claims) to encode into the token.
+   * @returns {string} The base64url encoded JWT string.
    */
   private createFakeJwt(payload: Record<string, unknown>): string {
     const header = {alg: "none", typ: "JWT"};

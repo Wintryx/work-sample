@@ -3,18 +3,18 @@
 //   Methods like login() oder logout().
 //   Reason: Complexity reduction of the Service and App.
 
-import { computed, inject, Injectable } from "@angular/core";
-import { AuthService } from "./data-access/auth.service";
-import { AuthStatus } from "./data-access/auth.models";
-import { Router } from "@angular/router";
-import { NotificationService } from "@core/notifications/notification.service";
+import {computed, inject, Injectable} from "@angular/core";
+import {AuthService} from "./data-access/auth.service";
+import {AuthStatus} from "./data-access/auth.models";
+import {Router} from "@angular/router";
+import {NotificationService} from "@core/notifications/notification.service";
 
 /**
  * @description
  * Facade for Authentication.
  * Decouples the UI from the underlying AuthService implementation.
  */
-@Injectable({ providedIn: "root" })
+@Injectable({providedIn: "root"})
 export class AuthFacade {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router); // Router injizieren
@@ -30,9 +30,13 @@ export class AuthFacade {
     () => this.authService.state().status === AuthStatus.Authenticated,
   );
 
-  login(username: string, password?: string): void {
+  /**
+   * @description
+   * Attempts login via AuthService, shows a snackbar on failure, and redirects on success.
+   */
+  login(username: string, password: string): void {
     const result = this.authService.login(username, password);
-    if (!result.ok) {
+    if (!result.success) {
       this.notificationService.fail(null, result.message);
       return;
     }

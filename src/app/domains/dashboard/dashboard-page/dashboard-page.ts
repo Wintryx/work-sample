@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { Router } from "@angular/router";
-import { MatButtonModule } from "@angular/material/button";
-import { MatIconModule } from "@angular/material/icon";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { DashboardFacade } from "../dashboard.facade";
-import { DashboardTableComponent } from "@domains/dashboard/components/dashboard-table/dashboard-table";
+import {ChangeDetectionStrategy, Component, inject, OnInit} from "@angular/core";
+import {CommonModule} from "@angular/common";
+import {Router} from "@angular/router";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {DashboardFacade} from "../dashboard.facade";
+import {DashboardTableComponent} from "@domains/dashboard/components/dashboard-table/dashboard-table";
+import {environment} from "@env/environment";
 
 @Component({
   selector: "app-dashboard-page",
@@ -22,6 +23,7 @@ import { DashboardTableComponent } from "@domains/dashboard/components/dashboard
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPage implements OnInit {
+  protected readonly isDev = !environment.production;
   protected readonly dashboardFacade = inject(DashboardFacade);
   private readonly router = inject(Router);
 

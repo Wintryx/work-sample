@@ -9,7 +9,7 @@ import {mockBackendInterceptor} from "@core/http/mock-backend.interceptor";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {notificationInterceptor} from "@core/notifications/notification.interceptor";
 import {API_BASE_URL} from "@core/http/api.tokens";
-import {environment} from "@env/environment.development";
+import {environment} from "@env/environment";
 
 
 export const appConfig: ApplicationConfig = {

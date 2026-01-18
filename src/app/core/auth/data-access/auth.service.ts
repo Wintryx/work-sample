@@ -195,7 +195,7 @@ export class AuthService {
     const now = Math.floor(Date.now() / 1000);
     const accessToken = this.createFakeJwt({
       iss: this.config.oidcIssuer,
-      aud: "epm-progress-maker",
+      aud: this.config.audience,
       sub: userId,
       preferred_username: params.username,
       iat: now,

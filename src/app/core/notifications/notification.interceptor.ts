@@ -1,9 +1,12 @@
-import {HttpInterceptorFn, HttpResponse} from "@angular/common/http";
-import {inject} from "@angular/core";
-import {tap} from "rxjs";
-import {NotificationService} from "./notification.service";
-import {NOTIFICATION_TICKET} from "./notification.models";
-import {parseErrorMessage} from "@core/http/http-errors";
+import {HttpInterceptorFn, HttpResponse} from '@angular/common/http';
+import {inject} from '@angular/core';
+import {tap} from 'rxjs';
+import {NotificationService} from './notification.service';
+import {NOTIFICATION_TICKET} from './notification.models';
+import {parseErrorMessage} from '@core/http/http-errors';
+
+;
+
 
 export const notificationInterceptor: HttpInterceptorFn = (req, next) => {
   const notificationService = inject(NotificationService);

@@ -7,11 +7,13 @@
     </div>
 
     <!-- Debug Button -->
-    <button mat-stroked-button color="warn" (click)="dashboardFacade.triggerError()" class="!rounded-xl">
-      <mat-icon class="mr-2">bug_report</mat-icon> Simulate Error
-    </button>
+    @if (isDev) {
+      <button (click)="dashboardFacade.triggerError()" color="warn" mat-stroked-button>
+        Simulate Error
+      </button>
+    }
 
-    <button mat-flat-button color="primary" (click)="dashboardFacade.refresh()">
+    <button (click)="dashboardFacade.refresh()" color="primary" mat-flat-button>
       <mat-icon class="mr-2">refresh</mat-icon> Refresh Data
     </button>
   </header>
@@ -27,11 +29,11 @@
   <!-- Main Content Card -->
   <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
     @if (dashboardFacade.isLoading()) {
-    <mat-progress-bar mode="indeterminate" class="absolute top-0 w-full"></mat-progress-bar>
+    <mat-progress-bar class="absolute top-0 w-full" mode="indeterminate"></mat-progress-bar>
     }
 
     <!-- Delegating the complex table rendering to the dumb component -->
-    <app-dashboard-table [items]="dashboardFacade.items()" (selectItem)="navigateToDetail($event)">
+    <app-dashboard-table (selectItem)="navigateToDetail($event)" [items]="dashboardFacade.items()">
     </app-dashboard-table>
 
     <!-- Empty State -->

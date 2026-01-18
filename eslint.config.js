@@ -64,7 +64,7 @@ module.exports = tseslint.config(
       "@angular-eslint/component-selector": ["error", { type: "element", prefix: "app", style: "kebab-case" }],
       "@angular-eslint/prefer-on-push-component-change-detection": "error",
       "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-      "quotes": ["error", "double", { "avoidEscape": true }],
+      "quotes": ["error", "double", { "avoidEscape": true,"allowTemplateLiterals": true }],
       "max-lines": ["error", {
         "max": 600,
         "skipBlankLines": true,

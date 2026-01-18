@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   apiBaseUrl: "/api",
   oidc: {
     issuer: "https://auth.epm-progress-maker.com",

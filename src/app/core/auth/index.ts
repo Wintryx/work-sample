@@ -28,3 +28,10 @@ export * from "./data-access/auth.interceptor";
  * Common types and enums for authentication.
  */
 export * from "./data-access/auth.models";
+
+/**
+ * @internalApi
+ * Configuration Injection Token and Interface.
+ * Required to provide the specific OIDC settings at the application root level.
+ */
+export * from "./auth.config";

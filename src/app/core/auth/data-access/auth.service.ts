@@ -1,6 +1,14 @@
 import {inject, Injectable, PLATFORM_ID, signal} from "@angular/core";
 import {isPlatformBrowser} from "@angular/common";
-import {AUTH_COOKIE_NAME, AUTH_SESSION_KEY, AuthErrorState, AuthResult, AuthState, AuthStatus} from "@core/auth";
+import {
+  AUTH_CONFIG,
+  AUTH_COOKIE_NAME,
+  AUTH_SESSION_KEY,
+  AuthErrorState,
+  AuthResult,
+  AuthState,
+  AuthStatus
+} from "@core/auth";
 import {CookieService} from "@core/services/cookie.service";
 
 /**
@@ -19,12 +27,13 @@ export class AuthService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly cookieService = inject(CookieService);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
-  /** @description OIDC state key used for the fake authorization flow. */
-  private readonly oidcStateKey = "epm_oidc_state";
-  /** @description OIDC nonce key used to simulate replay protection. */
-  private readonly oidcNonceKey = "epm_oidc_nonce";
-  /** @description Fake issuer to emulate an external OIDC provider. */
-  private readonly oidcIssuer = "https://fake-idp.example";
+  private readonly config = inject(AUTH_CONFIG);
+  // /** @description OIDC state key used for the fake authorization flow. */
+  // private readonly oidcStateKey = "epm_oidc_state";
+  // /** @description OIDC nonce key used to simulate replay protection. */
+  // private readonly oidcNonceKey = "epm_oidc_nonce";
+  // /** @description Fake issuer to emulate an external OIDC provider. */
+  // private readonly oidcIssuer = "https://fake-idp.example";
 
   private readonly _state = signal<AuthState>({status: AuthStatus.Unauthenticated});
   readonly state = this._state.asReadonly();
@@ -121,8 +130,8 @@ export class AuthService {
     if (this.isBrowser) {
       localStorage.removeItem(AUTH_SESSION_KEY);
       this.cookieService.delete(AUTH_COOKIE_NAME);
-      sessionStorage.removeItem(this.oidcStateKey);
-      sessionStorage.removeItem(this.oidcNonceKey);
+      sessionStorage.removeItem(this.config.stateKeyPrefix);
+      sessionStorage.removeItem(this.config.nonceKeyPrefix);
     }
     this._state.set({status: AuthStatus.Unauthenticated});
   }
@@ -151,8 +160,8 @@ export class AuthService {
   private startFakeOidcFlow(): { code: string; state: string; nonce: string } {
     const state = this.randomId("state");
     const nonce = this.randomId("nonce");
-    sessionStorage.setItem(this.oidcStateKey, state);
-    sessionStorage.setItem(this.oidcNonceKey, nonce);
+    sessionStorage.setItem(this.config.stateKeyPrefix, state);
+    sessionStorage.setItem(this.config.nonceKeyPrefix, nonce);
 
     return {code: this.randomId("code"), state, nonce};
   }
@@ -179,19 +188,19 @@ export class AuthService {
     nonce: string;
     username: string;
   }): Extract<AuthState, { status: AuthStatus.Authenticated }> {
-    const expectedState = sessionStorage.getItem(this.oidcStateKey);
-    const expectedNonce = sessionStorage.getItem(this.oidcNonceKey);
+    const expectedState = sessionStorage.getItem(this.config.stateKeyPrefix);
+    const expectedNonce = sessionStorage.getItem(this.config.nonceKeyPrefix);
     if (expectedState !== params.state || expectedNonce !== params.nonce) {
       throw new Error("OIDC state/nonce mismatch");
     }
 
-    sessionStorage.removeItem(this.oidcStateKey);
-    sessionStorage.removeItem(this.oidcNonceKey);
+    sessionStorage.removeItem(this.config.stateKeyPrefix);
+    sessionStorage.removeItem(this.config.nonceKeyPrefix);
 
     const userId = `u-${Date.now()}`;
     const now = Math.floor(Date.now() / 1000);
     const accessToken = this.createFakeJwt({
-      iss: this.oidcIssuer,
+      iss: this.config.oidcIssuer,
       aud: "epm-progress-maker",
       sub: userId,
       preferred_username: params.username,

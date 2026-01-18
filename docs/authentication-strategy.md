@@ -24,19 +24,47 @@ To ensure a seamless UX and prevent "Auth-Flicker", we implemented a hybrid stra
 - **Functional Providers**: The `provideAuth()` function in `auth.providers.ts` centralizes dependency injection, making the global `app.config.ts` highly maintainable.
 - **Reactive State**: User data is exposed via read-only **Signals**, allowing for fine-grained reactivity in the Header and other UI elements without manual subscription management.
 
-## 5. Transition to Enterprise Production
-To move from this work sample to a production-ready enterprise product, the following steps are required:
+## 5. Real Keycloak Integration (Angular 21 SSR)
 
-### OIDC Integration
-Replace the mock logic in `AuthService` with a library like `angular-oauth2-oidc`. The `AUTH_CONFIG` token is already prepared to receive real discovery URLs, client IDs, and scopes.
+This project is structured so the mock flow can be replaced by a real OIDC provider with minimal changes.
 
-### Advanced Security
-- **Token Refresh**: Implement silent refresh cycles to keep the user logged in without re-authentication.
-- **CSRF Protection**: Implement XSRF-TOKEN header validation (standard in most Java/Spring or .NET backends).
-- **HttpOnly Cookies**: For maximum security, move the JWT itself into a `SameSite=Strict; HttpOnly` cookie to mitigate XSS risks.
+### 5.1 Dependencies
+Pick one approach:
+- **Recommended**: `keycloak-angular` (wraps `keycloak-js` and adds guards/interceptors)
+- Alternative: `keycloak-js` directly for full control
 
-### Role-Based Access Control (RBAC)
-Extend the `AuthUser` model and `authGuard` to support permission-based routing (e.g., `canMatch: [authGuard], data: { roles: ['ADMIN'] }`).
+### 5.2 Configuration
+Provide Keycloak settings via environment or DI:
+- `url`, `realm`, `clientId`
+- `initOptions`: `onLoad: "check-sso"`, `pkceMethod: "S256"`, `checkLoginIframe: false`
+
+### 5.3 Bootstrapping
+Initialize Keycloak during app startup (e.g. `APP_INITIALIZER` or `provideKeycloak`):
+- Block initial navigation until Keycloak is initialized.
+- Keep `AuthFacade` as the single UI entry point.
+
+### 5.4 AuthService Changes
+- `login()` -> `keycloak.login()` (redirects to Keycloak)
+- `logout()` -> `keycloak.logout()` (SSO logout)
+- Replace fake token with `keycloak.token`
+- Build `AuthState` from `tokenParsed` or `loadUserProfile()`
+- Return `AuthResult` for errors (network, init, expired session)
+
+### 5.5 HTTP Interceptor
+Attach `Authorization: Bearer <token>` for API calls.
+- Refresh token before attaching (`keycloak.updateToken(minValidity)`).
+
+### 5.6 Guards and SSR
+- Client guard: `keycloak.isLoggedIn()` or `AuthFacade.isAuthenticated()`.
+- Server guard (SSR):
+  - Use a server-side session or a lightweight indicator cookie (not a real auth token).
+  - With Angular SSR, protected routes should use `RenderMode.Server` so the server can read the request cookie.
+  - Avoid relying on `localStorage` during SSR.
+
+### 5.7 Security Notes
+- Avoid storing access tokens in `localStorage` for production.
+- Prefer **memory + refresh token** or a **BFF/session cookie** model.
+- If a cookie is used, make it `HttpOnly`, `SameSite=Strict`, and set by the server.
 
 ---
 *Note: This architecture demonstrates a "Security-First" mindset, prioritizing robustness and developer experience (DX) for a team of multiple developers.*

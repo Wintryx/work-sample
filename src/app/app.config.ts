@@ -8,14 +8,18 @@ import {authInterceptor, provideAuth} from "@core/auth";
 import {mockBackendInterceptor} from "@core/http/mock-backend.interceptor";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {notificationInterceptor} from "@core/notifications/notification.interceptor";
+import {API_BASE_URL} from "@core/http/api.tokens";
+import {environment} from "@env/environment.development";
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
+    {provide: API_BASE_URL, useValue: environment.apiBaseUrl},
     provideAuth({
-      oidcIssuer: "https://fake-idp.example",
-      audience: "epm-progress-maker",
+      oidcIssuer: environment.oidc.issuer,
+      audience: environment.oidc.audience,
       stateKeyPrefix: "epm_oidc_state",
       nonceKeyPrefix: "epm_oidc_nonce"
     }),

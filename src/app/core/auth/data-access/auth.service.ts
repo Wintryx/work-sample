@@ -28,44 +28,12 @@ export class AuthService {
   private readonly cookieService = inject(CookieService);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly config = inject(AUTH_CONFIG);
-  // /** @description OIDC state key used for the fake authorization flow. */
-  // private readonly oidcStateKey = "epm_oidc_state";
-  // /** @description OIDC nonce key used to simulate replay protection. */
-  // private readonly oidcNonceKey = "epm_oidc_nonce";
-  // /** @description Fake issuer to emulate an external OIDC provider. */
-  // private readonly oidcIssuer = "https://fake-idp.example";
 
   private readonly _state = signal<AuthState>({status: AuthStatus.Unauthenticated});
   readonly state = this._state.asReadonly();
 
   constructor() {
     this.hydrate();
-  }
-
-  /**
-   * @description
-   * Re-initializes the session state from `localStorage` on application startup.
-   *
-   * This method runs only in the browser (client-side) to restore the user's
-   * previous session, allowing for a seamless "Stay Logged In" experience.
-   * * Note: Server-side validation relies on the `epm_authenticated` cookie instead.
-   */
-  private hydrate(): void {
-    if (!this.isBrowser) return;
-
-    try {
-      const savedSession = localStorage.getItem(AUTH_SESSION_KEY);
-      if (savedSession) {
-        const session = JSON.parse(savedSession) as Extract<
-          AuthState,
-          { status: AuthStatus.Authenticated }
-        >;
-        this._state.set(session);
-      }
-    } catch (e) {
-      console.error("AuthService: Failed to restore session", e);
-      this.logout();
-    }
   }
 
   /**
@@ -142,6 +110,32 @@ export class AuthService {
   getToken(): string | null {
     const s = this._state();
     return s.status === AuthStatus.Authenticated ? s.token : null;
+  }
+
+  /**
+   * @description
+   * Re-initializes the session state from `localStorage` on application startup.
+   *
+   * This method runs only in the browser (client-side) to restore the user's
+   * previous session, allowing for a seamless "Stay Logged In" experience.
+   * * Note: Server-side validation relies on the `epm_authenticated` cookie instead.
+   */
+  private hydrate(): void {
+    if (!this.isBrowser) return;
+
+    try {
+      const savedSession = localStorage.getItem(AUTH_SESSION_KEY);
+      if (savedSession) {
+        const session = JSON.parse(savedSession) as Extract<
+          AuthState,
+          { status: AuthStatus.Authenticated }
+        >;
+        this._state.set(session);
+      }
+    } catch (e) {
+      console.error("AuthService: Failed to restore session", e);
+      this.logout();
+    }
   }
 
   /**

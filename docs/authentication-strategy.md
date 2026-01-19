@@ -21,7 +21,7 @@ Angular 21 executes code on both the server and client. Since `localStorage` is 
 ## 4. Technical Highlights
 
 ### Discriminated Unions for Type Safety
-The `AuthResult` type is implemented as a discriminated union. This forces the compiler to verify that an error `message` or `AuthErrorState` is only accessed if the `success` flag is `false`.
+The `AuthResult` type is based on a generic `Result<T, E>` union. This enforces that error details are only accessible when `ok` is `false`.
 
 ### OIDC Security Simulation
 The `AuthService` simulates a real OIDC "Authorization Code Flow":

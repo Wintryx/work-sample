@@ -1,4 +1,5 @@
 import {InjectionToken} from "@angular/core";
+import {Result} from "@core/types/result";
 
 /**
  * @description Configuration contract for the OIDC/Auth infrastructure.
@@ -54,11 +55,19 @@ export const AuthErrorState = {
 
 export type AuthErrorState = (typeof AuthErrorState)[keyof typeof AuthErrorState];
 
+export interface AuthSuccess {
+    status: AuthStatus.Authenticated;
+}
+
+export interface AuthFailure {
+    status: AuthStatus.Unauthenticated;
+    authErrorState: AuthErrorState;
+    message: string;
+}
+
 /**
  * @description
  * Discriminated Union for Auth results.
- * Provides absolute type safety for success and error branches.
+ * Provides absolute type safety for ok/error branches.
  */
-export type AuthResult =
-    | { success: true; status: AuthStatus.Authenticated; }
-    | { success: false; status: AuthStatus.Unauthenticated; authErrorState: AuthErrorState; message: string };
+export type AuthResult = Result<AuthSuccess, AuthFailure>;

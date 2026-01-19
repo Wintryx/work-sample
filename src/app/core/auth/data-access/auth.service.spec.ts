@@ -49,10 +49,10 @@ describe("AuthService", () => {
         const service = TestBed.inject(AuthService);
         const result = service.login("Arne", "wrong");
 
-        expect(result.success).toBe(false);
-        if (!result.success) {
-            expect(result.authErrorState).toBe(AuthErrorState.INVALID_PASSWORD);
-            expect(result.status).toBe(AuthStatus.Unauthenticated);
+        expect(result.ok).toBe(false);
+        if (!result.ok) {
+            expect(result.error.authErrorState).toBe(AuthErrorState.INVALID_PASSWORD);
+            expect(result.error.status).toBe(AuthStatus.Unauthenticated);
         }
         expect(cookieServiceMock.set).not.toHaveBeenCalled();
     });
@@ -61,7 +61,7 @@ describe("AuthService", () => {
         const service = TestBed.inject(AuthService);
         const result = service.login("Arne", "epm");
 
-        expect(result.success).toBe(true);
+        expect(result.ok).toBe(true);
         expect(service.state().status).toBe(AuthStatus.Authenticated);
         expect(cookieServiceMock.set).toHaveBeenCalledWith(AUTH_COOKIE_NAME, "true");
         expect(localStorage.getItem(AUTH_SESSION_KEY)).not.toBeNull();

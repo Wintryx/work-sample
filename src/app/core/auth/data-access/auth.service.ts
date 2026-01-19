@@ -58,18 +58,22 @@ export class AuthService {
             console.warn("AuthService: Invalid password for mock login");
             this.logout();
             return {
-                success: false,
-                status: AuthStatus.Unauthenticated,
-                authErrorState: AuthErrorState.INVALID_PASSWORD,
-                message: "Invalid password. Hint: epm."
+                ok: false,
+                error: {
+                    status: AuthStatus.Unauthenticated,
+                    authErrorState: AuthErrorState.INVALID_PASSWORD,
+                    message: "Invalid password. Hint: epm."
+                },
             };
         }
         if (!this.isBrowser) {
             return {
-                success: false,
-                status: AuthStatus.Unauthenticated,
-                authErrorState: AuthErrorState.BROWSER_ONLY,
-                message: "Login is only available in the browser."
+                ok: false,
+                error: {
+                    status: AuthStatus.Unauthenticated,
+                    authErrorState: AuthErrorState.BROWSER_ONLY,
+                    message: "Login is only available in the browser."
+                },
             };
         }
 
@@ -80,15 +84,22 @@ export class AuthService {
             localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
             this.cookieService.set(AUTH_COOKIE_NAME, "true");
             this._state.set(session);
-            return {success: true, status: AuthStatus.Authenticated};
+            return {
+                ok: true,
+                value: {
+                    status: AuthStatus.Authenticated,
+                },
+            };
         } catch (e) {
             console.error("AuthService: Fake OIDC login failed", e);
             this.logout();
             return {
-                success: false,
-                status: AuthStatus.Unauthenticated,
-                authErrorState: AuthErrorState.OIDC_FLOW_FAILED,
-                message: "Login failed. Please try again."
+                ok: false,
+                error: {
+                    status: AuthStatus.Unauthenticated,
+                    authErrorState: AuthErrorState.OIDC_FLOW_FAILED,
+                    message: "Login failed. Please try again."
+                },
             };
         }
     }

@@ -8,6 +8,17 @@ This document lists planned improvements to move the work sample toward a produc
    - The mock interceptor is registered globally and will mask real API calls in production.
    - Plan: only register the mock interceptor in development builds or behind a feature flag.
 
+## Type-system refinements (planned)
+1. Enum/union consistency
+   - Standardize on either `enum` or `as const` unions for error/status types.
+   - Applies to `AuthErrorState`, `NotificationType`, and future domain types.
+2. DTO vs domain model separation
+   - Introduce `DashboardItem` as a domain model and map from `DashboardItemDto`.
+   - Reduces coupling to API response shapes.
+3. Typed API error codes
+   - Make `ApiError` generic (`ApiError<TCode extends string>`).
+   - Enables domain-specific error code enums.
+
 ## Completed
 1. SSR auth guard strictness
    - Missing or invalid cookies now redirect to `/login` during SSR.
@@ -20,6 +31,10 @@ This document lists planned improvements to move the work sample toward a produc
 4. Shared UI decoupling
    - `shared/ui/status-badge` now uses a generic UI variant enum.
    - Domain-specific status mapping lives in the dashboard presentation layer.
+5. Loadable state abstraction
+   - Added a generic `LoadableState<T>` to avoid repeated data/loading/loaded/error shapes.
+6. Generic result type
+   - Introduced `Result<T, E>` and migrated `AuthResult` to use it.
 
 ## Secondary refinements
 - Notification registry safety: add a UUID fallback when `crypto.randomUUID` is unavailable.

@@ -1,40 +1,41 @@
 # State Management Strategy
 
-## 1. Angular Signals (Primary)
-We leverage **Angular Signals** for local and global state management to benefit from:
-- Fine-grained reactivity and better performance.
-- Simplified component code (no manual subscription management).
-- Clean integration with `computed` values.
+## 1. Core Philosophy: Reactive & Encapsulated
+To support a team of 2+ developers, we follow a **Signals-first** approach combined with the **Facade Pattern**. This ensures a unidirectional data flow and strict encapsulation of business logic.
 
-## 2. Facade Pattern
-To decouple UI components from state complexity, we use **Facades**:
-- **State Hiding**: Components don't know if data comes from a Signal, RxJS, or a Cache.
-- **Abstraction**: Services handle raw data; Facades provide `computed` signals for the UI.
+## 2. Angular Signals (Primary State)
+We leverage **Angular 21 Signals** as our primary state mechanism to achieve:
+- **Fine-grained Reactivity**: Only the parts of the UI that depend on a specific Signal are re-rendered.
+- **Improved Performance**: Minimal change detection cycles compared to traditional `zone.js` checks.
+- **Subscription-Free UI**: Components consume state via `computed()` selectors, eliminating the need for manual `async` pipes or `unsubscribe` logic.
 
-## 3. RxJS (Secondary)
-RxJS is used strictly for **asynchronous event streams** (HTTP requests, WebSocket, search debouncing).
-We subscribe and update Signals inside the Facade layer to keep the UI reactive without manual subscriptions.
+## 3. The Facade Pattern (Application Layer)
+To decouple the Presentation Layer from state complexity, every domain (e.g., `Dashboard`, `Auth`) uses a **Facade**:
+- **Encapsulation**: Writable signals (`_state`) are kept private. Components only access read-only computed signals.
+- **Orchestration**: Facades coordinate between the `HttpClient` and the local state.
+- **Self-Healing Logic**: Facades implement "Lazy-Load" triggers. If a component accesses data that hasn't been initialized yet (e.g., on a browser refresh), the Facade automatically triggers a background fetch.
 
-## 4. Signal Ownership & Encapsulation
-- Services keep writable signals private and expose read-only versions.
-- Components should only read from `computed` selectors or `asReadonly()` signals.
+## 4. RxJS Integration (Asynchronous Streams)
+RxJS remains the standard for **asynchronous event streams**. We follow a "Stream-to-Signal" pattern:
+- **Fetch & Convert**: Data is fetched via RxJS Observables. Within the Facade, we subscribe to these streams and update our Signals in the `next` block.
+- **Resource Safety**: We use the `takeUntilDestroyed()` operator combined with `inject(DestroyRef)` to ensure all streams are closed when the consuming context is destroyed, preventing memory leaks.
 
-## 5. Mutable Data Structures
-- When a signal holds a mutable structure (e.g., `Map`), always clone on updates.
-- This ensures change detection and keeps updates predictable.
+## 5. Advanced State Patterns used in this Project
 
-## 6. Computed Side-Effects
-- Avoid direct side-effects inside `computed()`.
-- If a computed selector must trigger a fetch (e.g., self-healing state), defer the call using `setTimeout`.
+### Transactional Registry (Ticket-System)
+For global notifications, we use a **Reactive Map within a Signal**.
+- Actions are registered with a unique `Ticket ID`.
+- This prevents race conditions in complex UIs where multiple asynchronous operations occur simultaneously.
 
-## 7. Input Signals for Routing
-- Use `input.required()` and `withComponentInputBinding()` for route parameters.
-- Compute derived state from route input signals instead of injecting `ActivatedRoute` directly.
+### Signal-based Routing Inputs
+We utilize Angular's modern `withComponentInputBinding()` feature.
+- Route parameters (like `:id`) are injected directly into components as **Signal Inputs** (`input.required()`).
+- This allows the UI to derive state reactively: `item = computed(() => facade.items().find(i => i.id === id()))`.
 
-## 8. Time-Based Signals
-- Use `DestroyRef` to clean up timers or intervals tied to Signals.
-- Prevents memory leaks in long-lived layout components.
+### Isomorphic State (SSR Synchronization)
+To handle the "Hydration Gap" in SSR:
+- The **Auth State** is synchronized between the Server and Client using a combination of **Cookies** (visible to the server) and **localStorage** (client-side persistence).
 
-## 9. Persistent State
-- Auth state is hydrated from `localStorage` on the client.
-- A lightweight cookie is used as an SSR bridge to avoid auth flicker.
+## 6. Coding Standards
+- **Immutability**: When updating Signals that hold objects or arrays, we always create new references (using the spread operator or new Map instances) to ensure proper change detection.
+- **Side-Effect Management**: We avoid placing side-effects inside `computed()` signals. For automated triggers, we use `setTimeout` or Angular `effect()` in a controlled lifecycle context.

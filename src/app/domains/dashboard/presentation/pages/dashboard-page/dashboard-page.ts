@@ -4,8 +4,8 @@ import {Router} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
-import {DashboardFacade} from "../dashboard.facade";
-import {DashboardTableComponent} from "@domains/dashboard/components/dashboard-table/dashboard-table";
+import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
+import {DashboardTableComponent} from "@domains/dashboard/presentation/components/dashboard-table/dashboard-table";
 import {environment} from "@env/environment";
 
 @Component({

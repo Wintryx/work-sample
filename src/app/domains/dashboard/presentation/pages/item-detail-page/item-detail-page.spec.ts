@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {provideRouter, RouterLink} from "@angular/router";
 import {beforeEach, describe, expect, it} from "vitest";
 import {ItemDetailPage} from "./item-detail-page";
-import {DashboardFacade} from "../dashboard.facade";
+import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
 import {signal} from "@angular/core";
 import {DashboardItemDto, ItemStatus} from "@domains/dashboard";
 import {By} from "@angular/platform-browser";
@@ -80,4 +80,3 @@ describe("ItemDetailPage", () => {
         expect(backLink.attributes["routerLink"]).toBe("/dashboard");
     });
 });
-

@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {Router} from "@angular/router";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {DashboardPage} from "./dashboard-page";
-import {DashboardFacade} from "../dashboard.facade";
+import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
 import {signal} from "@angular/core";
 import {DashboardItemDto} from "@domains/dashboard";
 

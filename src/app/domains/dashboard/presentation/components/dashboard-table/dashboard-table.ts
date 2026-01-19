@@ -5,7 +5,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { StatusBadgeComponent } from "@shared/ui/status-badge/status-badge";
-import { DashboardItemDto } from "@domains/dashboard";
+import { DashboardItemDto } from "@domains/dashboard/domain/dashboard.models";
 
 /**
  * @description

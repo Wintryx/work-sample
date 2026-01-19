@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ItemStatus } from "@domains/dashboard/dashboard.models";
+import { ItemStatus } from "@domains/dashboard/domain/dashboard.models";
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 /**

@@ -5,7 +5,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatCardModule } from "@angular/material/card";
 import { StatusBadgeComponent } from "@shared/ui/status-badge/status-badge";
-import { DashboardFacade } from "../dashboard.facade";
+import { DashboardFacade } from "@domains/dashboard/application/dashboard.facade";
 
 @Component({
   selector: "app-item-detail-page",

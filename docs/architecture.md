@@ -4,7 +4,8 @@
 To support a team of 2 developers and ensure scalability, the project follows a **Domain-Driven Design (DDD)** approach within the Angular workspace.
 
 - **`core/`**: Global, singleton infrastructure (Auth, HTTP, Notifications, Guards).
-- **`domains/`**: Business-specific features. Each domain is self-contained.
+- **`domains/`**: Business-specific features. Each domain is self-contained and split into
+  `domain/` (models/logic), `application/` (facades/use-cases), and `presentation/` (pages/components/routes).
 - **`shared/`**: Reusable UI components, pipes, and directives without business logic.
 
 ## 2. Standalone Components & Public API

@@ -4,7 +4,7 @@ import {beforeEach, describe, expect, it, vi} from "vitest";
 import {DashboardPage} from "./dashboard-page";
 import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
 import {signal} from "@angular/core";
-import {DashboardItemDto} from "@domains/dashboard";
+import {DashboardItem} from "@domains/dashboard";
 
 /**
  * @description
@@ -18,7 +18,7 @@ describe("DashboardPage", () => {
 
     // Fix: Explicitly type the mock signals to avoid TS2345
     const facadeMock = {
-        items: signal<DashboardItemDto[]>([]),
+        items: signal<DashboardItem[]>([]),
         isLoading: signal<boolean>(false),
         error: signal<string | null>(null),
         hasItems: signal<boolean>(false)

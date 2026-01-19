@@ -5,7 +5,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { StatusBadgeComponent } from "@shared/ui/status-badge/status-badge";
-import { DashboardItemDto, ItemStatus } from "@domains/dashboard/domain/dashboard.models";
+import { DashboardItem, ItemStatus } from "@domains/dashboard/domain/dashboard.models";
 import {
   DASHBOARD_STATUS_BADGE_MAP,
   DashboardStatusBadge,
@@ -32,7 +32,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardTableComponent {
-  readonly items = input.required<DashboardItemDto[]>();
+  readonly items = input.required<DashboardItem[]>();
   readonly selectItem = output<string>();
 
   protected readonly statusBadgeMap = DASHBOARD_STATUS_BADGE_MAP;

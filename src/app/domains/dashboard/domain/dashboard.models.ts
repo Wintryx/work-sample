@@ -22,3 +22,14 @@ export interface DashboardItemDto {
   status: ItemStatus;
   progress: number;
 }
+
+/**
+ * @description
+ * Domain model used by the UI and application layer.
+ */
+export interface DashboardItem {
+  id: string;
+  title: string;
+  status: ItemStatus;
+  progress: number;
+}

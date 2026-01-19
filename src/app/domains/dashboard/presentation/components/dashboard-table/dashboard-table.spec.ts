@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {DashboardTableComponent} from "./dashboard-table";
-import {DashboardItemDto, ItemStatus} from "@domains/dashboard";
+import {DashboardItem, ItemStatus} from "@domains/dashboard";
 
 /**
  * @description
@@ -13,7 +13,7 @@ describe("DashboardTableComponent", () => {
     let fixture: ComponentFixture<DashboardTableComponent>;
 
     // Mock Data
-    const mockItems: DashboardItemDto[] = [
+    const mockItems: DashboardItem[] = [
         {id: "1", title: "Test Item 1", status: ItemStatus.Done, progress: 100},
         {id: "2", title: "Test Item 2", status: ItemStatus.Todo, progress: 0},
     ];

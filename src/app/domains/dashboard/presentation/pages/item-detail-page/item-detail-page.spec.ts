@@ -4,7 +4,7 @@ import {beforeEach, describe, expect, it} from "vitest";
 import {ItemDetailPage} from "./item-detail-page";
 import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
 import {signal} from "@angular/core";
-import {DashboardItemDto, ItemStatus} from "@domains/dashboard";
+import {DashboardItem, ItemStatus} from "@domains/dashboard";
 import {By} from "@angular/platform-browser";
 
 /**
@@ -16,7 +16,7 @@ describe("ItemDetailPage", () => {
     let fixture: ComponentFixture<ItemDetailPage>;
 
     // Tip: Ensure mock data is strictly typed
-    const MOCK_ITEM: DashboardItemDto = {
+    const MOCK_ITEM: DashboardItem = {
         id: "p-101",
         title: "Mock Feature",
         status: ItemStatus.InProgress,
@@ -25,7 +25,7 @@ describe("ItemDetailPage", () => {
 
     const facadeMock = {
         // Initializing with the mock data to avoid 'Not Found' state during first render
-        items: signal<DashboardItemDto[]>([MOCK_ITEM]),
+        items: signal<DashboardItem[]>([MOCK_ITEM]),
     };
 
     beforeEach(async () => {

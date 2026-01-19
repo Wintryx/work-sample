@@ -1,22 +1,69 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import {ComponentFixture, TestBed} from "@angular/core/testing";
+import {By} from "@angular/platform-browser";
+import {beforeEach, describe, expect, it, vi} from "vitest";
+import {LoginPage} from "./login-page";
+import {AuthFacade} from "@core/auth";
 
-import { LoginPage } from "./login-page";
+/**
+ * @description
+ * Unit tests for LoginPage.
+ * Validates form behavior and login submission flow.
+ */
 
 describe("LoginPage", () => {
-  let component: LoginPage;
-  let fixture: ComponentFixture<LoginPage>;
+    let component: LoginPage;
+    let fixture: ComponentFixture<LoginPage>;
+    let authFacadeMock: { login: ReturnType<typeof vi.fn> };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [LoginPage],
-    }).compileComponents();
+    beforeEach(async () => {
+        authFacadeMock = {login: vi.fn()};
 
-    fixture = TestBed.createComponent(LoginPage);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
-  });
+        await TestBed.configureTestingModule({
+            imports: [LoginPage],
+            providers: [{provide: AuthFacade, useValue: authFacadeMock}],
+        }).compileComponents();
 
-  it("should create", () => {
-    expect(component).toBeTruthy();
-  });
+        fixture = TestBed.createComponent(LoginPage);
+        component = fixture.componentInstance;
+        await fixture.whenStable();
+    });
+
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
+
+    it("should call AuthFacade.login on valid submit", () => {
+        const form = (component as unknown as { loginForm: typeof component["loginForm"] }).loginForm;
+        form.setValue({username: "Jane", password: "epm"});
+        fixture.detectChanges();
+
+        const formDebug = fixture.debugElement.query(By.css("form"));
+        formDebug.triggerEventHandler("ngSubmit", {});
+
+        expect(authFacadeMock.login).toHaveBeenCalledWith("Jane", "epm");
+    });
+
+    it("should not call AuthFacade.login when form is invalid", () => {
+        const form = (component as unknown as { loginForm: typeof component["loginForm"] }).loginForm;
+        form.setValue({username: "", password: "epm"});
+        fixture.detectChanges();
+
+        const formDebug = fixture.debugElement.query(By.css("form"));
+        formDebug.triggerEventHandler("ngSubmit", {});
+
+        expect(authFacadeMock.login).not.toHaveBeenCalled();
+    });
+
+    it("should disable submit button when form is invalid", () => {
+        const form = (component as unknown as { loginForm: typeof component["loginForm"] }).loginForm;
+        form.setValue({username: "", password: "epm"});
+        fixture.detectChanges();
+
+        const button = fixture.nativeElement.querySelector(
+            "button[type='submit']",
+        ) as HTMLButtonElement;
+
+        expect(button.disabled).toBe(true);
+    });
 });
+

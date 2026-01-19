@@ -1,7 +1,7 @@
-<div class="space-y-6">
+<div class="item-view-container space-y-6">
   <!-- Back Action -->
   <nav>
-    <button mat-button routerLink="/dashboard" class="!text-slate-500 hover:!text-slate-900">
+    <button class="!text-slate-500 hover:!text-slate-900" mat-button routerLink="/dashboard">
       <mat-icon class="mr-1">arrow_back</mat-icon> Back to Dashboard
     </button>
   </nav>
@@ -17,7 +17,7 @@
         <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest"
           >Feature Detail</span
         >
-        <h2 class="text-3xl font-black text-slate-900 tracking-tight">{{ data.title }}</h2>
+        <h2 class="main-title text-3xl font-black text-slate-900 tracking-tight">{{ data.title }}</h2>
       </div>
       <app-status-badge [status]="data.status"></app-status-badge>
     </div>
@@ -40,8 +40,8 @@
             <span class="text-2xl font-bold text-slate-900">{{ data.progress }}%</span>
             <div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
               <div
-                class="h-full bg-indigo-600 transition-all duration-1000"
                 [style.width.%]="data.progress"
+                class="h-full bg-indigo-600 transition-all duration-1000"
               ></div>
             </div>
           </div>

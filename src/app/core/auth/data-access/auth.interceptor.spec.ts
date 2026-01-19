@@ -7,63 +7,52 @@ import {AuthService} from "./auth.service";
 
 /**
  * @description
- * Unit tests for the functional Auth Interceptor.
- * Validates the injection of the Authorization header using Vitest and HttpTestingController.
+ * Integration test for the functional Auth Interceptor.
+ * Ensures that security tokens are correctly injected into outgoing requests.
  */
 describe("authInterceptor", () => {
-  let httpClient: HttpClient;
-  let httpMock: HttpTestingController;
+    let httpClient: HttpClient;
+    let httpMock: HttpTestingController;
 
-  /**
-   * @description
-   * Vitest mock for the AuthService.
-   * We mock getToken to simulate different authentication states.
-   */
-  const authServiceMock = {
-    getToken: vi.fn(),
-  };
+    // Create a clean mock for the AuthService using Vitest spies
+    const authServiceMock = {
+        getToken: vi.fn()
+    };
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        {provide: AuthService, useValue: authServiceMock},
-        provideHttpClient(withInterceptors([authInterceptor])),
-        provideHttpClientTesting(),
-      ],
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [
+                {provide: AuthService, useValue: authServiceMock},
+                provideHttpClient(withInterceptors([authInterceptor])),
+                provideHttpClientTesting(),
+            ],
+        });
+
+        httpClient = TestBed.inject(HttpClient);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
-    httpClient = TestBed.inject(HttpClient);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
+    afterEach(() => {
+        httpMock.verify(); // Ensures no outstanding requests remain
+        vi.clearAllMocks();
+    });
 
-  afterEach(() => {
-    httpMock.verify();
-    // ensure that the call history of our spies is reset between tests.
-    vi.clearAllMocks();
-  });
+    it("should append Authorization header if a token is available", () => {
+        const mockToken = "eyJhbGci.mock.token";
+        authServiceMock.getToken.mockReturnValue(mockToken);
 
-  it("should append Authorization header if token is present", () => {
-    // Arrange
-    const mockToken = "senior-level-token-123";
-    authServiceMock.getToken.mockReturnValue(mockToken);
+        httpClient.get("/api/secure-data").subscribe();
 
-    // Act
-    httpClient.get("/api/resource").subscribe();
+        const req = httpMock.expectOne("/api/secure-data");
+        expect(req.request.headers.get("Authorization")).toBe(`Bearer ${mockToken}`);
+    });
 
-    // Assert
-    const req = httpMock.expectOne("/api/resource");
-    expect(req.request.headers.get("Authorization")).toBe(`Bearer ${mockToken}`);
-  });
+    it("should NOT append Authorization header if token is missing", () => {
+        authServiceMock.getToken.mockReturnValue(null);
 
-  it("should NOT append Authorization header if token is missing", () => {
-    // Arrange
-    authServiceMock.getToken.mockReturnValue(null);
+        httpClient.get("/api/public-data").subscribe();
 
-    // Act
-    httpClient.get("/api/resource").subscribe();
-
-    // Assert
-    const req = httpMock.expectOne("/api/resource");
-    expect(req.request.headers.has("Authorization")).toBe(false);
-  });
+        const req = httpMock.expectOne("/api/public-data");
+        expect(req.request.headers.has("Authorization")).toBe(false);
+    });
 });

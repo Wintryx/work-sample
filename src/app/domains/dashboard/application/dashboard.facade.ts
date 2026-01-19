@@ -59,13 +59,33 @@ export class DashboardFacade {
    * Ensures data is loaded once, returning the current list for SSR-safe resolvers.
    */
   ensureLoaded(): Observable<DashboardItemDto[]> {
+    return this.fetchItems$(null);
+  }
+
+  /**
+   * @description Fetches items from the mock backend.
+   */
+  loadItems(ticketId: string | null = null): void {
+    this.fetchItems$(ticketId, true)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+  }
+
+  /**
+   * @description
+   * Shared data-loading pipeline for initial loads and forced refreshes.
+   * Avoids duplicate state transitions and keeps SSR resolvers consistent.
+   */
+  private fetchItems$(ticketId: string | null, force = false): Observable<DashboardItemDto[]> {
     const state = this._state();
-    if (state.loaded || state.loading) return of(state.items);
+    if (state.loading) return of(state.items);
+    if (!force && state.loaded) return of(state.items);
 
     this._state.update((s) => ({...s, loading: true, error: null}));
     const url = `${this.baseUrl}/dashboard/items`;
+    const context = ticketId ? new HttpContext().set(NOTIFICATION_TICKET, ticketId) : undefined;
 
-    return this.http.get<DashboardItemDto[]>(url).pipe(
+    return this.http.get<DashboardItemDto[]>(url, {context}).pipe(
       tap((items) => {
         this._state.update((s) => ({...s, items, loaded: true}));
       }),
@@ -78,35 +98,6 @@ export class DashboardFacade {
         this._state.update((s) => ({...s, loading: false}));
       }),
     );
-  }
-
-  /**
-   * @description Fetches items from the mock backend.
-   */
-  loadItems(ticketId: string | null = null): void {
-    this._state.update((s) => ({...s, loading: true, error: null}));
-
-    const url = `${this.baseUrl}/dashboard/items`;
-
-    const context = new HttpContext().set(NOTIFICATION_TICKET, ticketId);
-
-    this.http
-      .get<DashboardItemDto[]>(url, {context})
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => {
-          this._state.update((s) => ({...s, loading: false}));
-        }),
-      )
-      .subscribe({
-        next: (items) => {
-          this._state.update((s) => ({...s, items, loaded: true}));
-        },
-        error: (err: unknown) => {
-          const message = parseErrorMessage(err, "Failed to load dashboard data");
-          this._state.update((s) => ({...s, error: message}));
-        },
-      });
   }
 
   /**

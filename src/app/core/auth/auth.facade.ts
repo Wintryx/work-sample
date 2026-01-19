@@ -16,42 +16,38 @@ import {NotificationService} from "@core/notifications/notification.service";
  */
 @Injectable({providedIn: "root"})
 export class AuthFacade {
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router); // Router injizieren
-  private readonly notificationService = inject(NotificationService);
+    private readonly authService = inject(AuthService);
+    // Computed signals for reactive UI updates
+    readonly user = computed(() => {
+        const s = this.authService.state();
+        return s.status === AuthStatus.Authenticated ? s.user : null;
+    });
+    public readonly isAuthenticated = this.authService.isAuthenticated;
+    private readonly router = inject(Router); // Router injizieren
+    private readonly notificationService = inject(NotificationService);
 
-  // Computed signals for reactive UI updates
-  readonly user = computed(() => {
-    const s = this.authService.state();
-    return s.status === AuthStatus.Authenticated ? s.user : null;
-  });
-
-  readonly isAuthenticated = computed(
-    () => this.authService.state().status === AuthStatus.Authenticated,
-  );
-
-  /**
-   * @description
-   * Attempts login via AuthService, shows a snackbar on failure, and redirects on success.
-   */
-  login(username: string, password: string): void {
-    const result = this.authService.login(username, password);
-    if (!result.success) {
-      this.notificationService.fail(null, result.message);
-      return;
+    /**
+     * @description
+     * Attempts login via AuthService, shows a snackbar on failure, and redirects on success.
+     */
+    login(username: string, password: string): void {
+        const result = this.authService.login(username, password);
+        if (!result.success) {
+            this.notificationService.fail(null, result.message);
+            return;
+        }
+        // Centralized redirect after login
+        this.router.navigate(["/dashboard"]);
     }
-    // Centralized redirect after login
-    this.router.navigate(["/dashboard"]);
-  }
 
-  /**
-   * @description
-   * Centralized logout logic.
-   * Clears the state and ensures the user is redirected to a public page.
-   */
-  logout(): void {
-    this.authService.logout();
-    // Ensure the user is kicked out of protected areas immediately.
-    this.router.navigate(["/login"]);
-  }
+    /**
+     * @description
+     * Centralized logout logic.
+     * Clears the state and ensures the user is redirected to a public page.
+     */
+    logout(): void {
+        this.authService.logout();
+        // Ensure the user is kicked out of protected areas immediately.
+        this.router.navigate(["/login"]);
+    }
 }

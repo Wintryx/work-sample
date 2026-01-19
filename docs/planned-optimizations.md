@@ -8,10 +8,6 @@ This document lists planned improvements to move the work sample toward a produc
    - The mock interceptor is registered globally and will mask real API calls in production.
    - Plan: only register the mock interceptor in development builds or behind a feature flag.
 
-2. Fix shared-layer dependency on domain models
-   - `shared/ui/status-badge` imports `ItemStatus` from the dashboard domain.
-   - Plan: move the status type to a shared contract (or pass a string union) and keep shared UI domain-agnostic.
-
 ## Completed
 1. SSR auth guard strictness
    - Missing or invalid cookies now redirect to `/login` during SSR.
@@ -21,6 +17,9 @@ This document lists planned improvements to move the work sample toward a produc
 3. Resolver-driven dashboard loading
    - Initial data loads moved to route resolvers with a `loaded` flag.
    - Side-effects removed from `computed()`, with in-flight request deduplication.
+4. Shared UI decoupling
+   - `shared/ui/status-badge` now uses a generic UI variant enum.
+   - Domain-specific status mapping lives in the dashboard presentation layer.
 
 ## Secondary refinements
 - Notification registry safety: add a UUID fallback when `crypto.randomUUID` is unavailable.
@@ -35,4 +34,3 @@ This document lists planned improvements to move the work sample toward a produc
 
 ## Done criteria (remaining)
 - Production builds do not include the mock backend.
-- Shared UI components have no domain imports.

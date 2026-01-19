@@ -22,7 +22,10 @@
     </th>
     <td mat-cell *matCellDef="let item">
       <!-- Reusing the shared component -->
-      <app-status-badge [status]="item.status"></app-status-badge>
+      <app-status-badge
+        [variant]="statusBadgeFor(item.status).variant"
+        [label]="statusBadgeFor(item.status).label"
+      ></app-status-badge>
     </td>
   </ng-container>
 

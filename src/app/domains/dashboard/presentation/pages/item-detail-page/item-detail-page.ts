@@ -6,6 +6,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatCardModule} from "@angular/material/card";
 import {StatusBadgeComponent} from "@shared/ui/status-badge/status-badge";
 import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
+import {DASHBOARD_STATUS_BADGE_MAP} from "@domains/dashboard/presentation/dashboard.status-badge";
 
 @Component({
     selector: "app-item-detail-page",
@@ -30,6 +31,7 @@ export class ItemDetailPage {
      */
     readonly id = input.required<string>();
     private readonly dashboardFacade = inject(DashboardFacade);
+    protected readonly statusBadgeMap = DASHBOARD_STATUS_BADGE_MAP;
     /**
      * We reactively find the item in our facade state.
      */

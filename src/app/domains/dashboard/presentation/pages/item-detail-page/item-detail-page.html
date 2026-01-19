@@ -19,7 +19,10 @@
         >
         <h2 class="main-title text-3xl font-black text-slate-900 tracking-tight">{{ data.title }}</h2>
       </div>
-      <app-status-badge [status]="data.status"></app-status-badge>
+      <app-status-badge
+        [variant]="statusBadgeMap[data.status].variant"
+        [label]="statusBadgeMap[data.status].label"
+      ></app-status-badge>
     </div>
 
     <!-- Content -->

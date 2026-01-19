@@ -5,7 +5,11 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { StatusBadgeComponent } from "@shared/ui/status-badge/status-badge";
-import { DashboardItemDto } from "@domains/dashboard/domain/dashboard.models";
+import { DashboardItemDto, ItemStatus } from "@domains/dashboard/domain/dashboard.models";
+import {
+  DASHBOARD_STATUS_BADGE_MAP,
+  DashboardStatusBadge,
+} from "@domains/dashboard/presentation/dashboard.status-badge";
 
 /**
  * @description
@@ -31,5 +35,14 @@ export class DashboardTableComponent {
   readonly items = input.required<DashboardItemDto[]>();
   readonly selectItem = output<string>();
 
+  protected readonly statusBadgeMap = DASHBOARD_STATUS_BADGE_MAP;
   protected readonly displayedColumns = ["id", "title", "status", "progress", "actions"];
+
+  /**
+   * @description
+   * Converts a domain status into a UI badge config in a strictly typed way.
+   */
+  protected statusBadgeFor(status: ItemStatus): DashboardStatusBadge {
+    return this.statusBadgeMap[status];
+  }
 }

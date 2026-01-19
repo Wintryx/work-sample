@@ -27,98 +27,105 @@ import {parseErrorMessage} from "@core/http/http-errors";
  * @description Internal state for the Dashboard.
  */
 interface DashboardState {
-  items: DashboardItemDto[];
-  loading: boolean;
-  error: string | null;
+    items: DashboardItemDto[];
+    loading: boolean;
+    error: string | null;
 }
 
 @Injectable({providedIn: "root"})
 export class DashboardFacade {
-  private readonly http = inject(HttpClient);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly baseUrl = inject(API_BASE_URL);
-  private readonly notificationService = inject(NotificationService);
+    private readonly http = inject(HttpClient);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly baseUrl = inject(API_BASE_URL);
+    private readonly notificationService = inject(NotificationService);
 
-  private readonly _state = signal<DashboardState>({
-    items: [],
-    loading: false,
-    error: null,
-  });
+    private readonly _state = signal<DashboardState>({
+        items: [],
+        loading: false,
+        error: null,
+    });
 
-  // Public Signals for the UI (Computed to ensure read-only access)
-  readonly items = computed(() => {
-    const state = this._state();
+    // Public Signals for the UI (Computed to ensure read-only access)
+    readonly items = computed(() => {
+        const state = this._state();
 
-    // Tip: Self-healing state.
-    // If someone accesses items but they are empty and we aren't already loading, trigger a load.
-    if (state.items.length === 0 && !state.loading && !state.error) {
-      // We use untracked or a setTimeout to avoid "computed side-effects" warnings
-      setTimeout(() => this.loadItems());
+        // Tip: Self-healing state.
+        // If someone accesses items but they are empty and we aren't already loading, trigger a load.
+        if (state.items.length === 0 && !state.loading && !state.error) {
+            // We use untracked or a setTimeout to avoid "computed side-effects" warnings
+            setTimeout(() => this.loadItems());
+        }
+
+        return state.items;
+    });
+
+    readonly isLoading = computed(() => this._state().loading);
+    readonly error = computed(() => this._state().error);
+    readonly hasItems = computed(() => this._state().items.length > 0);
+
+    /**
+     * @description Fetches items from the mock backend.
+     */
+    loadItems(ticketId: string | null = null): void {
+        this._state.update((s) => ({...s, loading: true, error: null}));
+
+        const url = `${this.baseUrl}/dashboard/items`;
+
+        const context = new HttpContext().set(NOTIFICATION_TICKET, ticketId);
+
+        this.http
+            .get<DashboardItemDto[]>(url, {context})
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this._state.update((s) => ({...s, loading: false}));
+                }),
+            )
+            .subscribe({
+                next: (items) => {
+                    this._state.update((s) => ({...s, items}));
+                },
+                error: (err: unknown) => {
+                    const message = parseErrorMessage(err, "Failed to load dashboard data");
+                    this._state.update((s) => ({...s, error: message}));
+                },
+            });
     }
 
-    return state.items;
-  });
+    /**
+     * @description Example of a domain-specific action.
+     */
+    refresh(): void {
+        const ticket = this.notificationService.register({
+            message: "Dashboard data updated.",
+            type: NotificationTypeEnum.Success,
+            clearExisting: true,
+        });
+        this.loadItems(ticket);
+    }
 
-  readonly isLoading = computed(() => this._state().loading);
-  readonly error = computed(() => this._state().error);
-  readonly hasItems = computed(() => this._state().items.length > 0);
+    /**
+     * @description
+     * Debug method to simulate a failing API request.
+     * Demonstrates automated error toast via notificationInterceptor.
+     */
+    triggerError(): void {
+        // We don't even need a ticket here, because our interceptor
+        // catches ALL HttpErrors if we want, or we use a System ticket.
+        const url = `${this.baseUrl}/debug/error`;
+        this._state.update((s) => ({...s, loading: true, error: null}));
 
-  /**
-   * @description Fetches items from the mock backend.
-   */
-  loadItems(ticketId: string | null = null): void {
-    this._state.update((s) => ({...s, loading: true, error: null}));
+        this.http.get(url, {
+            context: new HttpContext().set(NOTIFICATION_TICKET, "DEBUG_ERROR")
+        }).pipe(
+            finalize(() => this._state.update((s) => ({...s, loading: false})))
+        )
+            .subscribe({
+                error: (err) => {
+                    const message = parseErrorMessage(err, "Simulated error");
+                    this._state.update((s) => ({...s, error: message}));
+                }
+            });
 
-    const url = `${this.baseUrl}/dashboard/items`;
-
-    const context = new HttpContext().set(NOTIFICATION_TICKET, ticketId);
-
-    this.http
-      .get<DashboardItemDto[]>(url, {context})
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => {
-          this._state.update((s) => ({...s, loading: false}));
-        }),
-      )
-      .subscribe({
-        next: (items) => {
-          this._state.update((s) => ({...s, items}));
-        },
-        error: (err: unknown) => {
-          const message = parseErrorMessage(err, "Failed to load dashboard data");
-          this._state.update((s) => ({...s, error: message}));
-        },
-      });
-  }
-
-  /**
-   * @description Example of a domain-specific action.
-   */
-  refresh(): void {
-    const ticket = this.notificationService.register({
-      message: "Dashboard data updated.",
-      type: NotificationTypeEnum.Success,
-      clearExisting: true,
-    });
-    this.loadItems(ticket);
-  }
-
-  /**
-   * @description
-   * Debug method to simulate a failing API request.
-   * Demonstrates automated error toast via notificationInterceptor.
-   */
-  triggerError(): void {
-    // We don't even need a ticket here, because our interceptor
-    // catches ALL HttpErrors if we want, or we use a System ticket.
-    const url = `${this.baseUrl}/debug/error`;
-
-    this.http.get(url, {
-      context: new HttpContext().set(NOTIFICATION_TICKET, "DEBUG_ERROR")
-    }).subscribe({
-      error: (err) => console.log("Facade received error:", err)
-    });
-
-  }
+    }
 }

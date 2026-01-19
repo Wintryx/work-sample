@@ -15,7 +15,7 @@ import {By} from "@angular/platform-browser";
 describe("ItemDetailPage", () => {
     let fixture: ComponentFixture<ItemDetailPage>;
 
-    // Senior-Tip: Ensure mock data is strictly typed
+    // Tip: Ensure mock data is strictly typed
     const MOCK_ITEM: DashboardItemDto = {
         id: "p-101",
         title: "Mock Feature",

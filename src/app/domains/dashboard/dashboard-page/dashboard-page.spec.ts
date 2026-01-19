@@ -16,7 +16,7 @@ describe("DashboardPage", () => {
     let fixture: ComponentFixture<DashboardPage>;
     let router: Router;
 
-    // Senior-Fix: Explicitly type the mock signals to avoid TS2345
+    // Fix: Explicitly type the mock signals to avoid TS2345
     const facadeMock = {
         loadItems: vi.fn(),
         items: signal<DashboardItemDto[]>([]),
@@ -46,7 +46,7 @@ describe("DashboardPage", () => {
 
     it("should request data on initialization", () => {
         /**
-         * Senior-Check: Verifies that the smart component correctly
+         * Check: Verifies that the smart component correctly
          * triggers the data fetching on init.
          */
         expect(facadeMock.loadItems).toHaveBeenCalled();

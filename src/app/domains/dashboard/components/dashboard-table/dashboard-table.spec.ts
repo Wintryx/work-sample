@@ -28,7 +28,7 @@ describe("DashboardTableComponent", () => {
         component = fixture.componentInstance;
 
         /**
-         * Senior-Tip: Using componentRef.setInput() is the official way to test
+         * Tip: Using componentRef.setInput() is the official way to test
          * the new Angular Signal-based inputs.
          */
         fixture.componentRef.setInput("items", mockItems);
@@ -55,7 +55,7 @@ describe("DashboardTableComponent", () => {
 
     it("should display the formatted title in the data cell", () => {
         /**
-         * Senior-Fix: Specifically target the <td> (data cell) to avoid collision
+         * Fix: Specifically target the <td> (data cell) to avoid collision
          * with the <th> (header cell) which shares the same CSS class.
          */
         const firstDataCell = fixture.nativeElement.querySelector("td.mat-column-title");

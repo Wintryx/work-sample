@@ -18,7 +18,6 @@ describe("DashboardPage", () => {
 
     // Fix: Explicitly type the mock signals to avoid TS2345
     const facadeMock = {
-        loadItems: vi.fn(),
         items: signal<DashboardItemDto[]>([]),
         isLoading: signal<boolean>(false),
         error: signal<string | null>(null),
@@ -42,14 +41,6 @@ describe("DashboardPage", () => {
         router = TestBed.inject(Router);
 
         fixture.detectChanges();
-    });
-
-    it("should request data on initialization", () => {
-        /**
-         * Check: Verifies that the smart component correctly
-         * triggers the data fetching on init.
-         */
-        expect(facadeMock.loadItems).toHaveBeenCalled();
     });
 
     it("should delegate navigation to the router when an item is selected", () => {

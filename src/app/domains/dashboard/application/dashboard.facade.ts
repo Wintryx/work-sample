@@ -16,7 +16,7 @@
 import {computed, DestroyRef, inject, Injectable, signal} from "@angular/core";
 import {HttpClient, HttpContext} from "@angular/common/http";
 import {DashboardItemDto} from "@domains/dashboard/domain/dashboard.models";
-import {finalize} from "rxjs";
+import {Observable, catchError, finalize, of, tap} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {API_BASE_URL} from "@core/http/api.tokens";
 import {NOTIFICATION_TICKET, NotificationTypeEnum} from "@core/notifications/notification.models";
@@ -29,6 +29,7 @@ import {parseErrorMessage} from "@core/http/http-errors";
 interface DashboardState {
   items: DashboardItemDto[];
   loading: boolean;
+  loaded: boolean;
   error: string | null;
 }
 
@@ -42,26 +43,42 @@ export class DashboardFacade {
   private readonly _state = signal<DashboardState>({
     items: [],
     loading: false,
+    loaded: false,
     error: null,
   });
 
   // Public Signals for the UI (Computed to ensure read-only access)
-  readonly items = computed(() => {
-    const state = this._state();
-
-    // Tip: Self-healing state.
-    // If someone accesses items but they are empty and we aren't already loading, trigger a load.
-    if (state.items.length === 0 && !state.loading && !state.error) {
-      // We use untracked or a setTimeout to avoid "computed side-effects" warnings
-      setTimeout(() => this.loadItems());
-    }
-
-    return state.items;
-  });
+  readonly items = computed(() => this._state().items);
 
   readonly isLoading = computed(() => this._state().loading);
   readonly error = computed(() => this._state().error);
   readonly hasItems = computed(() => this._state().items.length > 0);
+
+  /**
+   * @description
+   * Ensures data is loaded once, returning the current list for SSR-safe resolvers.
+   */
+  ensureLoaded(): Observable<DashboardItemDto[]> {
+    const state = this._state();
+    if (state.loaded || state.loading) return of(state.items);
+
+    this._state.update((s) => ({...s, loading: true, error: null}));
+    const url = `${this.baseUrl}/dashboard/items`;
+
+    return this.http.get<DashboardItemDto[]>(url).pipe(
+      tap((items) => {
+        this._state.update((s) => ({...s, items, loaded: true}));
+      }),
+      catchError((err: unknown) => {
+        const message = parseErrorMessage(err, "Failed to load dashboard data");
+        this._state.update((s) => ({...s, error: message}));
+        return of([]);
+      }),
+      finalize(() => {
+        this._state.update((s) => ({...s, loading: false}));
+      }),
+    );
+  }
 
   /**
    * @description Fetches items from the mock backend.
@@ -83,7 +100,7 @@ export class DashboardFacade {
       )
       .subscribe({
         next: (items) => {
-          this._state.update((s) => ({...s, items}));
+          this._state.update((s) => ({...s, items, loaded: true}));
         },
         error: (err: unknown) => {
           const message = parseErrorMessage(err, "Failed to load dashboard data");

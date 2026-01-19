@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from "@angular/core";
+import {ChangeDetectionStrategy, Component, inject} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {Router} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
@@ -22,14 +22,10 @@ import {environment} from "@env/environment";
   styleUrl: "./dashboard-page.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage {
   protected readonly isDev = !environment.production;
   protected readonly dashboardFacade = inject(DashboardFacade);
   private readonly router = inject(Router);
-
-  ngOnInit(): void {
-    this.dashboardFacade.loadItems();
-  }
 
   /**
    * @description Handles the row-click interaction.

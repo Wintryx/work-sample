@@ -18,7 +18,7 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 ## 3. State Management (Angular Signals)
 - **Signals-First**: Primary state mechanism using Angular 21 Signals for fine-grained reactivity.
 - **Facade Pattern**: Components interact exclusively with Facades. This abstracts away the `HttpClient` and complex state transitions.
-- **Self-Healing State**: Facades implement a "Lazy-Loading" pattern to ensure data is fetched automatically during deep-linking or browser refreshes.
+- **Resolver-Driven Loading**: Initial domain data is loaded via route resolvers (SSR-safe). Facades expose `ensureLoaded()` and keep `computed()` selectors side-effect free while deduplicating in-flight requests.
 - **Resource Management**: Use of `takeUntilDestroyed()` ensures automatic unsubscription and prevents memory leaks.
 
 ## 4. HTTP Pipeline & Security

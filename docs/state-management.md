@@ -13,7 +13,7 @@ We leverage **Angular 21 Signals** as our primary state mechanism to achieve:
 To decouple the Presentation Layer from state complexity, every domain (e.g., `Dashboard`, `Auth`) uses a **Facade**:
 - **Encapsulation**: Writable signals (`_state`) are kept private. Components only access read-only computed signals.
 - **Orchestration**: Facades coordinate between the `HttpClient` and the local state.
-- **Self-Healing Logic**: Facades implement "Lazy-Load" triggers. If a component accesses data that hasn't been initialized yet (e.g., on a browser refresh), the Facade automatically triggers a background fetch.
+- **Resolver-Driven Loading**: Initial data loads happen through route resolvers calling Facade `ensureLoaded()` methods. This keeps `computed()` selectors pure while remaining SSR-safe.
 
 ## 4. RxJS Integration (Asynchronous Streams)
 RxJS remains the standard for **asynchronous event streams**. We follow a "Stream-to-Signal" pattern:
@@ -32,10 +32,15 @@ We utilize Angular's modern `withComponentInputBinding()` feature.
 - Route parameters (like `:id`) are injected directly into components as **Signal Inputs** (`input.required()`).
 - This allows the UI to derive state reactively: `item = computed(() => facade.items().find(i => i.id === id()))`.
 
+### In-Flight Request Deduplication
+To avoid parallel HTTP calls when multiple consumers trigger the same load:
+- Facades cache the in-flight Observable and reuse it for concurrent requests.
+- This keeps state transitions deterministic and reduces network noise.
+
 ### Isomorphic State (SSR Synchronization)
 To handle the "Hydration Gap" in SSR:
 - The **Auth State** is synchronized between the Server and Client using a combination of **Cookies** (visible to the server) and **localStorage** (client-side persistence).
 
 ## 6. Coding Standards
 - **Immutability**: When updating Signals that hold objects or arrays, we always create new references (using the spread operator or new Map instances) to ensure proper change detection.
-- **Side-Effect Management**: We avoid placing side-effects inside `computed()` signals. For automated triggers, we use `setTimeout` or Angular `effect()` in a controlled lifecycle context.
+- **Side-Effect Management**: We avoid placing side-effects inside `computed()` signals. Automated data loads are triggered by resolvers or explicit Facade methods.

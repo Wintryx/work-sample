@@ -8,6 +8,7 @@ Following Domain-Driven Design principles, the authentication logic is strictly 
 
 - **`data-access/`**: Contains the `AuthService` (logic), `AuthInterceptor` (JWT injection), `AuthModels` (contracts), and `AuthProviders` (DI Hub).
 - **`guards/`**: Logic for route protection. We use functional guards (`authGuard`, `publicGuard`) for better tree-shaking and simplicity.
+  - Guards read AuthService state in the browser and rely on the SSR auth cookie on the server to prevent protected SSR rendering.
 - **`AuthFacade`**: The public interface for the rest of the application. It orchestrates navigation and exposes state via read-only **Angular Signals**.
 
 ## 3. The "Isomorphic Auth" Challenge (SSR)

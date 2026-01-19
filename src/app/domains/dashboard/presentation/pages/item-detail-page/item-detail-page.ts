@@ -1,40 +1,39 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { RouterLink } from "@angular/router";
-import { MatButtonModule } from "@angular/material/button";
-import { MatIconModule } from "@angular/material/icon";
-import { MatCardModule } from "@angular/material/card";
-import { StatusBadgeComponent } from "@shared/ui/status-badge/status-badge";
-import { DashboardFacade } from "@domains/dashboard/application/dashboard.facade";
+import {ChangeDetectionStrategy, Component, computed, inject, input} from "@angular/core";
+import {CommonModule} from "@angular/common";
+import {RouterLink} from "@angular/router";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatCardModule} from "@angular/material/card";
+import {StatusBadgeComponent} from "@shared/ui/status-badge/status-badge";
+import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
 
 @Component({
-  selector: "app-item-detail-page",
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    MatButtonModule,
-    MatIconModule,
-    MatCardModule,
-    StatusBadgeComponent,
-  ],
-  templateUrl: "./item-detail-page.html",
-  styleUrl: "./item-detail-page.scss",
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: "app-item-detail-page",
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterLink,
+        MatButtonModule,
+        MatIconModule,
+        MatCardModule,
+        StatusBadgeComponent,
+    ],
+    templateUrl: "./item-detail-page.html",
+    styleUrl: "./item-detail-page.scss",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemDetailPage {
-  private readonly dashboardFacade = inject(DashboardFacade);
-
-  /**
-   * Feature: Angular automatically binds the ':id' from the URL
-   * to this input signal thanks to 'withComponentInputBinding()'.
-   */
-  readonly id = input.required<string>();
-
-  /**
-   * We reactively find the item in our facade state.
-   */
-  protected readonly item = computed(() =>
-    this.dashboardFacade.items().find((i) => i.id === this.id()),
-  );
+    /**
+     * Feature: Angular automatically binds the ':id' from the URL
+     * to this input signal thanks to 'withComponentInputBinding()'.
+     * Alternatively, we can pass the id or the item via Inputs
+     */
+    readonly id = input.required<string>();
+    private readonly dashboardFacade = inject(DashboardFacade);
+    /**
+     * We reactively find the item in our facade state.
+     */
+    protected readonly item = computed(() =>
+        this.dashboardFacade.items().find((i) => i.id === this.id()),
+    );
 }

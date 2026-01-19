@@ -1,58 +1,50 @@
 # Architectural Overview
 
-## 1. Domain-Driven Structure
-To support a team of 2 developers and ensure scalability, the project follows a **Domain-Driven Design (DDD)** approach within the Angular workspace.
+## 1. Domain-Driven Design (DDD) & Layering
+To ensure scalability for a team of 2+ developers, the project follows a strict **Vertical Slicing** approach combined with specialized internal layering:
 
-- **`core/`**: Global, singleton infrastructure (Auth, HTTP, Notifications, Guards).
-- **`domains/`**: Business-specific features. Each domain is self-contained and split into
-  `domain/` (models/logic), `application/` (facades/use-cases), and `presentation/` (pages/components/routes).
-- **`shared/`**: Reusable UI components, pipes, and directives without business logic.
+- **`core/`**: Global infrastructure singletons (Auth, HTTP, Notifications, Layout).
+    - Internal layering: `data-access/` (Services/Models), `guards/`, `layout/`.
+- **`domains/`**: Business-specific features. Each domain is strictly isolated and partitioned:
+    - **`domain/`**: Pure logic, interfaces, and Enums (e.g., `ItemStatus`).
+    - **`application/`**: Orchestration layer using the **Facade Pattern**.
+    - **`presentation/`**: UI logic, including `pages/` (smart) and `components/` (dumb).
+- **`shared/`**: Reusable, stateless UI building blocks (Badges, Buttons) and Pipes.
 
-## 2. Standalone Components & Public API
-- All UI building blocks are **standalone components**, which keeps feature modules light.
-- Each folder exposes a **Public API** via `index.ts` (barrel file).
-- Internal implementations are hidden; consumers import via **path aliases** (e.g., `@core/auth`).
+## 2. Encapsulation & Public API
+- **Barrel Files**: Each module folder exposes a **Public API** via `index.ts`. External consumers are forbidden from importing internal files directly.
+- **Path Aliases**: Clean imports are enforced via TypeScript aliases (e.g., `@core/*`, `@domains/*`, `@shared/*`), preventing brittle relative paths.
 
-## 3. Dependency Injection & Configuration
-- Global configuration is centralized in `app.config.ts`.
-- Runtime configuration is injected via **tokens** (e.g., `API_BASE_URL`, `AUTH_CONFIG`).
-- Functional providers (e.g., `provideAuth`) group related DI setup.
-- `withComponentInputBinding()` enables route params as input signals.
+## 3. State Management (Angular Signals)
+- **Signals-First**: Primary state mechanism using Angular 21 Signals for fine-grained reactivity.
+- **Facade Pattern**: Components interact exclusively with Facades. This abstracts away the `HttpClient` and complex state transitions.
+- **Self-Healing State**: Facades implement a "Lazy-Loading" pattern to ensure data is fetched automatically during deep-linking or browser refreshes.
+- **Resource Management**: Use of `takeUntilDestroyed()` ensures automatic unsubscription and prevents memory leaks.
 
-## 4. State Management & Facades
-- **Signals** are the primary state mechanism with `computed` selectors for UI binding.
-- State is **encapsulated**: writable signals are private, read-only access is exposed.
-- **Facades** (e.g., `AuthFacade`, `DashboardFacade`) orchestrate state and UI workflows.
-- Data fetching happens at the Facade layer and updates Signals directly.
+## 4. HTTP Pipeline & Security
+- **Interceptor Chain**: A strictly ordered pipeline:
+    1. **Auth**: Injects JWT Bearer tokens.
+    2. **Notification**: Monitors `HttpContext` for automated UI feedback.
+    3. **MockBackend**: Intercepts requests to simulate server responses for local development.
+- **Isomorphic Auth**: Combines `localStorage` (client persistence) with **Cookies** (SSR bridge) to eliminate auth-flicker and enable secure server-side guards.
+- **Fetch API**: Optimized for SSR using `withFetch()` for modern, high-performance network communication.
 
-## 5. HTTP Pipeline & Interceptors
-- HTTP requests are handled through `HttpClient` with a consistent interceptor chain:
-  1. **Auth**: adds the Bearer token if present.
-  2. **Notification**: triggers snackbars for success/error.
-  3. **Mock Backend**: simulates API responses for the work sample.
-- `HttpContext` is used to pass notification tickets without coupling UI logic to HTTP.
+## 5. Transactional Notification System
+- **Ticket-Registry Pattern**: Implements a "Coat Check" system. Actions are registered in a `NotificationService` map before execution.
+- **HttpContext Integration**: A unique `NOTIFICATION_TICKET` is passed through the HTTP pipeline, allowing the Interceptor to trigger the correct UI feedback (Toast) based on the specific request's success or failure.
 
-## 6. SSR & Rendering Modes
-- The app uses **Angular SSR** with client hydration (`provideClientHydration`).
-- Protected routes are **server-rendered** using `RenderMode.Server`.
-- Public routes are **prerendered** for fast static delivery.
-- Auth uses a cookie as an SSR bridge to avoid redirect flicker on first render.
+## 6. Configuration & Environments
+- **Token-based Injection**: Environment-specific variables are mapped to **Injection Tokens** (e.g., `API_BASE_URL`, `AUTH_CONFIG`) during bootstrap.
+- **Environment Parity**: Uses Angular's modern file-replacement strategy to swap `environment.ts` (Production) with `environment.development.ts` at build time.
 
-## 7. Routing & Guards
-- `authGuard` protects private routes (e.g., `/dashboard`).
-- `publicGuard` prevents authenticated users from accessing `/login`.
-- Guards are functional and rely on the `AuthFacade` state.
+## 7. UI, Styling & Accessibility
+- **Hybrid CSS Strategy**: Combines **Tailwind CSS v4** for rapid utility-first layouting with **Angular Material 3** for accessible, enterprise-ready components.
+- **Scoped Abstraction**: Complex Tailwind chains are abstracted into component-scoped `.scss` files using semantic classes, preventing "class soup" in templates.
+- **OnPush Detection**: Enforced across all components to ensure predictable data flow and maximum rendering performance.
 
-## 8. Notifications & UX Feedback
-- `NotificationService` standardizes user feedback.
-- `notificationInterceptor` allows centralized success/error messaging.
-- UI components remain clean and do not handle toast logic directly.
-
-## 9. Testing
-- Tests are written with **Vitest** for speed and ESM compatibility.
-- See `docs/testing-strategy.md` for detailed guidelines and patterns.
-
-## 10. Extensibility
-- Auth can be switched from the mock flow to a real OIDC provider (e.g., Keycloak).
-- The HTTP pipeline is ready for a real backend by removing the mock interceptor.
-- The architecture keeps UI and infrastructure decoupled for easy replacement.
+## 8. Quality Gates (Linting & Testing)
+- **Strict ESLint**: Enforces project standards, including file length limits (max 600 lines) and naming conventions.
+- **Vitest**: High-speed testing suite covering:
+    - **Unit**: Pure logic and type-guards (e.g., `http-errors`).
+    - **Integration**: Interceptor middleware and Signal-based component interactions.
+- **Prettier**: Guarantees a consistent "Double Quote" code style across the entire team.

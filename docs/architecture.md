@@ -1,4 +1,4 @@
-# Architectural Overview
+﻿# Architectural Overview
 
 ## 1. Domain-Driven Design (DDD) & Layering
 To ensure scalability for a team of 2+ developers, the project follows a strict **Vertical Slicing** approach combined with specialized internal layering:
@@ -6,7 +6,7 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 - **`core/`**: Global infrastructure singletons (Auth, HTTP, Notifications, Layout).
     - Internal layering: `data-access/` (Services/Models), `guards/`, `layout/`.
 - **`domains/`**: Business-specific features. Each domain is strictly isolated and partitioned:
-    - **`domain/`**: Pure logic, interfaces, and Enums (e.g., `ItemStatus`).
+    - **`domain/`**: Pure logic, interfaces, and typed constants (e.g., `ItemStatus`).
     - **`application/`**: Orchestration layer using the **Facade Pattern**.
     - **`presentation/`**: UI logic, including `pages/` (smart) and `components/` (dumb).
 - **`shared/`**: Reusable, stateless UI building blocks (Badges, Buttons) and Pipes.
@@ -48,3 +48,4 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
     - **Unit**: Pure logic and type-guards (e.g., `http-errors`).
     - **Integration**: Interceptor middleware and Signal-based component interactions.
 - **Prettier**: Guarantees a consistent "Double Quote" code style across the entire team.
+

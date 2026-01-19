@@ -1,5 +1,6 @@
 import {InjectionToken} from "@angular/core";
 import {Result} from "@core/types/result";
+import {ValueOf} from "@core/types/value-of";
 
 /**
  * @description Configuration contract for the OIDC/Auth infrastructure.
@@ -20,11 +21,16 @@ export const AUTH_CONFIG = new InjectionToken<AuthConfig>("AUTH_CONFIG");
 
 /**
  * @description Authentication status constants to avoid magic strings.
+ * Using a const object + ValueOf keeps unions consistent and tree-shakeable.
  */
-export enum AuthStatus {
-    Authenticated = "AUTHENTICATED",
-    Unauthenticated = "UNAUTHENTICATED",
-}
+export const AuthStatus = {
+    Authenticated: "AUTHENTICATED",
+    Unauthenticated: "UNAUTHENTICATED",
+} as const;
+
+export type AuthStatus = ValueOf<typeof AuthStatus>;
+export type AuthenticatedStatus = typeof AuthStatus.Authenticated;
+export type UnauthenticatedStatus = typeof AuthStatus.Unauthenticated;
 
 /**
  * @description Global constants for authentication storage keys.
@@ -44,8 +50,8 @@ interface AuthUser {
  * @description Internal state definition using Discriminated Unions.
  */
 export type AuthState =
-    | { status: AuthStatus.Authenticated; user: AuthUser; token: string }
-    | { status: AuthStatus.Unauthenticated };
+    | { status: AuthenticatedStatus; user: AuthUser; token: string }
+    | { status: UnauthenticatedStatus };
 
 export const AuthErrorState = {
     INVALID_PASSWORD: "INVALID_PASSWORD",
@@ -53,14 +59,14 @@ export const AuthErrorState = {
     OIDC_FLOW_FAILED: "OIDC_FLOW_FAILED",
 } as const;
 
-export type AuthErrorState = (typeof AuthErrorState)[keyof typeof AuthErrorState];
+export type AuthErrorState = ValueOf<typeof AuthErrorState>;
 
 export interface AuthSuccess {
-    status: AuthStatus.Authenticated;
+    status: AuthenticatedStatus;
 }
 
 export interface AuthFailure {
-    status: AuthStatus.Unauthenticated;
+    status: UnauthenticatedStatus;
     authErrorState: AuthErrorState;
     message: string;
 }

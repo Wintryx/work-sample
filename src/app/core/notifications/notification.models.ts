@@ -1,4 +1,5 @@
 import {HttpContextToken} from "@angular/common/http";
+import {ValueOf} from "@core/types/value-of";
 
 /**
  * @description
@@ -7,30 +8,30 @@ import {HttpContextToken} from "@angular/common/http";
  */
 export const NOTIFICATION_TICKET = new HttpContextToken<string | null>(() => null);
 
-export enum NotificationTypeEnum {
-  Success = "success",
-  Error = "error",
-  Info = "info",
-  Warning = "warning",
-}
+export const NotificationType = {
+    Success: "success",
+    Error: "error",
+    Info: "info",
+    Warning: "warning",
+} as const;
 
-export type NotificationType = (typeof NotificationTypeEnum)[keyof typeof NotificationTypeEnum];
+export type NotificationType = ValueOf<typeof NotificationType>;
 
 /**
  * @description Configuration for individual notification triggers.
  */
 export interface NotificationOptions {
-  duration?: number;
-  /** If true, dismisses all previous toasts before showing this one. */
-  clearExisting?: boolean;
-  /** Action label, e.g., 'Retry' or 'Close' */
-  action?: string;
+    duration?: number;
+    /** If true, dismisses all previous toasts before showing this one. */
+    clearExisting?: boolean;
+    /** Action label, e.g., 'Retry' or 'Close' */
+    actionLabel?: string;
 }
 
 /**
  * @description Represents a structured message internally.
  */
 export interface NotificationObject extends NotificationOptions {
-  message: string;
-  type: NotificationType;
+    message: string;
+    type: NotificationType;
 }

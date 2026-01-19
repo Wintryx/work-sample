@@ -19,7 +19,7 @@ import {DashboardItemDto} from "@domains/dashboard/domain/dashboard.models";
 import {Observable, catchError, finalize, of, shareReplay, tap} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {API_BASE_URL} from "@core/http/api.tokens";
-import {NOTIFICATION_TICKET, NotificationTypeEnum} from "@core/notifications/notification.models";
+import {NOTIFICATION_TICKET, NotificationType} from "@core/notifications/notification.models";
 import {NotificationService} from "@core/notifications/notification.service";
 import {parseErrorMessage} from "@core/http/http-errors";
 import {createLoadableState, LoadableState} from "@core/state/loadable";
@@ -113,7 +113,7 @@ export class DashboardFacade {
   refresh(): void {
     const ticket = this.notificationService.register({
       message: "Dashboard data updated.",
-      type: NotificationTypeEnum.Success,
+      type: NotificationType.Success,
       clearExisting: true,
     });
     this.loadItems(ticket);

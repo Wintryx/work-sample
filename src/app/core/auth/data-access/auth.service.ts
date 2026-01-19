@@ -7,7 +7,8 @@ import {
     AuthErrorState,
     AuthResult,
     AuthState,
-    AuthStatus
+    AuthStatus,
+    AuthenticatedStatus
 } from "@core/auth";
 import {CookieService} from "@core/services/cookie.service";
 
@@ -141,7 +142,7 @@ export class AuthService {
             if (savedSession) {
                 const session = JSON.parse(savedSession) as Extract<
                     AuthState,
-                    { status: AuthStatus.Authenticated }
+                    { status: AuthenticatedStatus }
                 >;
                 this._state.set(session);
             }
@@ -194,7 +195,7 @@ export class AuthService {
         state: string;
         nonce: string;
         username: string;
-    }): Extract<AuthState, { status: AuthStatus.Authenticated }> {
+    }): Extract<AuthState, { status: AuthenticatedStatus }> {
         const expectedState = sessionStorage.getItem(this.config.stateKeyPrefix);
         const expectedNonce = sessionStorage.getItem(this.config.nonceKeyPrefix);
         if (expectedState !== params.state || expectedNonce !== params.nonce) {

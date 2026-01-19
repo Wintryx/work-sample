@@ -1,13 +1,15 @@
 /**
  * @description
  * Progress status for Dashboard items.
- * Using an Enum for better readability and refactoring support.
+ * Using a const object + union type for consistency and tree-shaking.
  */
-export enum ItemStatus {
-  Todo = "todo",
-  InProgress = "in-progress",
-  Done = "done",
-}
+export const ItemStatus = {
+  Todo: "todo",
+  InProgress: "in-progress",
+  Done: "done",
+} as const;
+
+export type ItemStatus = (typeof ItemStatus)[keyof typeof ItemStatus];
 
 /**
  * @description

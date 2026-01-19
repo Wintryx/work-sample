@@ -9,13 +9,10 @@ This document lists planned improvements to move the work sample toward a produc
    - Plan: only register the mock interceptor in development builds or behind a feature flag.
 
 ## Type-system refinements (planned)
-1. Enum/union consistency
-   - Standardize on either `enum` or `as const` unions for error/status types.
-   - Applies to `AuthErrorState`, `NotificationType`, and future domain types.
-2. DTO vs domain model separation
+1. DTO vs domain model separation
    - Introduce `DashboardItem` as a domain model and map from `DashboardItemDto`.
    - Reduces coupling to API response shapes.
-3. Typed API error codes
+2. Typed API error codes
    - Make `ApiError` generic (`ApiError<TCode extends string>`).
    - Enables domain-specific error code enums.
 
@@ -35,6 +32,8 @@ This document lists planned improvements to move the work sample toward a produc
    - Added a generic `LoadableState<T>` to avoid repeated data/loading/loaded/error shapes.
 6. Generic result type
    - Introduced `Result<T, E>` and migrated `AuthResult` to use it.
+7. Enum/union consistency
+   - Standardized status/error types on `as const` unions across auth, notifications, and domain models.
 
 ## Secondary refinements
 - Notification registry safety: add a UUID fallback when `crypto.randomUUID` is unavailable.

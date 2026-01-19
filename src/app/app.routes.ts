@@ -7,22 +7,13 @@ export const routes: Routes = [
   {
     path: "login",
     canMatch: [publicGuard],
-    loadComponent: () => import("@domains/auth/login-page/login-page").then((m) => m.LoginPage),
+    loadChildren: () => import("@domains/auth/auth.routes").then((m) => m.authRoutes),
   },
   // Protected Routes
   {
     path: "dashboard",
     canMatch: [authGuard],
-    children: [
-      {
-        path: "",
-        loadComponent: () => import("@domains/dashboard").then((m) => m.DashboardPage),
-      },
-      {
-        path: "items/:id",
-        loadComponent: () => import("@domains/dashboard").then((m) => m.ItemDetailPage),
-      },
-    ],
+    loadChildren: () => import("@domains/dashboard/dashboard.routes").then((m) => m.dashboardRoutes),
   },
   // Fallback
   { path: "**", redirectTo: "dashboard" },

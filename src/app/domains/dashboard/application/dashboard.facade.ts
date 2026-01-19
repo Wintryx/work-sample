@@ -14,16 +14,18 @@
  */
 
 import {computed, DestroyRef, inject, Injectable, signal} from "@angular/core";
-import {HttpClient, HttpContext} from "@angular/common/http";
+import {HttpClient, HttpContext, HttpParams} from "@angular/common/http";
 import {DashboardItem, DashboardItemDto} from "@domains/dashboard/domain/dashboard.models";
 import {catchError, finalize, map, Observable, of, shareReplay, tap} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {API_BASE_URL} from "@core/http/api.tokens";
 import {NOTIFICATION_TICKET, NotificationType} from "@core/notifications/notification.models";
 import {NotificationService} from "@core/notifications/notification.service";
-import {parseErrorMessage} from "@core/http/http-errors";
+import {extractApiError, hasApiErrorCode, parseErrorMessage} from "@core/http/http-errors";
 import {createLoadableState, LoadableState} from "@core/state/loadable";
 import {toDashboardItems} from "./dashboard.mappers";
+import {DashboardErrorCode} from "@domains/dashboard/domain/dashboard.error-codes";
+import {AuthFacade} from "@core/auth";
 
 /**
  * @description Internal state for the Dashboard.
@@ -36,6 +38,7 @@ export class DashboardFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly baseUrl = inject(API_BASE_URL);
     private readonly notificationService = inject(NotificationService);
+    private readonly authFacade = inject(AuthFacade);
     /**
      * @description
      * Caches the current in-flight request to prevent duplicate HTTP calls
@@ -107,25 +110,53 @@ export class DashboardFacade {
 
     /**
      * @description
+     * Debug helper that simulates an unauthorized response and exercises the typed error-code path.
+     */
+    triggerUnauthorized(): void {
+        // this.notificationService.fail(
+        //     null,
+        //     "You are not authenticated. The action was canceled."
+        // );
+        this.fetchItems$("DEBUG_UNAUTHORIZED", true, DashboardErrorCode.Unauthorized)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
+    }
+
+    /**
+     * @description
      * Shared data-loading pipeline for initial loads and forced refreshes.
      * Reuses in-flight requests to avoid parallel loads and keeps SSR resolvers consistent.
+     *
+     * The optional debugCode appends a query param that the mock backend understands,
+     * allowing deterministic simulation of specific API error codes during development.
      */
-    private fetchItems$(ticketId: string | null, force = false): Observable<DashboardItem[]> {
+    private fetchItems$(
+        ticketId: string | null,
+        force = false,
+        debugCode?: DashboardErrorCode,
+    ): Observable<DashboardItem[]> {
         const state = this._state();
         if (state.loading) return this.inFlightItems$ ?? of(state.data);
         if (!force && state.loaded) return of(state.data);
 
         this._state.update((s) => ({...s, loading: true, error: null}));
         const url = `${this.baseUrl}/dashboard/items`;
+        const params = debugCode ? new HttpParams().set("debug", debugCode) : undefined;
         const context = ticketId ? new HttpContext().set(NOTIFICATION_TICKET, ticketId) : undefined;
 
-        const request$ = this.http.get<DashboardItemDto[]>(url, {context}).pipe(
+        const request$ = this.http.get<DashboardItemDto[]>(url, {context, params}).pipe(
             map(toDashboardItems),
             tap((items) => {
                 this._state.update((s) => ({...s, data: items, loaded: true}));
             }),
             catchError((err: unknown) => {
-                const message = parseErrorMessage(err, "Failed to load dashboard data");
+                if (hasApiErrorCode(err, DashboardErrorCode.Unauthorized)) {
+                    this._state.set(createLoadableState<DashboardItem[]>([]));
+                    this.authFacade.logout();
+                    return of<DashboardItem[]>([]);
+                }
+                const apiError = extractApiError<DashboardErrorCode>(err);
+                const message = apiError?.message ?? parseErrorMessage(err, "Failed to load dashboard data");
                 this._state.update((s) => ({...s, error: message}));
                 return of<DashboardItem[]>([]);
             }),

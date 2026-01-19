@@ -7,14 +7,14 @@ Dieses Dokument dient als roter Faden für die Vorstellung des Projekts "EPM Pro
 ## 1. Architektur & Struktur (Der Senior-Blick)
 *   **Thema**: Warum DDD und Vertical Slicing?
 *   **Punkte**:
-    *   **Kapselung**: Jedes Modul (`core`, `domains`, `shared`) ist eine autarke Einheit mit eigener **Public API (`index.ts`)**. Das verhindert unkontrollierte AbhÃ¤ngigkeiten ("Spaghetti-Code").
+    *   **Kapselung**: Jedes Modul (`core`, `domains`, `shared`) ist eine autarke Einheit mit eigener **Public API (`index.ts`)**. Das verhindert unkontrollierte Abhängigkeiten ("Spaghetti-Code").
     *   **Layering**: Innerhalb der Domains trennen wir strikt in `domain` (Logik), `application` (Facade) und `presentation` (UI). Das macht den Code für ein Team von 6+ Entwicklern vorhersagbar.
     *   **DIP**: Nutzung von **Injection Tokens** für API-URLs und Auth-Konfigurationen, um den Code komplett von der Umgebung zu entkoppeln.
 
 ## 2. State Management & Reaktivität
 *   **Thema**: Warum Angular Signals statt klassischem RxJS/Zone.js?
 *   **Punkte**:
-    *   **Performance**: Feingranulare Reaktivität ohne unnÃ¶tige Change Detection Zyklen.
+    *   **Performance**: Feingranulare Reaktivität ohne unnötige Change Detection Zyklen.
     *   **Facade Pattern**: Die UI ist "dumm". Sämtliche Orchestrierung (Laden, Error-Handling, State-Updates) findet zentral in der Facade statt.
     *   **Resolver-Driven Loading**: Route-Resolver rufen `ensureLoaded()` auf, damit SSR/Refresh stabil sind und `computed()` side-effect free bleibt.
     *   **In-Flight Dedup**: Parallele Loads teilen sich denselben Request, um doppelte HTTP-Calls zu vermeiden.
@@ -23,8 +23,8 @@ Dieses Dokument dient als roter Faden für die Vorstellung des Projekts "EPM Pro
 *   **Thema**: Die Herausforderung von Server-Side Rendering in Angular 21.
 *   **Punkte**:
     *   **Hydration Gap**: Erklärung, dass der Server keinen Zugriff auf den `localStorage` hat.
-    *   **Die Loesung**: Eine hybride Strategie aus **Cookies** (für den Server-Guard) und **localStorage** (für den Client-State).
-    *   **UX**: Verhindert den typischen "Redirect-Flicker" beim Neuladen geschÃ¼tzter Seiten.
+    *   **Die Lösung**: Eine hybride Strategie aus **Cookies** (für den Server-Guard) und **localStorage** (für den Client-State).
+    *   **UX**: Verhindert den typischen "Redirect-Flicker" beim Neuladen geschützter Seiten.
 
 ## 4. Transactional Messaging (Innovation)
 *   **Thema**: Wie behandeln wir Feedback bei parallelen Requests?

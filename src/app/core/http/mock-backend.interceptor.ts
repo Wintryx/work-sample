@@ -1,6 +1,7 @@
 import {HttpErrorResponse, HttpInterceptorFn, HttpResponse} from "@angular/common/http";
 import {delay, mergeMap, of, throwError, timer} from "rxjs";
 import {DashboardItemDto, ItemStatus} from "@domains/dashboard/domain/dashboard.models";
+import {DashboardErrorCode} from "@domains/dashboard/domain/dashboard.error-codes";
 import {inject} from "@angular/core";
 import {API_BASE_URL} from "@core/http/api.tokens";
 
@@ -24,6 +25,23 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
     const baseUrl = inject(API_BASE_URL);
 
     if (url.endsWith(`${baseUrl}/dashboard/items`) && method === "GET") {
+        const debugCode = req.params.get("debug");
+        if (debugCode === DashboardErrorCode.Unauthorized) {
+            return timer(800).pipe(
+                mergeMap(() =>
+                    throwError(() => new HttpErrorResponse({
+                        status: 401,
+                        statusText: "Unauthorized",
+                        error: {
+                            status: 401,
+                            message: "Session expired. Please log in again.",
+                            code: DashboardErrorCode.Unauthorized,
+                        },
+                    })),
+                ),
+            );
+        }
+
         return of(
             new HttpResponse({
                 status: 200,
@@ -39,7 +57,11 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
                 throwError(() => new HttpErrorResponse({
                     status: 500,
                     statusText: "Internal Server Error",
-                    error: {message: "Simulated API failure for debugging purposes."}
+                    error: {
+                        status: 500,
+                        message: "Simulated API failure for debugging purposes.",
+                        code: DashboardErrorCode.ItemsLoadFailed,
+                    }
                 })),
             ),
         );

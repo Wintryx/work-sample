@@ -8,11 +8,6 @@ This document lists planned improvements to move the work sample toward a produc
    - The mock interceptor is registered globally and will mask real API calls in production.
    - Plan: only register the mock interceptor in development builds or behind a feature flag.
 
-## Type-system refinements (planned)
-1. Typed API error codes
-   - Make `ApiError` generic (`ApiError<TCode extends string>`).
-   - Enables domain-specific error code enums.
-
 ## Completed
 1. SSR auth guard strictness
    - Missing or invalid cookies now redirect to `/login` during SSR.
@@ -34,6 +29,10 @@ This document lists planned improvements to move the work sample toward a produc
 8. DTO vs domain model separation
    - Introduced `DashboardItem` as a domain model and mapped from `DashboardItemDto`.
    - Reduced coupling to API response shapes.
+9. Typed API error codes
+   - Made `ApiError` generic (`ApiError<TCode extends string>`).
+   - Added domain-specific error code unions (dashboard).
+   - `TCode` is the type parameter that constrains valid error codes per domain, enabling autocomplete and safer branching.
 
 ## Secondary refinements
 - Notification registry safety: add a UUID fallback when `crypto.randomUUID` is unavailable.

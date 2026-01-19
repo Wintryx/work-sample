@@ -16,8 +16,6 @@ describe("App", () => {
         const authFacadeMock = {
             isAuthenticated: signal(false),
             user: signal<{ id: string; username: string } | null>(null),
-            logout: () => {
-            },
         };
 
         await TestBed.configureTestingModule({

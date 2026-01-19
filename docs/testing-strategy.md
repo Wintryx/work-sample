@@ -14,7 +14,7 @@ We use **Vitest** as our primary test runner instead of Jest or Karma.
 ### Unit Tests (80%)
 Focuses on pure logic in isolation.
 - **Logic Utilities**: Verifying type-guards and data parsers (e.g., `http-errors.spec.ts`).
-- **Domain Models**: Ensuring business rules and Enums behave correctly.
+- **Domain Models**: Ensuring business rules and typed constant unions behave correctly.
 
 ### Integration Tests (15%)
 Validates the interaction between multiple units.

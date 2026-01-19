@@ -22,16 +22,12 @@ import {API_BASE_URL} from "@core/http/api.tokens";
 import {NOTIFICATION_TICKET, NotificationTypeEnum} from "@core/notifications/notification.models";
 import {NotificationService} from "@core/notifications/notification.service";
 import {parseErrorMessage} from "@core/http/http-errors";
+import {createLoadableState, LoadableState} from "@core/state/loadable";
 
 /**
  * @description Internal state for the Dashboard.
  */
-interface DashboardState {
-  items: DashboardItemDto[];
-  loading: boolean;
-  loaded: boolean;
-  error: string | null;
-}
+type DashboardState = LoadableState<DashboardItemDto[]>;
 
 @Injectable({providedIn: "root"})
 export class DashboardFacade {
@@ -46,19 +42,14 @@ export class DashboardFacade {
    */
   private inFlightItems$: Observable<DashboardItemDto[]> | null = null;
 
-  private readonly _state = signal<DashboardState>({
-    items: [],
-    loading: false,
-    loaded: false,
-    error: null,
-  });
+  private readonly _state = signal<DashboardState>(createLoadableState<DashboardItemDto[]>([]));
 
   // Public Signals for the UI (Computed to ensure read-only access)
-  readonly items = computed(() => this._state().items);
+  readonly items = computed(() => this._state().data);
 
   readonly isLoading = computed(() => this._state().loading);
   readonly error = computed(() => this._state().error);
-  readonly hasItems = computed(() => this._state().items.length > 0);
+  readonly hasItems = computed(() => this._state().data.length > 0);
 
   /**
    * @description
@@ -84,8 +75,8 @@ export class DashboardFacade {
    */
   private fetchItems$(ticketId: string | null, force = false): Observable<DashboardItemDto[]> {
     const state = this._state();
-    if (state.loading) return this.inFlightItems$ ?? of(state.items);
-    if (!force && state.loaded) return of(state.items);
+    if (state.loading) return this.inFlightItems$ ?? of(state.data);
+    if (!force && state.loaded) return of(state.data);
 
     this._state.update((s) => ({...s, loading: true, error: null}));
     const url = `${this.baseUrl}/dashboard/items`;
@@ -93,7 +84,7 @@ export class DashboardFacade {
 
     const request$ = this.http.get<DashboardItemDto[]>(url, {context}).pipe(
       tap((items) => {
-        this._state.update((s) => ({...s, items, loaded: true}));
+        this._state.update((s) => ({...s, data: items, loaded: true}));
       }),
       catchError((err: unknown) => {
         const message = parseErrorMessage(err, "Failed to load dashboard data");

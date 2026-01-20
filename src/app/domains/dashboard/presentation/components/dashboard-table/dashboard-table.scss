@@ -13,6 +13,6 @@
 
 // Ensure accessible focus states for the rows
 .mat-mdc-row:focus {
-  outline: 2px solid theme("colors.indigo.500");
+  outline: 2px solid var(--color-indigo-500);
   outline-offset: -2px;
 }

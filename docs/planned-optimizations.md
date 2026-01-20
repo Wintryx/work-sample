@@ -38,6 +38,12 @@ This document lists planned improvements to move the work sample toward a produc
 - Notification registry safety: add a UUID fallback when `crypto.randomUUID` is unavailable.
 - Auth persistence: keep localStorage for the demo, but note production preference for HttpOnly cookies or BFF.
 - Interceptor ordering: keep the documented order, add a small test to enforce it.
+- Mobile-first UI pass:
+  - Header burger menu for `md-` breakpoints (mat-menu).
+  - Mobile spacing defaults (`p-4`, `sm:p-6`) for page containers.
+  - Dashboard header becomes stacked on mobile; action buttons wrap.
+  - Table container gets horizontal scroll on small screens.
+  - Item detail and login cards use responsive padding (`p-6` -> `sm:p-8`).
 
 ## Test coverage additions
 - SSR guard behavior when the auth cookie is missing or invalid.

@@ -18,3 +18,9 @@ main {
     transform: translateY(0);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  main {
+    animation: none;
+  }
+}

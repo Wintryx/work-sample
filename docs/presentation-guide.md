@@ -40,6 +40,7 @@ Dieses Dokument dient als roter Faden für die Vorstellung des Projekts "EPM Pro
 *   **Thema**: Maintainability und Developer Experience (DX).
 *   **Punkte**:
     *   **Tailwind v4**: Modernste Utility-First Strategie.
+    *   **Angular Material 3**: Zugriff auf barrierefreie, konsistente Enterprise-Komponenten (z. B. Buttons, Inputs, Snackbars).
     *   **Sass-Abstraction**: Vermeidung von "Class Soup" im HTML durch Abstraktion in scoped SCSS via `@apply`.
     *   **Strict Quality Gates**: Demonstration der ESLint-Regeln (600 Zeilen Limit, OnPush Pflicht) und automatisierte Formatierung via Prettier.
 

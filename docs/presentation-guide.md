@@ -1,4 +1,4 @@
-﻿# ðŸŽ¤ Leitfaden zur Präsentation der Arbeitsprobe
+﻿# Leitfaden zur Präsentation der Arbeitsprobe
 
 Dieses Dokument dient als roter Faden für die Vorstellung des Projekts "EPM Progress Maker". Der Fokus liegt auf der Demonstration von Senior-Kompetenzen in den Bereichen Architektur, Sicherheit und Skalierbarkeit.
 
@@ -18,6 +18,7 @@ Dieses Dokument dient als roter Faden für die Vorstellung des Projekts "EPM Pro
     *   **Facade Pattern**: Die UI ist "dumm". Sämtliche Orchestrierung (Laden, Error-Handling, State-Updates) findet zentral in der Facade statt.
     *   **Resolver-Driven Loading**: Route-Resolver rufen `ensureLoaded()` auf, damit SSR/Refresh stabil sind und `computed()` side-effect free bleibt.
     *   **In-Flight Dedup**: Parallele Loads teilen sich denselben Request, um doppelte HTTP-Calls zu vermeiden.
+    *   **Generische Typen & Helfer**: Gemeinsame Verträge wie `Result<T, E>` und `ApiError<TCode>` vermeiden Redundanz und machen Refactorings sicherer als die frühere Ad-hoc-Typisierung.
 
 ## 3. Isomorphe Authentifizierung (SSR Mastery)
 *   **Thema**: Die Herausforderung von Server-Side Rendering in Angular 21.
@@ -32,6 +33,8 @@ Dieses Dokument dient als roter Faden für die Vorstellung des Projekts "EPM Pro
     *   **Ticket-System**: Registrierung von Nachrichten im `NotificationService` vor dem HTTP-Call.
     *   **HttpContext**: Die Ticket-ID reist durch den Interceptor.
     *   **Automatisierung**: Der `notificationInterceptor` lässt Toasts (Success/Error) vollautomatisch aus. UI-Komponenten bleiben dadurch komplett frei von Messaging-Logik.
+
+    *   **Typed API Error Codes**: `ApiError<TCode>` + domain codes enable deterministic error handling (e.g., Unauthorized -> logout + toast).
 
 ## 5. UI & Clean Code Standards
 *   **Thema**: Maintainability und Developer Experience (DX).
@@ -51,9 +54,9 @@ Dieses Dokument dient als roter Faden für die Vorstellung des Projekts "EPM Pro
 
 ---
 
-### ðŸ’¡ Drei SÃ¤tze für den "Winning Impression":
+### Drei Sätze für den "Winning Impression":
 
-1.  **Zur Skalierbarkeit**: *"Ich habe die Architektur so gewählt, dass die kognitive Last für neue Entwickler minimal bleibt“ jeder weiß durch die DDD-Struktur sofort, wo Code hingehÃ¶rt."*
+1.  **Zur Skalierbarkeit**: *"Ich habe die Architektur so gewählt, dass die kognitive Last für neue Entwickler minimal bleibt“ jeder weiß durch die DDD-Struktur sofort, wo Code hingehört."*
 2.  **Zur Technologie**: *"Wir nutzen das volle Potenzial von Angular 21, insbesondere Signal-based Inputs und Isomorphe Auth, um eine moderne, performante Web-App abzuliefern."*
 3.  **Zur Robustheit**: *"Fehlerbehandlung ist bei mir kein Afterthought, sondern durch Type-Guards und transaktionale Interceptoren tief in den Core-Workflow integriert."*
 

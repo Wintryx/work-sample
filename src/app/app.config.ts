@@ -2,7 +2,7 @@ import {ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListene
 import {provideRouter, withComponentInputBinding} from "@angular/router";
 
 import {routes} from "./app.routes";
-import {provideClientHydration, withEventReplay} from "@angular/platform-browser";
+import {provideClientHydration, withEventReplay, withHttpTransferCacheOptions} from "@angular/platform-browser";
 import {provideHttpClient, withFetch, withInterceptors} from "@angular/common/http";
 import {authInterceptor, provideAuth} from "@core/auth";
 import {mockBackendInterceptor} from "@core/http/mock-backend.interceptor";
@@ -34,6 +34,9 @@ export const appConfig: ApplicationConfig = {
        */
       withInterceptors([authInterceptor, notificationInterceptor, mockBackendInterceptor]),
     ),
-    provideClientHydration(withEventReplay()),
+    provideClientHydration(
+      withEventReplay(),
+      withHttpTransferCacheOptions({}),
+    ),
   ],
 };

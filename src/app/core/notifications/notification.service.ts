@@ -14,7 +14,14 @@ export class NotificationService {
      * Registers a planned notification and returns a unique Ticket ID.
      */
     register(obj: NotificationObject): string {
-        const ticketId = crypto.randomUUID();
+        /**
+         * @description
+         * Falls back to a deterministic ID when `crypto.randomUUID` is unavailable
+         * (e.g., on non-secure HTTP contexts during mobile testing).
+         */
+        const ticketId =
+            crypto?.randomUUID?.() ??
+            `ticket_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
         this._registry.update((map) => {
             const newMap = new Map(map);

@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from "@angular/core";
 import { AuthFacade } from "@core/auth";
 import { MatIcon } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { MatButton } from "@angular/material/button";
 import { DateFormatPipe } from "@shared/pipes/date-format-pipe";
 
 @Component({
   selector: "app-header-component",
-  imports: [MatIcon, RouterLink, RouterLinkActive, MatButton, DateFormatPipe],
+  imports: [MatIcon, MatMenuModule, RouterLink, RouterLinkActive, MatButton, DateFormatPipe],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
   standalone: true,

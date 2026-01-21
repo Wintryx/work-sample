@@ -41,13 +41,13 @@ None at the moment.
    - Mock interceptor is gated by `useMockBackend` so production builds always use real APIs.
 12. Notification registry safety
    - Added a UUID fallback when `crypto.randomUUID` is unavailable (mobile HTTP).
+13. Reduced template utility noise
+   - Introduced small `epm-*` classes via `@apply` in component-scoped SCSS for page headers, panels, cards, and auth layouts.
+   - Kept the pattern scoped to shared building blocks to avoid overengineering.
 
 ## Secondary refinements
 - Auth persistence: keep localStorage for the demo, but note production preference for HttpOnly cookies or BFF.
 - Interceptor ordering: keep the documented order, add a small test to enforce it.
-- Reduce template utility noise:
-  - Introduce a light naming pattern for reusable components (e.g., `.epm-panel`, `.epm-section-title`).
-  - Use `@apply` only for shared UI building blocks to keep HTML lean without overengineering.
 - SOLID-oriented refinements:
   - Repository interfaces for DIP/LSP: Introduce domain repositories (e.g., `DashboardRepository`) so facades depend on abstractions and data sources can be swapped without touching UI/use-case code.
   - Query/command facade split for ISP: Separate read-only signals/queries from write actions to keep facades small and purpose-driven as the domain grows.

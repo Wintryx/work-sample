@@ -42,6 +42,7 @@ Dieses Dokument dient als roter Faden für die Vorstellung des Projekts "EPM Pro
     *   **Tailwind v4**: Modernste Utility-First Strategie.
     *   **Angular Material 3**: Zugriff auf barrierefreie, konsistente Enterprise-Komponenten (z. B. Buttons, Inputs, Snackbars).
     *   **Sass-Abstraction**: Vermeidung von "Class Soup" im HTML durch Abstraktion in scoped SCSS via `@apply`.
+    *   **Hybrid Utility Pattern**: Kleine, semantische `epm-*` Klassen via `@apply` fuer wiederverwendbare Layout-Bausteine.
     *   **Strict Quality Gates**: Demonstration der ESLint-Regeln (600 Zeilen Limit, OnPush Pflicht) und automatisierte Formatierung via Prettier.
 
 ## 6. Testing Strategie

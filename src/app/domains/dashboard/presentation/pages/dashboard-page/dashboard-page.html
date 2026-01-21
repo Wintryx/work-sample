@@ -1,12 +1,12 @@
-<div class="space-y-6">
+<div class="epm-page">
   <!-- Header with Title and Refresh Action -->
   <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <div>
-      <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Project Progress</h2>
-      <p class="text-slate-500 text-sm">Monitor and track current development milestones.</p>
+      <h2 class="epm-page-title">Project Progress</h2>
+      <p class="epm-page-subtitle">Monitor and track current development milestones.</p>
     </div>
 
-    <div class="flex flex-wrap items-center gap-2">
+    <div class="epm-actions">
       <!-- Debug Button -->
       @if (isDev) {
         <button (click)="dashboardFacade.triggerError()" color="warn" mat-stroked-button>
@@ -32,7 +32,7 @@
   }
 
   <!-- Main Content Card -->
-  <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+  <div class="epm-panel overflow-hidden">
     @if (dashboardFacade.isLoading()) {
     <mat-progress-bar class="absolute top-0 w-full" mode="indeterminate"></mat-progress-bar>
     }
@@ -43,7 +43,7 @@
 
     <!-- Empty State -->
     @if (!dashboardFacade.isLoading() && !dashboardFacade.hasItems()) {
-    <div class="py-20 text-center flex flex-col items-center justify-center">
+    <div class="epm-empty-state flex flex-col items-center justify-center">
       <mat-icon class="text-slate-200 !h-16 !w-16 !text-6xl mb-4">analytics</mat-icon>
       <p class="text-slate-400 font-medium">No progress items found.</p>
     </div>

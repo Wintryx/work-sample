@@ -12,6 +12,10 @@ import {API_BASE_URL} from "@core/http/api.tokens";
 import {environment} from "@env/environment";
 
 
+const httpInterceptors = environment.useMockBackend
+  ? [authInterceptor, notificationInterceptor, mockBackendInterceptor]
+  : [authInterceptor, notificationInterceptor];
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -30,9 +34,9 @@ export const appConfig: ApplicationConfig = {
        * Interceptor Chain Order is crucial:
        * 1. Auth: Adds the Bearer Token to the request.
        * 2. Notification: Listens for success/error events to show Snackbars.
-       * 3. MockBackend: Simulates the server response (must be last to catch the modified request).
+       * 3. MockBackend: Simulates the server response (dev-only, must be last to catch the modified request).
        */
-      withInterceptors([authInterceptor, notificationInterceptor, mockBackendInterceptor]),
+      withInterceptors(httpInterceptors),
     ),
     provideClientHydration(
       withEventReplay(),

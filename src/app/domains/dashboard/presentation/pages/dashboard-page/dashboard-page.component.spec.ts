@@ -1,10 +1,9 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {Router} from "@angular/router";
 import {beforeEach, describe, expect, it, vi} from "vitest";
-import {DashboardPageComponent} from "./dashboard-page.component";
+import {DashboardItem, DashboardPageComponent} from "@domains/dashboard";
 import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
 import {signal} from "@angular/core";
-import {DashboardItem} from "@domains/dashboard";
 
 /**
  * @description

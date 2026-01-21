@@ -1,10 +1,9 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {provideRouter, RouterLink} from "@angular/router";
 import {beforeEach, describe, expect, it} from "vitest";
-import {ItemDetailPageComponent} from "./item-detail-page.component";
+import {DashboardItem, ItemDetailPageComponent, ItemStatus} from "@domains/dashboard";
 import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
 import {signal} from "@angular/core";
-import {DashboardItem, ItemStatus} from "@domains/dashboard";
 import {By} from "@angular/platform-browser";
 
 /**

@@ -13,6 +13,23 @@ const MOCK_DASHBOARD_DATA: DashboardItemDto[] = [
     {id: "1", title: "Feature: Login Logic", status: ItemStatus.Done, progress: 100},
     {id: "2", title: "Feature: Dashboard Table", status: ItemStatus.InProgress, progress: 45},
     {id: "3", title: "Feature: Unit Tests", status: ItemStatus.Todo, progress: 0},
+    {id: "4", title: "Feature: SSR Guard", status: ItemStatus.Done, progress: 100},
+    {id: "5", title: "Feature: Notifications", status: ItemStatus.InProgress, progress: 70},
+    {id: "6", title: "Feature: Auth Tokens", status: ItemStatus.InProgress, progress: 55},
+    {id: "7", title: "Feature: Layout Shell", status: ItemStatus.Done, progress: 100},
+    {id: "8", title: "Feature: Item Detail", status: ItemStatus.Done, progress: 100},
+    {id: "9", title: "Feature: Resolver Loading", status: ItemStatus.Done, progress: 100},
+    {id: "10", title: "Feature: Mock Backend", status: ItemStatus.InProgress, progress: 60},
+    {id: "11", title: "Feature: Error Handling", status: ItemStatus.InProgress, progress: 50},
+    {id: "12", title: "Feature: Auth Guards", status: ItemStatus.Done, progress: 100},
+    {id: "13", title: "Feature: Table Actions", status: ItemStatus.InProgress, progress: 35},
+    {id: "14", title: "Feature: Status Badges", status: ItemStatus.Done, progress: 100},
+    {id: "15", title: "Feature: Responsive Layout", status: ItemStatus.InProgress, progress: 40},
+    {id: "16", title: "Feature: Code Quality", status: ItemStatus.Done, progress: 100},
+    {id: "17", title: "Feature: Data Mapping", status: ItemStatus.Done, progress: 100},
+    {id: "18", title: "Feature: State Management", status: ItemStatus.InProgress, progress: 65},
+    {id: "19", title: "Feature: Testing Strategy", status: ItemStatus.InProgress, progress: 30},
+    {id: "20", title: "Feature: Release Checklist", status: ItemStatus.Todo, progress: 0},
 ];
 
 /**

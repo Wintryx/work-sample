@@ -1,3 +1,5 @@
+@reference "tailwindcss";
+
 :host {
   display: block;
   width: 100%;
@@ -6,6 +8,10 @@
   position: sticky;
   top: 0;
   z-index: 50;
+}
+
+.epm-header {
+  @apply h-16 border-b bg-white flex items-center px-4 sm:px-6 justify-between sticky top-0 z-50;
 }
 
 // Tip: If you want to use Tailwind inside SCSS for complex hover states

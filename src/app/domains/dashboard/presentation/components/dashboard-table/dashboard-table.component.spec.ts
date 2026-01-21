@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {beforeEach, describe, expect, it, vi} from "vitest";
-import {DashboardTableComponent} from "./dashboard-table";
+import {DashboardTableComponent} from "./dashboard-table.component";
 import {DashboardItem, ItemStatus} from "@domains/dashboard";
 
 /**

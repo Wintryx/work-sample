@@ -15,6 +15,7 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 - **Barrel Files**: Each module folder exposes a **Public API** via `index.ts`. External consumers are forbidden from importing internal files directly.
 - **Path Aliases**: Clean imports are enforced via TypeScript aliases (e.g., `@core/*`, `@domains/*`, `@shared/*`), preventing brittle relative paths.
 - **SOLID Mindset**: The architecture is intentionally aligned with SOLID principles (SRP via Facades/Services, OCP via Interceptors, DIP via DI tokens), and the current codebase already reflects these patterns.
+- **Component Naming**: Use the `*.component.ts|html|scss|spec.ts` naming scheme in `presentation/pages` and `presentation/components`. Selectors follow `app-<feature>-<name>`, and specs mirror the component filename for easy discovery.
 
 ## 3. State Management (Angular Signals)
 - **Signals-First**: Primary state mechanism using Angular 21 Signals for fine-grained reactivity.

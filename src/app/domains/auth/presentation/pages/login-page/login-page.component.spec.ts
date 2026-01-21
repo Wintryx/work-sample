@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {By} from "@angular/platform-browser";
 import {beforeEach, describe, expect, it, vi} from "vitest";
-import {LoginPage} from "./login-page";
+import {LoginPageComponent} from "./login-page.component";
 import {AuthFacade} from "@core/auth";
 
 /**
@@ -11,19 +11,19 @@ import {AuthFacade} from "@core/auth";
  */
 
 describe("LoginPage", () => {
-    let component: LoginPage;
-    let fixture: ComponentFixture<LoginPage>;
+    let component: LoginPageComponent;
+    let fixture: ComponentFixture<LoginPageComponent>;
     let authFacadeMock: { login: ReturnType<typeof vi.fn> };
 
     beforeEach(async () => {
         authFacadeMock = {login: vi.fn()};
 
         await TestBed.configureTestingModule({
-            imports: [LoginPage],
+            imports: [LoginPageComponent],
             providers: [{provide: AuthFacade, useValue: authFacadeMock}],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(LoginPage);
+        fixture = TestBed.createComponent(LoginPageComponent);
         component = fixture.componentInstance;
         await fixture.whenStable();
     });

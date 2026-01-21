@@ -16,15 +16,15 @@ export const dashboardRoutes: Routes = [
                 pathMatch: "full",
                 loadComponent: () =>
                     import(
-                        "@domains/dashboard/presentation/pages/dashboard-page/dashboard-page"
-                        ).then((m) => m.DashboardPage),
+                        "@domains/dashboard/presentation/pages/dashboard-page/dashboard-page.component"
+                        ).then((m) => m.DashboardPageComponent),
             },
             {
                 path: "items/:id",
                 loadComponent: () =>
                     import(
-                        "@domains/dashboard/presentation/pages/item-detail-page/item-detail-page"
-                        ).then((m) => m.ItemDetailPage),
+                        "@domains/dashboard/presentation/pages/item-detail-page/item-detail-page.component"
+                        ).then((m) => m.ItemDetailPageComponent),
             },
         ],
     },

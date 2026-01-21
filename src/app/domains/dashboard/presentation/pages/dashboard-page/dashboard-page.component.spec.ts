@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {Router} from "@angular/router";
 import {beforeEach, describe, expect, it, vi} from "vitest";
-import {DashboardPage} from "./dashboard-page";
+import {DashboardPageComponent} from "./dashboard-page.component";
 import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
 import {signal} from "@angular/core";
 import {DashboardItem} from "@domains/dashboard";
@@ -12,8 +12,8 @@ import {DashboardItem} from "@domains/dashboard";
  * Aligned with the Ticket-based notification system.
  */
 describe("DashboardPage", () => {
-    let component: DashboardPage;
-    let fixture: ComponentFixture<DashboardPage>;
+    let component: DashboardPageComponent;
+    let fixture: ComponentFixture<DashboardPageComponent>;
     let router: Router;
 
     // Fix: Explicitly type the mock signals to avoid TS2345
@@ -26,7 +26,7 @@ describe("DashboardPage", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [DashboardPage],
+            imports: [DashboardPageComponent],
             providers: [
                 {provide: DashboardFacade, useValue: facadeMock},
                 {
@@ -36,7 +36,7 @@ describe("DashboardPage", () => {
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(DashboardPage);
+        fixture = TestBed.createComponent(DashboardPageComponent);
         component = fixture.componentInstance;
         router = TestBed.inject(Router);
 

@@ -6,8 +6,8 @@
  */
 
 // Exporting Page Components for the router
-export * from "./presentation/pages/dashboard-page/dashboard-page";
-export * from "./presentation/pages/item-detail-page/item-detail-page";
+export * from "./presentation/pages/dashboard-page/dashboard-page.component";
+export * from "./presentation/pages/item-detail-page/item-detail-page.component";
 
 // Exporting Models if they are needed by other domains (optional)
 export * from "./domain/dashboard.models";

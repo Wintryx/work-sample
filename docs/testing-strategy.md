@@ -19,8 +19,8 @@ Focuses on pure logic in isolation.
 ### Integration Tests (15%)
 Validates the interaction between multiple units.
 - **HTTP Middleware**: Testing Functional Interceptors using `HttpTestingController` to verify security and notification headers (e.g., `auth.interceptor.spec.ts`).
-- **Smart Components**: Verifying orchestration between Facades, Router, and UI (e.g., `dashboard-page.spec.ts`).
-- **Dumb Components**: Testing the "Contract" via Signal-based inputs and outputs (e.g., `dashboard-table.spec.ts`).
+- **Smart Components**: Verifying orchestration between Facades, Router, and UI (e.g., `dashboard-page.component.spec.ts`).
+- **Dumb Components**: Testing the "Contract" via Signal-based inputs and outputs (e.g., `dashboard-table.component.spec.ts`).
 - **Route Resolvers**: Ensuring resolver-driven data loading behaves correctly during navigation and refresh.
 
 ### E2E Tests (5%)

@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {provideRouter, RouterLink} from "@angular/router";
 import {beforeEach, describe, expect, it} from "vitest";
-import {ItemDetailPage} from "./item-detail-page";
+import {ItemDetailPageComponent} from "./item-detail-page.component";
 import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
 import {signal} from "@angular/core";
 import {DashboardItem, ItemStatus} from "@domains/dashboard";
@@ -13,7 +13,7 @@ import {By} from "@angular/platform-browser";
  * Validates modern Signal-based routing inputs and reactive data binding.
  */
 describe("ItemDetailPage", () => {
-    let fixture: ComponentFixture<ItemDetailPage>;
+    let fixture: ComponentFixture<ItemDetailPageComponent>;
 
     // Tip: Ensure mock data is strictly typed
     const MOCK_ITEM: DashboardItem = {
@@ -30,14 +30,14 @@ describe("ItemDetailPage", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ItemDetailPage],
+            imports: [ItemDetailPageComponent],
             providers: [
                 {provide: DashboardFacade, useValue: facadeMock},
                 provideRouter([]),
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(ItemDetailPage);
+        fixture = TestBed.createComponent(ItemDetailPageComponent);
         // Note: No initial detectChanges() here to allow setInput() first.
     });
 

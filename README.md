@@ -1,37 +1,57 @@
 # EPM Progress Maker
 
-Enterprise-ready Angular 21 project demonstrating a senior-level architecture for a team of multiple developers.
+Enterprise-ready Angular 21 work sample showcasing a higher-level architecture with clear layering, typed contracts, and SSR-aware state handling.
 
-## 🚀 Architectural Highlights
-- **Domain-Driven Structure**: Strict boundaries between `core`, `domains`, and `shared`.
-- **State Management**: Reactive data flow using **Angular Signals** and the **Facade Pattern**.
-- **Modern Tooling**: Vitest for ultra-fast testing, ESLint with Accessibility rules, and Prettier.
-- **Security**: Functional Guards and Interceptors for a robust Auth-Flow.
+## Architectural Highlights
+- **DDD Layering**: Clear separation between `core`, `domains`, and `shared` with strict public APIs.
+- **Signals + Facades**: Reactive state via Angular Signals, orchestration via facades, SSR-safe resolver loading.
+- **Typed Contracts**: `Result<T, E>` and typed API error codes for explicit success/error flows.
+- **HTTP Pipeline**: Auth + Notification interceptors, mock backend gated by `useMockBackend`.
+- **SSR & Hydration**: Cookie-based auth bridge and client hydration support.
+- **UI Stack**: Tailwind CSS v4 for layout and Angular Material 3 for controls.
+- **Quality Gates**: ESLint + Prettier, tests via `npm run test`.
 
 ---
 
-## 🛠️ Getting Started
+## Getting Started
 
 ### Development server
-Run `npm run start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm run start` and open `http://localhost:4200/`.
+
+### Environment selection
+- **Development (default):** `ng serve` uses `environment.development.ts`.
+- **Production build/serve:** `ng serve --configuration production` (uses `environment.ts`).
+
+### Mock backend switch
+Use `useMockBackend` in the environment files to control whether the mock interceptor is active.
 
 ### Key Scripts
-- `npm run lint`: Execute ESLint static analysis.
-- `npm run format:fix`: Automatically fix code style via Prettier.
-- `npm run test`: Run unit tests using **Vitest**.
-- `npm run build`: Build the project for production.
+- `npm run start` - start dev server
+- `npm run lint` - run ESLint
+- `npm run format:fix` - format with Prettier
+- `npm run test` - run tests
+- `npm run build` - production build
 
 ---
 
-## 🏗️ Detailed Documentation
-For deep dives into our engineering decisions, please refer to:
+## Conventions
+- **Component naming:** `*.component.ts|html|scss|spec.ts`
+- **Selectors:** `app-<feature>-<name>`
+- **Docs:** architecture and decisions live in `docs/`
+
+---
+
+## Documentation
 - [Architecture & DDD](./docs/architecture.md)
-- [State Management (Signals)](./docs/state-management.md)
+- [State Management](./docs/state-management.md)
+- [Authentication Strategy](./docs/authentication-strategy.md)
 - [Testing Strategy](./docs/testing-strategy.md)
+- [Planned Optimizations](./docs/planned-optimizations.md)
+- [Presentation Guide](./docs/presentation-guide.md)
 
 ---
 
-## 🧩 Standard Angular CLI Commands
+## Angular CLI Reference
 <details>
 <summary>Click to expand CLI reference</summary>
 

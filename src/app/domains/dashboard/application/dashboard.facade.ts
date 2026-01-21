@@ -13,7 +13,7 @@
  * - Exposes read-only computed signals to ensure unidirectional data flow.
  */
 
-import {computed, DestroyRef, inject, Injectable, signal} from "@angular/core";
+import {computed, DestroyRef, inject, Injectable} from "@angular/core";
 import {HttpClient, HttpContext, HttpParams} from "@angular/common/http";
 import {DashboardItem, DashboardItemDto} from "@domains/dashboard/domain/dashboard.models";
 import {catchError, finalize, map, Observable, of, shareReplay, tap} from "rxjs";
@@ -22,15 +22,10 @@ import {API_BASE_URL} from "@core/http/api.tokens";
 import {NOTIFICATION_TICKET, NotificationType} from "@core/notifications/notification.models";
 import {NotificationService} from "@core/notifications/notification.service";
 import {extractApiError, hasApiErrorCode, parseErrorMessage} from "@core/http/http-errors";
-import {createLoadableState, LoadableState} from "@core/state/loadable";
+import {createLoadableSignal, createLoadableState} from "@core/state/loadable-state";
 import {toDashboardItems} from "./dashboard.mappers";
 import {DashboardErrorCode} from "@domains/dashboard/domain/dashboard.error-codes";
 import {AuthFacade} from "@core/auth";
-
-/**
- * @description Internal state for the Dashboard.
- */
-type DashboardState = LoadableState<DashboardItem[]>;
 
 @Injectable({providedIn: "root"})
 export class DashboardFacade {
@@ -46,7 +41,7 @@ export class DashboardFacade {
      */
     private inFlightItems$: Observable<DashboardItem[]> | null = null;
 
-    private readonly _state = signal<DashboardState>(createLoadableState<DashboardItem[]>([]));
+    private readonly _state = createLoadableSignal<DashboardItem[]>([]);
 
     // Public Signals for the UI (Computed to ensure read-only access)
     readonly items = computed(() => this._state().data);
@@ -86,7 +81,7 @@ export class DashboardFacade {
 
     /**
      * @description
-     * Debug method to simulate a failing API request.
+     * Debug a method to simulate a failing API request.
      * Demonstrates automated error toast via notificationInterceptor.
      */
     triggerError(): void {

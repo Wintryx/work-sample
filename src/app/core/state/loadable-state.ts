@@ -3,6 +3,7 @@ import {signal} from "@angular/core";
 /**
  * @description
  * Generic state shape for loadable resources (lists, entities, etc.).
+ * Keeps loading/loaded/error flags consistent across domains and features.
  */
 export interface LoadableState<T> {
     data: T;

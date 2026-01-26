@@ -44,6 +44,9 @@ None at the moment.
 13. Reduced template utility noise
    - Introduced small `epm-*` classes via `@apply` in component-scoped SCSS for page headers, panels, cards, and auth layouts.
    - Kept the pattern scoped to shared building blocks to avoid overengineering.
+14. Error normalization + notification policy
+   - Added `normalizeApiError(...)` as a single source of truth for error messages and codes.
+   - Clarified notification behavior: errors always show; success toasts require a ticket or explicit opt-in.
 
 ## Secondary refinements
 - Auth persistence: keep localStorage for the demo, but note production preference for HttpOnly cookies or BFF.

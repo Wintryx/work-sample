@@ -30,17 +30,18 @@ Dieses Dokument dient als roter Faden für die Vorstellung des Projekts "EPM Pro
 ## 4. Transactional Messaging (Innovation)
 *   **Thema**: Wie behandeln wir Feedback bei parallelen Requests?
 *   **Punkte**:
-    *   **Ticket-System**: Registrierung von Nachrichten im `NotificationService` vor dem HTTP-Call.
+    *   **Ticket-System**: Optionales Registrieren von Nachrichten im `NotificationService` vor dem HTTP-Call, wenn ein Toast individuell gesteuert werden soll.
     *   **HttpContext**: Die Ticket-ID reist durch den Interceptor.
-    *   **Automatisierung**: Der `notificationInterceptor` lässt Toasts (Success/Error) vollautomatisch aus. UI-Komponenten bleiben dadurch komplett frei von Messaging-Logik.
-
-    *   **Typed API Error Codes**: `ApiError<TCode>` + domain codes enable deterministic error handling (e.g., Unauthorized -> logout + toast).
+    *   **Automatisierung**: Der `notificationInterceptor` zeigt Fehler immer an (Default-Konfiguration), während Success-Toasts nur mit Ticket oder bewusstem Opt-in kommen. UI-Komponenten bleiben dadurch komplett frei von Messaging-Logik.
+    *   **Error Normalization**: `normalizeApiError(...)` vereinheitlicht Message/Status/Code, sodass Fehlerflüsse konsistent und testbar bleiben.
+    *   **Typed API Error Codes**: `ApiError<TCode>` + Domain-Codes ermöglichen deterministisches Error-Handling (z. B. Unauthorized -> logout + toast).
 
 ## 5. UI & Clean Code Standards
 *   **Thema**: Maintainability und Developer Experience (DX).
 *   **Punkte**:
     *   **Tailwind v4**: Modernste Utility-First Strategie.
     *   **Angular Material 3**: Zugriff auf barrierefreie, konsistente Enterprise-Komponenten (z. B. Buttons, Inputs, Snackbars).
+    *   **Lodash Utilities**: Konsistente Helper für Daten-Transformationen, Defaults und Guards – macht Code kürzer und lesbarer.
     *   **Sass-Abstraction**: Vermeidung von "Class Soup" im HTML durch Abstraktion in scoped SCSS via `@apply`.
     *   **Hybrid Utility Pattern**: Kleine, semantische `epm-*` Klassen via `@apply` fuer wiederverwendbare Layout-Bausteine.
     *   **Strict Quality Gates**: Demonstration der ESLint-Regeln (600 Zeilen Limit, OnPush Pflicht) und automatisierte Formatierung via Prettier.

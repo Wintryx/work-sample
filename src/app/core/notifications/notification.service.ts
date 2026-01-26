@@ -1,5 +1,6 @@
 import {inject, Injectable, signal} from "@angular/core";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import defaults from "lodash/defaults";
 import {NotificationOptions, NotificationType,} from "./notification.models";
 
 @Injectable({providedIn: "root"})
@@ -18,6 +19,8 @@ export class NotificationService {
     /**
      * @description
      * Registers a planned notification and returns a unique Ticket ID.
+     * Use this when you want to control the exact toast that will be shown
+     * for a later async response (e.g. success or specific error variants).
      */
     registerTicket(obj: NotificationOptions): string {
         /**
@@ -41,6 +44,8 @@ export class NotificationService {
     /**
      * @description
      * Plays the successful notification for a ticket and cleans up.
+     * Success toasts are only shown when a matching ticket is registered,
+     * unless `displayAlwaysSuccessNotification` is enabled.
      */
     notifySuccess(ticketId?: string | null, message?: string): void {
         let obj: NotificationOptions = {
@@ -66,22 +71,25 @@ export class NotificationService {
     /**
      * @description
      * Discards the success message and shows the error instead.
+     * Error toasts are always displayed. When a ticket exists, it is used to
+     * override defaults; otherwise the default error configuration is applied.
      */
     notifyError(ticketId: string | null, message: string): void {
-        let notificationObject: NotificationOptions = {
-            ...this.defaultErrorNotificationObject,
-            message: message ?? this.defaultErrorNotificationObject.message,
-        };
+        let notificationObject = this.buildErrorNotification(message);
         if (ticketId) {
             const plannedNotification = this._registry().get(ticketId);
             if (plannedNotification) {
-                notificationObject = plannedNotification;
+                notificationObject = this.buildErrorNotification(message, plannedNotification);
                 this.clear(ticketId);
             }
         }
         this.notify(notificationObject);
     }
 
+    /**
+     * @description
+     * Removes a ticket from the registry to prevent stale notifications.
+     */
     private clear(ticketId: string): void {
         this._registry.update((map) => {
             const newMap = new Map(map);
@@ -90,6 +98,10 @@ export class NotificationService {
         });
     }
 
+    /**
+     * @description
+     * Shows a snackbar with the resolved notification options.
+     */
     private notify(options: NotificationOptions): void {
         if (options.clearExisting) this.snackBar.dismiss();
 
@@ -99,5 +111,21 @@ export class NotificationService {
             verticalPosition: "bottom",
             panelClass: [`notification-${options.type}`],
         });
+    }
+
+    /**
+     * @description
+     * Combines defaults with optional overrides. Uses lodash `defaults` to
+     * ensure any undefined fields fall back to the global error configuration.
+     */
+    private buildErrorNotification(
+        message?: string | null,
+        overrides: Partial<NotificationOptions> = {},
+    ): NotificationOptions {
+        const base = {
+            ...overrides,
+            message: overrides.message ?? message,
+        };
+        return defaults(base, this.defaultErrorNotificationObject) as NotificationOptions;
     }
 }

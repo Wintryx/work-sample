@@ -24,11 +24,8 @@ export const notificationInterceptor: HttpInterceptorFn = (req, next) => {
                     notificationService.notifyError(ticketId, message);
                     return;
                 }
-                const fallbackTicket = notificationService.registerTicket({
-                    ...notificationService.defaultErrorNotificationObject,
-                    message: message,
-                });
-                notificationService.notifyError(fallbackTicket, message);
+                // No ticket means "use global defaults and show the error".
+                notificationService.notifyError(null, message);
             },
         }),
     );

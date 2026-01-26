@@ -6,7 +6,10 @@ Enterprise-ready Angular 21 work sample showcasing a higher-level architecture w
 - **DDD Layering**: Clear separation between `core`, `domains`, and `shared` with strict public APIs.
 - **Signals + Facades**: Reactive state via Angular Signals, orchestration via facades, SSR-safe resolver loading.
 - **Typed Contracts**: `Result<T, E>` and typed API error codes for explicit success/error flows.
+- **Error Normalization**: `normalizeApiError(...)` ensures consistent message/status/code handling.
 - **HTTP Pipeline**: Auth + Notification interceptors, mock backend gated by `useMockBackend`.
+- **Notification Policy**: Errors always show with defaults; success toasts are ticket-driven (or explicitly opted-in).
+- **Utility Helpers**: Lodash for concise, readable transformations and safe defaults.
 - **SSR & Hydration**: Cookie-based auth bridge and client hydration support.
 - **UI Stack**: Tailwind CSS v4 for layout and Angular Material 3 for controls.
 - **Quality Gates**: ESLint + Prettier, tests via `npm run test`.

@@ -26,6 +26,8 @@ RxJS remains the standard for **asynchronous event streams**. We follow a "Strea
 For global notifications, we use a **Reactive Map within a Signal**.
 - Actions are registered with a unique `Ticket ID`.
 - This prevents race conditions in complex UIs where multiple asynchronous operations occur simultaneously.
+ - Errors can always fall back to the global default configuration even without a ticket.
+ - Success toasts are ticket-driven by design (unless explicitly opted-in).
 
 ### Signal-based Routing Inputs
 We utilize Angular's modern `withComponentInputBinding()` feature.

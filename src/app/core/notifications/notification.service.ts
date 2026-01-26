@@ -75,7 +75,7 @@ export class NotificationService {
      * Error toasts are always displayed using the global defaults plus overrides.
      */
     notifyError(message: string, overrides: Partial<NotificationOptions> = {}): void {
-        const notificationObject = this.buildErrorNotification(message, overrides);
+        const notificationObject = this.buildErrorHttpNotification(message, overrides);
         this.notify(notificationObject);
     }
 
@@ -98,7 +98,7 @@ export class NotificationService {
             : {...overrides};
         const overrideMessage = mergedOverrides.message;
         const resolvedMessage = overrideMessage ?? message;
-        const notificationObject = this.buildErrorNotification(
+        const notificationObject = this.buildErrorHttpNotification(
             resolvedMessage,
             omit(mergedOverrides, "message"),
         );
@@ -137,7 +137,7 @@ export class NotificationService {
      * Combines defaults with optional overrides. Uses lodash `defaults` to
      * ensure any undefined fields fall back to the global error configuration.
      */
-    private buildErrorNotification(
+    private buildErrorHttpNotification(
         message?: string | null,
         overrides: Partial<NotificationOptions> = {},
     ): NotificationOptions {

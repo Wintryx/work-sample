@@ -5,7 +5,7 @@
       <mat-icon>bolt</mat-icon>
     </div>
     <div class="flex flex-col leading-tight text-left">
-      <span class="font-bold text-slate-900 tracking-tight uppercase">EPM</span>
+      <span class="font-bold text-slate-900 tracking-tight uppercase">Wintryx</span>
       <span class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]"
         >Progress Maker</span
       >
@@ -23,10 +23,10 @@
     </div>
 
     <button
-      mat-icon-button
-      class="md:!hidden"
       [matMenuTriggerFor]="mobileMenu"
       aria-label="Open navigation menu"
+      class="md:!hidden"
+      mat-icon-button
     >
       <mat-icon>menu</mat-icon>
     </button>
@@ -34,9 +34,9 @@
     @if (authFacade.isAuthenticated()) {
       <nav class="hidden md:flex items-center gap-1">
         <a
+          class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
           routerLink="/dashboard"
           routerLinkActive="bg-slate-100 text-indigo-700"
-          class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
         >
           Dashboard
         </a>
@@ -47,20 +47,20 @@
         <span class="text-sm font-medium text-slate-700">{{ authFacade.user()?.username }}</span>
 
         <button
-          mat-flat-button
-          color="primary"
           (click)="onLogout()"
           class="!rounded-xl shadow-lg shadow-indigo-100"
+          color="primary"
+          mat-flat-button
         >
           <mat-icon class="mr-2">logout</mat-icon> Logout
         </button>
       </div>
     } @else {
       <button
-        mat-flat-button
-        color="primary"
-        routerLink="/login"
         class="hidden md:inline-flex !rounded-xl shadow-lg shadow-indigo-100"
+        color="primary"
+        mat-flat-button
+        routerLink="/login"
       >
         Sign In
       </button>
@@ -70,7 +70,7 @@
 
 <mat-menu #mobileMenu="matMenu">
   @if (authFacade.isAuthenticated()) {
-    <button mat-menu-item disabled>
+    <button disabled mat-menu-item>
       <mat-icon>account_circle</mat-icon>
       <span>{{ authFacade.user()?.username }}</span>
     </button>
@@ -78,7 +78,7 @@
       <mat-icon>dashboard</mat-icon>
       <span>Dashboard</span>
     </button>
-    <button mat-menu-item (click)="onLogout()">
+    <button (click)="onLogout()" mat-menu-item>
       <mat-icon>logout</mat-icon>
       <span>Logout</span>
     </button>

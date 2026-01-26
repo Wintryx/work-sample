@@ -21,11 +21,11 @@ export const notificationInterceptor: HttpInterceptorFn = (req, next) => {
             error: (err: unknown) => {
                 const message = normalizeApiError(err).message;
                 if (ticketId) {
-                    notificationService.notifyError(ticketId, message);
+                    notificationService.notifyErrorWithTicket(ticketId, message);
                     return;
                 }
                 // No ticket means "use global defaults and show the error".
-                notificationService.notifyError(null, message);
+                notificationService.notifyError(message);
             },
         }),
     );

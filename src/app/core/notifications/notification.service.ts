@@ -1,6 +1,7 @@
 import {inject, Injectable, signal} from "@angular/core";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import defaults from "lodash/defaults";
+import omit from "lodash/omit";
 import {NotificationOptions, NotificationType,} from "./notification.models";
 
 @Injectable({providedIn: "root"})
@@ -19,8 +20,8 @@ export class NotificationService {
     /**
      * @description
      * Registers a planned notification and returns a unique Ticket ID.
-     * Use this when you want to control the exact toast that will be shown
-     * for a later async response (e.g. success or specific error variants).
+     * Use this for success toasts or special error variants that require
+     * per-request customization.
      */
     registerTicket(obj: NotificationOptions): string {
         /**
@@ -71,18 +72,36 @@ export class NotificationService {
     /**
      * @description
      * Discards the success message and shows the error instead.
-     * Error toasts are always displayed. When a ticket exists, it is used to
-     * override defaults; otherwise the default error configuration is applied.
+     * Error toasts are always displayed using the global defaults plus overrides.
      */
-    notifyError(ticketId: string | null, message: string): void {
-        let notificationObject = this.buildErrorNotification(message);
-        if (ticketId) {
-            const plannedNotification = this._registry().get(ticketId);
-            if (plannedNotification) {
-                notificationObject = this.buildErrorNotification(message, plannedNotification);
-                this.clear(ticketId);
-            }
+    notifyError(message: string, overrides: Partial<NotificationOptions> = {}): void {
+        const notificationObject = this.buildErrorNotification(message, overrides);
+        this.notify(notificationObject);
+    }
+
+    /**
+     * @description
+     * Shows an error using a pre-registered ticket (special case).
+     * Falls back to defaults when the ticket is missing.
+     */
+    notifyErrorWithTicket(
+        ticketId: string,
+        message: string,
+        overrides: Partial<NotificationOptions> = {},
+    ): void {
+        const plannedNotification = this._registry().get(ticketId);
+        if (plannedNotification) {
+            this.clear(ticketId);
         }
+        const mergedOverrides = plannedNotification
+            ? {...plannedNotification, ...overrides}
+            : {...overrides};
+        const overrideMessage = mergedOverrides.message;
+        const resolvedMessage = overrideMessage ?? message;
+        const notificationObject = this.buildErrorNotification(
+            resolvedMessage,
+            omit(mergedOverrides, "message"),
+        );
         this.notify(notificationObject);
     }
 

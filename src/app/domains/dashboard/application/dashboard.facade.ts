@@ -85,15 +85,12 @@ export class DashboardFacade {
      * Demonstrates automated error toast via notificationInterceptor.
      */
     triggerError(): void {
-        // We don't even need a ticket here, because our interceptor
-        // catches ALL HttpErrors if we want, or we use a System ticket.
+        // No ticket needed here: errors use global defaults automatically.
         const url = `${this.baseUrl}/debug/error`;
         this._state.update((s) => ({...s, loading: true, error: null}));
 
         this.http
-            .get(url, {
-                context: new HttpContext().set(NOTIFICATION_TICKET, "DEBUG_ERROR"),
-            })
+            .get(url)
             .pipe(finalize(() => this._state.update((s) => ({...s, loading: false}))))
             .subscribe({
                 error: (err) => {
@@ -108,11 +105,11 @@ export class DashboardFacade {
      * Debug helper that simulates an unauthorized response and exercises the typed error-code path.
      */
     triggerUnauthorized(): void {
-        const ticket = this.notificationService.registerTicket({
-            ...this.notificationService.defaultErrorNotificationObject,
-            message: "Custom Message - Unauthorized",
-        });
-        this.fetchItems$(ticket, true, DashboardErrorCode.Unauthorized)
+        // const ticket = this.notificationService.registerTicket({
+        //     ...this.notificationService.defaultErrorNotificationObject,
+        //     message: "Custom Message - Unauthorized",
+        // });
+        this.fetchItems$(null, true, DashboardErrorCode.Unauthorized)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }

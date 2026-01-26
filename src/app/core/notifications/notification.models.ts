@@ -26,12 +26,14 @@ export interface NotificationOptions {
     clearExisting?: boolean;
     /** Action label, e.g., 'Retry' or 'Close' */
     actionLabel?: string;
+    message: string;
+    type: NotificationType;
 }
 
 /**
  * @description Represents a structured message internally.
  */
-export interface NotificationObject extends NotificationOptions {
-    message: string;
-    type: NotificationType;
-}
+// export interface NotificationObject extends NotificationOptions {
+//     message: string;
+//     type: NotificationType;
+// }

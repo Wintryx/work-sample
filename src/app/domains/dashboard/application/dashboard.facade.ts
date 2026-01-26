@@ -21,7 +21,7 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {API_BASE_URL} from "@core/http/api.tokens";
 import {NOTIFICATION_TICKET, NotificationType} from "@core/notifications/notification.models";
 import {NotificationService} from "@core/notifications/notification.service";
-import {extractApiError, hasApiErrorCode, parseErrorMessage} from "@core/http/http-errors";
+import {normalizeApiError} from "@core/http/http-errors";
 import {createLoadableSignal, createLoadableState} from "@core/state/loadable-state";
 import {toDashboardItems} from "./dashboard.mappers";
 import {DashboardErrorCode} from "@domains/dashboard/domain/dashboard.error-codes";
@@ -71,8 +71,8 @@ export class DashboardFacade {
      * @description Example of a domain-specific action.
      */
     refresh(): void {
-        const ticket = this.notificationService.register({
-            message: "Dashboard data updated.",
+        const ticket = this.notificationService.registerTicket({
+            message: "- Custom Message - " + "Dashboard data updated.",
             type: NotificationType.Success,
             clearExisting: true,
         });
@@ -97,8 +97,8 @@ export class DashboardFacade {
             .pipe(finalize(() => this._state.update((s) => ({...s, loading: false}))))
             .subscribe({
                 error: (err) => {
-                    const message = parseErrorMessage(err, "Simulated error");
-                    this._state.update((s) => ({...s, error: message}));
+                    const normalized = normalizeApiError(err, "Simulated error");
+                    this._state.update((s) => ({...s, error: normalized.message}));
                 },
             });
     }
@@ -108,11 +108,11 @@ export class DashboardFacade {
      * Debug helper that simulates an unauthorized response and exercises the typed error-code path.
      */
     triggerUnauthorized(): void {
-        // this.notificationService.fail(
-        //     null,
-        //     "You are not authenticated. The action was canceled."
-        // );
-        this.fetchItems$("DEBUG_UNAUTHORIZED", true, DashboardErrorCode.Unauthorized)
+        const ticket = this.notificationService.registerTicket({
+            ...this.notificationService.defaultErrorNotificationObject,
+            message: "Custom Message - Unauthorized",
+        });
+        this.fetchItems$(ticket, true, DashboardErrorCode.Unauthorized)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }
@@ -145,14 +145,13 @@ export class DashboardFacade {
                 this._state.update((s) => ({...s, data: items, loaded: true}));
             }),
             catchError((err: unknown) => {
-                if (hasApiErrorCode(err, DashboardErrorCode.Unauthorized)) {
+                const normalized = normalizeApiError<DashboardErrorCode>(err, "Failed to load dashboard data");
+                if (normalized.code === DashboardErrorCode.Unauthorized) {
                     this._state.set(createLoadableState<DashboardItem[]>([]));
                     this.authFacade.logout();
                     return of<DashboardItem[]>([]);
                 }
-                const apiError = extractApiError<DashboardErrorCode>(err);
-                const message = apiError?.message ?? parseErrorMessage(err, "Failed to load dashboard data");
-                this._state.update((s) => ({...s, error: message}));
+                this._state.update((s) => ({...s, error: normalized.message}));
                 return of<DashboardItem[]>([]);
             }),
             finalize(() => {

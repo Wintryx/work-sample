@@ -1,19 +1,25 @@
 import {inject, Injectable, signal} from "@angular/core";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {NotificationObject, NotificationOptions, NotificationType,} from "./notification.models";
+import {NotificationOptions, NotificationType,} from "./notification.models";
 
 @Injectable({providedIn: "root"})
 export class NotificationService {
+    displayAlwaysSuccessNotification = signal(false);
+    public defaultErrorNotificationObject: NotificationOptions = {
+        message: "An error occurred.",
+        type: NotificationType.Error,
+        actionLabel: "OK",
+        clearExisting: true,
+        duration: 4000
+    };
     private readonly snackBar = inject(MatSnackBar);
-    // private readonly injector = inject(Injector);
-
-    private readonly _registry = signal<Map<string, NotificationObject>>(new Map());
+    private readonly _registry = signal<Map<string, NotificationOptions>>(new Map());
 
     /**
      * @description
      * Registers a planned notification and returns a unique Ticket ID.
      */
-    register(obj: NotificationObject): string {
+    registerTicket(obj: NotificationOptions): string {
         /**
          * @description
          * Falls back to a deterministic ID when `crypto.randomUUID` is unavailable
@@ -36,11 +42,24 @@ export class NotificationService {
      * @description
      * Plays the successful notification for a ticket and cleans up.
      */
-    complete(ticketId: string): void {
-        const obj = this._registry().get(ticketId);
-        if (obj) {
-            this.notify(obj.message, obj.type, obj);
-            this.clear(ticketId);
+    notifySuccess(ticketId?: string | null, message?: string): void {
+        let obj: NotificationOptions = {
+            message: message ?? "",
+            type: NotificationType.Success,
+            actionLabel: "OK",
+            clearExisting: true,
+            duration: 4000
+        };
+        if (ticketId) {
+            if (this._registry().get(ticketId) !== undefined) {
+                obj = this._registry().get(ticketId)!;
+                this.notify(obj);
+                this.clear(ticketId);
+            }
+        } else {
+            if (message && this.displayAlwaysSuccessNotification()) {
+                this.notify(obj);
+            }
         }
     }
 
@@ -48,9 +67,19 @@ export class NotificationService {
      * @description
      * Discards the success message and shows the error instead.
      */
-    fail(ticketId: string | null, errorMessage: string): void {
-        this.notify(errorMessage, NotificationType.Error, {clearExisting: true});
-        if (ticketId) this.clear(ticketId);
+    notifyError(ticketId: string | null, message: string): void {
+        let notificationObject: NotificationOptions = {
+            ...this.defaultErrorNotificationObject,
+            message: message ?? this.defaultErrorNotificationObject.message,
+        };
+        if (ticketId) {
+            const plannedNotification = this._registry().get(ticketId);
+            if (plannedNotification) {
+                notificationObject = plannedNotification;
+                this.clear(ticketId);
+            }
+        }
+        this.notify(notificationObject);
     }
 
     private clear(ticketId: string): void {
@@ -61,14 +90,14 @@ export class NotificationService {
         });
     }
 
-    private notify(message: string, type: NotificationType, options: NotificationOptions = {}): void {
+    private notify(options: NotificationOptions): void {
         if (options.clearExisting) this.snackBar.dismiss();
 
-        this.snackBar.open(message, options.actionLabel ?? "OK", {
+        this.snackBar.open(options.message, options.actionLabel ?? "OK", {
             duration: options.duration ?? 4000,
             horizontalPosition: "end",
             verticalPosition: "bottom",
-            panelClass: [`notification-${type}`],
+            panelClass: [`notification-${options.type}`],
         });
     }
 }

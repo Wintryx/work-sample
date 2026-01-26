@@ -33,7 +33,7 @@ export class AuthFacade {
     login(username: string, password: string): void {
         const result = this.authService.login(username, password);
         if (!result.ok) {
-            this.notificationService.fail(null, result.error.message);
+            this.notificationService.notifyError(null, result.error.message);
             return;
         }
         // Centralized redirect after login

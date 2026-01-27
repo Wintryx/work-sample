@@ -1,5 +1,4 @@
-<div class="overflow-x-auto">
-  <table mat-table [dataSource]="items()" class="w-full min-w-[640px]">
+<table mat-table [dataSource]="items()" class="w-full min-w-[640px]">
   <!-- ID Column -->
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef class="!text-slate-400 !font-semibold uppercase text-xs">
@@ -61,7 +60,7 @@
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr
     mat-row
     *matRowDef="let row; columns: displayedColumns"
@@ -69,4 +68,3 @@
     class="hover:bg-slate-50 cursor-pointer transition-colors"
   ></tr>
   </table>
-</div>

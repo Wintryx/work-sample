@@ -15,10 +15,12 @@
 :host {
   display: block;
   position: relative; // Needed for the absolute progress bar positioning
+  height: 100%;
+  min-height: 0;
 }
 
 .epm-page {
-  @apply space-y-6;
+  @apply flex flex-col gap-6 h-full min-h-0;
 }
 
 .epm-page-title {
@@ -34,7 +36,7 @@
 }
 
 .epm-panel {
-  @apply bg-white rounded-2xl shadow-sm border border-slate-200;
+  @apply bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col min-h-0;
 }
 
 .epm-page-header {
@@ -43,4 +45,8 @@
 
 .epm-empty-state {
   @apply py-20 text-center bg-white rounded-3xl border-2 border-dashed border-slate-200;
+}
+
+.epm-table-scroll {
+  @apply flex-1 min-h-0 overflow-auto;
 }

@@ -27,16 +27,18 @@
     <mat-progress-bar class="absolute top-0 w-full" mode="indeterminate"></mat-progress-bar>
     }
 
-    <!-- Delegating the complex table rendering to the dumb component -->
-    <app-dashboard-table (selectItem)="navigateToDetail($event)" [items]="dashboardFacade.items()">
-    </app-dashboard-table>
+    <div class="epm-table-scroll">
+      <!-- Delegating the complex table rendering to the dumb component -->
+      <app-dashboard-table (selectItem)="navigateToDetail($event)" [items]="dashboardFacade.items()">
+      </app-dashboard-table>
 
-    <!-- Empty State -->
-    @if (!dashboardFacade.isLoading() && !dashboardFacade.hasItems()) {
-    <div class="epm-empty-state flex flex-col items-center justify-center">
-      <mat-icon class="text-slate-200 !h-16 !w-16 !text-6xl mb-4">analytics</mat-icon>
-      <p class="text-slate-400 font-medium">No progress items found.</p>
+      <!-- Empty State -->
+      @if (!dashboardFacade.isLoading() && !dashboardFacade.hasItems()) {
+      <div class="epm-empty-state flex flex-col items-center justify-center">
+        <mat-icon class="text-slate-200 !h-16 !w-16 !text-6xl mb-4">analytics</mat-icon>
+        <p class="text-slate-400 font-medium">No progress items found.</p>
+      </div>
+      }
     </div>
-    }
   </div>
 </div>

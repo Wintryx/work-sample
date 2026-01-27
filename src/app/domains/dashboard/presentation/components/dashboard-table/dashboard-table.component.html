@@ -1,26 +1,30 @@
-<table mat-table [dataSource]="items()" class="w-full min-w-[640px]">
+<table mat-table [dataSource]="items()" class="epm-table">
   <!-- ID Column -->
   <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef class="!text-slate-400 !font-semibold uppercase text-xs">
+    <th mat-header-cell *matHeaderCellDef class="epm-table-header-cell">
       ID
     </th>
-    <td mat-cell *matCellDef="let item" class="text-slate-500 font-mono text-xs">#{{ item.id }}</td>
+    <td mat-cell *matCellDef="let item" class="epm-table-cell epm-table-cell-id">
+      #{{ item.id }}
+    </td>
   </ng-container>
 
   <!-- Title Column -->
   <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef class="!text-slate-400 !font-semibold uppercase text-xs">
+    <th mat-header-cell *matHeaderCellDef class="epm-table-header-cell">
       Title
     </th>
-    <td mat-cell *matCellDef="let item" class="font-medium text-slate-900">{{ item.title }}</td>
+    <td mat-cell *matCellDef="let item" class="epm-table-cell epm-table-cell-title">
+      {{ item.title }}
+    </td>
   </ng-container>
 
   <!-- Status Column -->
   <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef class="!text-slate-400 !font-semibold uppercase text-xs">
+    <th mat-header-cell *matHeaderCellDef class="epm-table-header-cell">
       Status
     </th>
-    <td mat-cell *matCellDef="let item">
+    <td mat-cell *matCellDef="let item" class="epm-table-cell">
       <!-- Reusing the shared component -->
       <app-status-badge
         [variant]="statusBadgeFor(item.status).variant"
@@ -31,17 +35,17 @@
 
   <!-- Progress Column -->
   <ng-container matColumnDef="progress">
-    <th mat-header-cell *matHeaderCellDef class="!text-slate-400 !font-semibold uppercase text-xs">
+    <th mat-header-cell *matHeaderCellDef class="epm-table-header-cell">
       Completion
     </th>
-    <td mat-cell *matCellDef="let item" class="w-48">
-      <div class="flex items-center gap-3">
+    <td mat-cell *matCellDef="let item" class="epm-table-cell epm-table-cell-progress">
+      <div class="epm-table-progress">
         <mat-progress-bar
-          class="rounded-full h-2"
+          class="epm-progress-bar"
           mode="determinate"
           [value]="item.progress"
         ></mat-progress-bar>
-        <span class="text-xs font-bold text-slate-500">{{ item.progress }}%</span>
+        <span class="epm-progress-label">{{ item.progress }}%</span>
       </div>
     </td>
   </ng-container>
@@ -51,20 +55,24 @@
     <th
       mat-header-cell
       *matHeaderCellDef
-      class="!text-slate-400 !font-semibold uppercase text-xs"
+      class="epm-table-header-cell"
     ></th>
-    <td mat-cell *matCellDef="let item" class="text-right">
+    <td mat-cell *matCellDef="let item" class="epm-table-cell epm-table-cell-actions">
       <button mat-icon-button (click)="selectItem.emit(item.id); $event.stopPropagation()">
-        <mat-icon class="text-slate-400">chevron_right</mat-icon>
+        <mat-icon class="epm-action-icon">chevron_right</mat-icon>
       </button>
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr
+    mat-header-row
+    *matHeaderRowDef="displayedColumns; sticky: true"
+    class="epm-table-header-row"
+  ></tr>
   <tr
     mat-row
     *matRowDef="let row; columns: displayedColumns"
     (click)="selectItem.emit(row.id)"
-    class="hover:bg-slate-50 cursor-pointer transition-colors"
+    class="epm-table-row"
   ></tr>
   </table>

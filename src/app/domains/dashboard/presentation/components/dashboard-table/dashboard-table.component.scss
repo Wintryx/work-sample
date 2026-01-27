@@ -1,32 +1,66 @@
+@reference "tailwindcss";
+
 :host {
   display: block;
 }
 
-.mat-mdc-table {
-  background: transparent;
+.epm-table {
+  @apply w-full min-w-[640px] bg-transparent;
 }
 
-// Keep the header visible while the table body scrolls.
-.mat-mdc-header-row {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background: white;
+.epm-table-header-row {
+  @apply bg-white;
 }
 
-.mat-mdc-header-cell {
-  position: sticky;
-  top: 0;
-  background: white;
+.epm-table-header-cell {
+  @apply text-slate-400 font-semibold uppercase text-xs;
 }
 
-// Remove the last border for a cleaner card-in-card look
-.mat-mdc-row:last-child .mat-mdc-cell {
-  border-bottom: none;
+.epm-table-cell {
+  @apply text-slate-600;
 }
 
-// Ensure accessible focus states for the rows
-.mat-mdc-row:focus {
+.epm-table-cell-id {
+  @apply text-slate-500 font-mono text-xs;
+}
+
+.epm-table-cell-title {
+  @apply font-medium text-slate-900;
+}
+
+.epm-table-cell-progress {
+  @apply w-48;
+}
+
+.epm-table-cell-actions {
+  @apply text-right;
+}
+
+.epm-table-progress {
+  @apply flex items-center gap-3;
+}
+
+.epm-progress-bar {
+  @apply rounded-full h-2;
+}
+
+.epm-progress-label {
+  @apply text-xs font-bold text-slate-500;
+}
+
+.epm-action-icon {
+  @apply text-slate-400;
+}
+
+.epm-table-row {
+  @apply hover:bg-slate-50 cursor-pointer transition-colors;
+}
+
+.epm-table-row:focus {
   outline: 2px solid var(--color-indigo-500);
   outline-offset: -2px;
+}
+
+.epm-table-row:last-child .epm-table-cell {
+  border-bottom: none;
 }

@@ -20,6 +20,12 @@ export interface AuthConfig {
 export const AUTH_CONFIG = new InjectionToken<AuthConfig>("AUTH_CONFIG");
 
 /**
+ * @description Global constants for authentication storage keys.
+ */
+export const AUTH_SESSION_KEY = "epm_auth_session";
+export const AUTH_COOKIE_NAME = "epm_authenticated";
+
+/**
  * @description Authentication status constants to avoid magic strings.
  * Using a const object + ValueOf keeps unions consistent and tree-shakeable.
  */
@@ -29,14 +35,6 @@ export const AuthStatus = {
 } as const;
 
 export type AuthStatus = ValueOf<typeof AuthStatus>;
-export type AuthenticatedStatus = typeof AuthStatus.Authenticated;
-export type UnauthenticatedStatus = typeof AuthStatus.Unauthenticated;
-
-/**
- * @description Global constants for authentication storage keys.
- */
-export const AUTH_SESSION_KEY = "epm_auth_session";
-export const AUTH_COOKIE_NAME = "epm_authenticated";
 
 /**
  * @description Public User model.
@@ -50,40 +48,50 @@ interface AuthUser {
  * @description Internal state definition using Discriminated Unions.
  */
 export type AuthState =
-    | { status: AuthenticatedStatus; user: AuthUser; token: string }
-    | { status: UnauthenticatedStatus };
+    | { status: typeof AuthStatus.Authenticated; user: AuthUser; token: string }
+    | { status: typeof AuthStatus.Unauthenticated };
 
-export const AuthErrorState = {
-    INVALID_PASSWORD: "INVALID_PASSWORD",
-    BROWSER_ONLY: "BROWSER_ONLY",
-    OIDC_FLOW_FAILED: "OIDC_FLOW_FAILED",
+/**
+ * @description
+ * Centralized auth error constants grouped by purpose.
+ */
+const AuthErrors = {
+    State: {
+        INVALID_PASSWORD: "INVALID_PASSWORD",
+        BROWSER_ONLY: "BROWSER_ONLY",
+        OIDC_FLOW_FAILED: "OIDC_FLOW_FAILED",
+    },
+    Code: {
+        Unauthorized: "AUTH_UNAUTHORIZED",
+    },
 } as const;
 
-export type AuthErrorState = ValueOf<typeof AuthErrorState>;
+/**
+ * @description
+ * Internal authentication error states for login flows.
+ */
+export const AuthErrorState = AuthErrors.State;
+
+export type AuthErrorState = ValueOf<typeof AuthErrors.State>;
 
 /**
  * @description
  * Typed API error codes related to authentication flows.
  */
-export const AuthErrorCode = {
-    Unauthorized: "AUTH_UNAUTHORIZED",
-} as const;
+export const AuthErrorCode = AuthErrors.Code;
 
-export type AuthErrorCode = ValueOf<typeof AuthErrorCode>;
-
-export interface AuthSuccess {
-    status: AuthenticatedStatus;
-}
-
-export interface AuthFailure {
-    status: UnauthenticatedStatus;
-    authErrorState: AuthErrorState;
-    message: string;
-}
+export type AuthErrorCode = ValueOf<typeof AuthErrors.Code>;
 
 /**
  * @description
  * Discriminated Union for Auth results.
  * Provides absolute type safety for ok/error branches.
  */
-export type AuthResult = Result<AuthSuccess, AuthFailure>;
+export type AuthResult = Result<
+    { status: typeof AuthStatus.Authenticated },
+    {
+        status: typeof AuthStatus.Unauthenticated;
+        authErrorState: AuthErrorState;
+        message: string;
+    }
+>;

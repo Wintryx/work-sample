@@ -67,7 +67,6 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
         ).pipe(delay(800));
     }
 
-    // --- NEW: ERROR SIMULATION ENDPOINT ---
     if (url === `${baseUrl}/debug/error` && method === "GET") {
         return timer(800).pipe(
             mergeMap(() =>
@@ -79,6 +78,22 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
                         message: "Simulated API failure for debugging purposes.",
                         code: DashboardErrorCode.ItemsLoadFailed,
                     }
+                })),
+            ),
+        );
+    }
+
+    if (url === `${baseUrl}/debug/unauthorized` && method === "GET") {
+        return timer(800).pipe(
+            mergeMap(() =>
+                throwError(() => new HttpErrorResponse({
+                    status: 401,
+                    statusText: "Unauthorized",
+                    error: {
+                        status: 401,
+                        message: "Session expired. Please log in again.",
+                        code: "AUTH_UNAUTHORIZED",
+                    },
                 })),
             ),
         );

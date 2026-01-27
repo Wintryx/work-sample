@@ -1,0 +1,63 @@
+<div class="epm-page">
+  <header class="epm-page-header">
+    <div>
+      <h2 class="epm-page-title">Notifications</h2>
+      <p class="epm-page-subtitle">
+        Simulate API errors and auth expirations to validate the global toast behavior.
+      </p>
+    </div>
+  </header>
+
+  <div class="epm-panel">
+    <div class="p-6 space-y-6 text-sm text-slate-600">
+      <div class="space-y-1">
+        <p class="text-xs uppercase tracking-[0.2em] text-slate-400 font-semibold">
+          Simulate Errors
+        </p>
+        <p>
+          These actions intentionally trigger HTTP failures so the notification interceptor can
+          surface consistent snackbars.
+        </p>
+      </div>
+
+      <form (ngSubmit)="onSimulateError()" [formGroup]="errorForm" class="grid gap-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Custom error message</mat-label>
+          <input
+            formControlName="message"
+            matInput
+            placeholder="Optional custom message for the error toast"
+          />
+        </mat-form-field>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            [disabled]="!isDev"
+            color="warn"
+            mat-stroked-button
+            type="submit"
+          >
+            <mat-icon class="mr-2">error_outline</mat-icon>
+            Simulate Error
+          </button>
+          <button
+            (click)="onSimulateUnauthorized()"
+            [disabled]="!isDev"
+            color="warn"
+            mat-stroked-button
+            type="button"
+          >
+            <mat-icon class="mr-2">lock</mat-icon>
+            Simulate Unauthorized
+          </button>
+        </div>
+      </form>
+
+      @if (!isDev) {
+        <div class="text-amber-600 font-medium">
+          This page is disabled in production builds.
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -67,7 +67,11 @@ describe("HeaderComponent", () => {
 
         const links = fixture.debugElement.queryAll(By.directive(RouterLink));
         const dashboardLink = links.find((link) => link.attributes["routerLink"] === "/dashboard");
+        const notificationsLink = links.find(
+            (link) => link.attributes["routerLink"] === "/notifications",
+        );
         expect(dashboardLink).toBeTruthy();
+        expect(notificationsLink).toBeTruthy();
     });
 
     it("should call logout when clicking the logout button", () => {

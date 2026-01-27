@@ -7,16 +7,6 @@
     </div>
 
     <div class="epm-actions">
-      <!-- Debug Button -->
-      @if (isDev) {
-        <button (click)="dashboardFacade.triggerError()" color="warn" mat-stroked-button>
-          Simulate Error
-        </button>
-        <button (click)="dashboardFacade.triggerUnauthorized()" color="warn" mat-stroked-button>
-          Simulate Unauthorized
-        </button>
-      }
-
       <button (click)="dashboardFacade.refresh()" color="primary" mat-flat-button>
         <mat-icon class="mr-2">refresh</mat-icon> Refresh Data
       </button>

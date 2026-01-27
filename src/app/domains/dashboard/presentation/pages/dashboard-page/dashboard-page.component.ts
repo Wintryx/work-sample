@@ -8,7 +8,6 @@ import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
 import {
     DashboardTableComponent
 } from "@domains/dashboard/presentation/components/dashboard-table/dashboard-table.component";
-import {environment} from "@env/environment";
 
 @Component({
     selector: "app-dashboard-page",
@@ -25,7 +24,6 @@ import {environment} from "@env/environment";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPageComponent {
-    protected readonly isDev = !environment.production;
     protected readonly dashboardFacade = inject(DashboardFacade);
     private readonly router = inject(Router);
 

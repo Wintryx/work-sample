@@ -17,6 +17,14 @@ export const routes: Routes = [
     loadChildren: () =>
       import("@domains/dashboard/presentation/dashboard.routes").then((m) => m.dashboardRoutes),
   },
+  {
+    path: "notifications",
+    canMatch: [authGuard],
+    loadChildren: () =>
+      import("@domains/notifications/presentation/notifications.routes").then(
+        (m) => m.notificationsRoutes,
+      ),
+  },
   // Fallback
   { path: "**", redirectTo: "dashboard" },
 ];

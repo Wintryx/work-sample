@@ -61,6 +61,16 @@ export const AuthErrorState = {
 
 export type AuthErrorState = ValueOf<typeof AuthErrorState>;
 
+/**
+ * @description
+ * Typed API error codes related to authentication flows.
+ */
+export const AuthErrorCode = {
+    Unauthorized: "AUTH_UNAUTHORIZED",
+} as const;
+
+export type AuthErrorCode = ValueOf<typeof AuthErrorCode>;
+
 export interface AuthSuccess {
     status: AuthenticatedStatus;
 }

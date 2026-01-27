@@ -32,7 +32,6 @@
 
         <div class="flex flex-wrap items-center gap-2">
           <button
-            [disabled]="!isDev"
             color="warn"
             mat-stroked-button
             type="submit"
@@ -42,7 +41,6 @@
           </button>
           <button
             (click)="onSimulateUnauthorized()"
-            [disabled]="!isDev"
             color="warn"
             mat-stroked-button
             type="button"
@@ -52,12 +50,6 @@
           </button>
         </div>
       </form>
-
-      @if (!isDev) {
-        <div class="text-amber-600 font-medium">
-          This page is disabled in production builds.
-        </div>
-      }
     </div>
   </div>
 </div>

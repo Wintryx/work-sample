@@ -1,7 +1,7 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient, HttpContext} from "@angular/common/http";
 import {API_BASE_URL} from "@core/http/api.tokens";
-import {AuthFacade} from "@core/auth";
+import {AuthErrorCode, AuthFacade} from "@core/auth";
 import {normalizeApiError} from "@core/http/http-errors";
 import {NotificationService} from "@core/notifications/notification.service";
 import {NOTIFICATION_TICKET} from "@core/notifications/notification.models";
@@ -17,24 +17,6 @@ export class NotificationsFacade {
     private readonly baseUrl = inject(API_BASE_URL);
     private readonly authFacade = inject(AuthFacade);
     private readonly notificationService = inject(NotificationService);
-
-    /**
-     * @description
-     * Silently consumes simulated errors to avoid console noise.
-     */
-    private readonly handleSimulatedError = (): void => {
-    };
-
-    /**
-     * @description
-     * Normalizes unauthorized errors and triggers a logout when needed.
-     */
-    private readonly handleUnauthorizedError = (err: unknown): void => {
-        const normalized = normalizeApiError(err);
-        if (normalized.status === 401) {
-            this.authFacade.logout();
-        }
-    };
 
     /**
      * @description
@@ -64,6 +46,24 @@ export class NotificationsFacade {
             error: this.handleUnauthorizedError,
         });
     }
+
+    /**
+     * @description
+     * Silently consumes simulated errors to avoid console noise.
+     */
+    private readonly handleSimulatedError = (): void => { /* empty */
+    };
+
+    /**
+     * @description
+     * Normalizes unauthorized errors and triggers a logout when needed.
+     */
+    private readonly handleUnauthorizedError = (err: unknown): void => {
+        const normalized = normalizeApiError<AuthErrorCode>(err);
+        if (normalized.code === AuthErrorCode.Unauthorized || normalized.status === 401) {
+            this.authFacade.logout();
+        }
+    };
 
     /**
      * @description

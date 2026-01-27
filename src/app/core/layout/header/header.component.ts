@@ -5,6 +5,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import {RouterLink, RouterLinkActive} from "@angular/router";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {DateFormatPipe} from "@shared/pipes/date-format-pipe";
+import {environment} from "@env/environment";
 
 @Component({
     selector: "app-header-component",
@@ -15,16 +16,23 @@ import {DateFormatPipe} from "@shared/pipes/date-format-pipe";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-    // Using the facade to drive the UI state
     protected readonly authFacade = inject(AuthFacade);
+    protected readonly isDev = !environment.production;
     protected readonly currentTime = signal(new Date());
-    private readonly timer = setInterval(() => this.currentTime.set(new Date()), 1000 * 60); // Update every minute
+    private readonly timer = setInterval(() => this.currentTime.set(new Date()), 1000 * 60);
 
+    /**
+     * @description
+     * Registers a cleanup handler for the live clock timer.
+     */
     constructor() {
-        // Cleanup timer to prevent memory leaks
         inject(DestroyRef).onDestroy(() => clearInterval(this.timer));
     }
 
+    /**
+     * @description
+     * Delegates logout to the AuthFacade.
+     */
     protected onLogout(): void {
         this.authFacade.logout();
     }

@@ -40,13 +40,15 @@
         >
           Dashboard
         </a>
-        <a
-          class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
-          routerLink="/notifications"
-          routerLinkActive="bg-slate-100 text-indigo-700"
-        >
-          Notifications
-        </a>
+        @if (isDev) {
+          <a
+            class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+            routerLink="/notifications"
+            routerLinkActive="bg-slate-100 text-indigo-700"
+          >
+            Notifications
+          </a>
+        }
       </nav>
 
       <!-- User Profile & Logout -->
@@ -85,10 +87,12 @@
       <mat-icon>dashboard</mat-icon>
       <span>Dashboard</span>
     </button>
-    <button mat-menu-item routerLink="/notifications">
-      <mat-icon>notifications</mat-icon>
-      <span>Notifications</span>
-    </button>
+    @if (isDev) {
+      <button mat-menu-item routerLink="/notifications">
+        <mat-icon>notifications</mat-icon>
+        <span>Notifications</span>
+      </button>
+    }
     <button (click)="onLogout()" mat-menu-item>
       <mat-icon>logout</mat-icon>
       <span>Logout</span>

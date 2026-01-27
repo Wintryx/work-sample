@@ -40,6 +40,7 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 - **Token-based Injection**: Environment-specific variables are mapped to **Injection Tokens** (e.g., `API_BASE_URL`, `AUTH_CONFIG`) during bootstrap.
 - **Environment Parity**: Uses Angular's modern file-replacement strategy to swap `environment.ts` (Production) with `environment.development.ts` at build time.
 - **Feature Flags**: `useMockBackend` gates the mock interceptor so production builds always target real APIs.
+- **Dev-only Tooling**: Debug routes like `/notifications` are registered only when `environment.production` is false.
 
 ## 7. UI, Styling & Accessibility
 - **Hybrid CSS Strategy**: Combines **Tailwind CSS v4** for rapid utility-first layouting with **Angular Material 3** for accessible, enterprise-ready components.

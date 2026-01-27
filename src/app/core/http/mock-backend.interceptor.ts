@@ -4,6 +4,7 @@ import {DashboardItemDto, ItemStatus} from "@domains/dashboard/domain/dashboard.
 import {DashboardErrorCode} from "@domains/dashboard/domain/dashboard.error-codes";
 import {inject} from "@angular/core";
 import {API_BASE_URL} from "@core/http/api.tokens";
+import {AuthErrorCode} from "@core/auth";
 
 /**
  * @description
@@ -92,7 +93,7 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
                     error: {
                         status: 401,
                         message: "Session expired. Please log in again.",
-                        code: "AUTH_UNAUTHORIZED",
+                        code: AuthErrorCode.Unauthorized,
                     },
                 })),
             ),

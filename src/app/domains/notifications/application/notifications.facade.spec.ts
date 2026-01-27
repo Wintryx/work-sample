@@ -3,6 +3,7 @@ import {HttpClient, HttpContext, HttpErrorResponse} from "@angular/common/http";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {throwError} from "rxjs";
 import {NotificationsFacade} from "./notifications.facade";
+import {AuthErrorCode} from "@core/auth";
 import {NotificationOptions, NotificationType, NOTIFICATION_TICKET} from "@core/notifications/notification.models";
 import {NotificationService} from "@core/notifications/notification.service";
 import {AuthFacade} from "@core/auth";
@@ -48,6 +49,11 @@ const describeNotificationsFacade = (): void => {
         return new HttpErrorResponse({
             status: 401,
             statusText: "Unauthorized",
+            error: {
+                status: 401,
+                message: "Session expired",
+                code: AuthErrorCode.Unauthorized,
+            },
         });
     };
 

@@ -33,9 +33,9 @@ Dieses Dokument dient als roter Faden für die Vorstellung des Projekts "EPM Pro
     *   **Ticket-System**: Optionales Registrieren von Nachrichten im `NotificationService` vor dem HTTP-Call, wenn ein Toast individuell gesteuert werden soll.
     *   **HttpContext**: Die Ticket-ID reist durch den Interceptor.
     *   **Automatisierung**: Der `notificationInterceptor` zeigt Fehler immer an (Default-Konfiguration), während Success-Toasts nur mit Ticket oder bewusstem Opt-in kommen. UI-Komponenten bleiben dadurch komplett frei von Messaging-Logik.
-    *   **Notifications-Playground**: Eigene Seite mit Aktionen ("Simulate Error/Unauthorized"), um die Toast-Pipeline und Logout-Flow gezielt zu demonstrieren.
+    *   **Notifications-Playground**: Eigene Seite mit Aktionen ("Simulate Error/Unauthorized"), um die Toast-Pipeline und Logout-Flow gezielt zu demonstrieren (dev-only Route).
     *   **Error Normalization**: `normalizeApiError(...)` vereinheitlicht Message/Status/Code, sodass Fehlerflüsse konsistent und testbar bleiben.
-    *   **Typed API Error Codes**: `ApiError<TCode>` + Domain-Codes ermöglichen deterministisches Error-Handling (z. B. Unauthorized -> logout + toast).
+    *   **Typed API Error Codes**: `ApiError<TCode>` + Domain-Codes ermöglichen deterministisches Error-Handling (z. B. Unauthorized -> logout + toast) – ergänzt durch `AuthErrorCode` für Auth-spezifische Fehler.
 
 ## 5. UI & Clean Code Standards
 *   **Thema**: Maintainability und Developer Experience (DX).

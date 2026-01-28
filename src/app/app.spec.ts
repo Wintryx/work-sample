@@ -1,23 +1,53 @@
-import { TestBed } from '@angular/core/testing';
-import { App } from './app';
+import {signal} from "@angular/core";
+import {TestBed} from "@angular/core/testing";
+import {provideRouter} from "@angular/router";
+import {beforeEach, describe, expect, it} from "vitest";
+import {App} from "./app";
+import {AuthFacade} from "@core/auth";
 
-describe('App', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [App],
-    }).compileComponents();
-  });
+/**
+ * @description
+ * Unit tests for the App shell.
+ * Verifies the base layout elements are rendered.
+ */
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
+describe("App", () => {
+    beforeEach(async () => {
+        const authFacadeMock = {
+            isAuthenticated: signal(false),
+            user: signal<{ id: string; username: string } | null>(null),
+        };
 
-  it('should render title', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, epm-progress-maker');
-  });
+        await TestBed.configureTestingModule({
+            imports: [App],
+            providers: [
+                provideRouter([]),
+                {provide: AuthFacade, useValue: authFacadeMock},
+            ],
+        }).compileComponents();
+    });
+
+    it("should create the app", () => {
+        const fixture = TestBed.createComponent(App);
+        const app = fixture.componentInstance;
+        expect(app).toBeTruthy();
+    });
+
+    it("should render header and footer components", () => {
+        const fixture = TestBed.createComponent(App);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector("app-header-component")).toBeTruthy();
+        expect(host.querySelector("app-footer-component")).toBeTruthy();
+    });
+
+    it("should include a router outlet in the layout", () => {
+        const fixture = TestBed.createComponent(App);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector("router-outlet")).toBeTruthy();
+    });
 });
+

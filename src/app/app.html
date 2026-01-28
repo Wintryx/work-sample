@@ -1,37 +1,11 @@
-<div class="min-h-screen bg-slate-50 flex flex-col font-sans">
-  <!-- Top Navigation Header -->
-  <header class="h-16 border-b bg-white flex items-center px-6 justify-between sticky top-0 z-50">
-    <div class="flex items-center gap-4">
-      <div class="bg-indigo-600 text-white p-1.5 rounded-lg shadow-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-        </svg>
-      </div>
-      <div class="flex flex-col leading-tight">
-        <span class="font-bold text-slate-900 tracking-tight">EPM</span>
-        <span class="text-xs text-slate-500 font-medium uppercase tracking-widest">Progress Maker</span>
-      </div>
-    </div>
-
-    <div class="flex items-center gap-3">
-      <span class="text-sm text-slate-400 mr-2">v1.0.0</span>
-      <!-- Navigation Links -->
-      <nav class="hidden md:flex items-center gap-1">
-        <a routerLink="/dashboard" routerLinkActive="bg-slate-100 text-indigo-700" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">Dashboard</a>
-      </nav>
-      <div class="h-6 w-px bg-slate-200 mx-2"></div>
-      <button mat-stroked-button color="primary" routerLink="/login">Login</button>
-    </div>
-  </header>
+<div class="h-screen bg-slate-50 flex flex-col font-sans overflow-hidden">
+  <app-header-component />
 
   <!-- Main Content Area -->
-  <main class="flex-1 p-6 lg:p-10 max-w-7xl mx-auto w-full">
+  <main class="flex-1 min-h-0 p-4 sm:p-6 lg:p-10 max-w-7xl mx-auto w-full overflow-hidden">
     <!-- Breadcrumbs or Page Title could go here -->
     <router-outlet />
   </main>
 
-  <!-- Footer (optional but professional) -->
-  <footer class="py-6 border-t bg-white text-center text-slate-400 text-xs">
-    &copy; 2026 EPM Progress Maker &bull; Work Sample
-  </footer>
+  <app-footer-component />
 </div>

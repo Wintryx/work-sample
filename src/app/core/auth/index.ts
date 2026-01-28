@@ -9,22 +9,31 @@
  * @publicApi
  * Main interface for UI components to interact with authentication state.
  */
-export * from './auth.facade';
+export * from "./auth.facade";
 
 /**
  * @publicApi
  * Routing guard to protect unauthorized access to protected domains.
  */
-export * from './auth.guard';
+export * from "./guards/auth.guard";
 
 /**
  * @internalApi
  * HTTP Interceptor for injecting Bearer tokens.
  * Exported for registration in the global application configuration.
  */
-export * from './auth.interceptor';
+export * from "./data-access/auth.interceptor";
 /**
  * @publicApi
  * Common types and enums for authentication.
  */
-export * from './auth.models';
+export * from "./data-access/auth.models";
+
+/**
+ * @publicApi
+ * Functional provider hub for the Authentication infrastructure.
+ * Encapsulates all auth-related dependency injection tokens and services
+ * into a unified bootstrap function.
+ */
+export * from "./data-access/auth.providers";
+

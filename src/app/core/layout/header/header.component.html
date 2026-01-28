@@ -1,0 +1,114 @@
+<header class="wtx-header">
+  <!-- Brand Logo -->
+  <div class="flex items-center gap-4 cursor-pointer" routerLink="/">
+    <div class="bg-indigo-600 text-white p-1.5 rounded-lg shadow-sm">
+      <mat-icon>bolt</mat-icon>
+    </div>
+    <div class="flex flex-col leading-tight text-left">
+      <span class="font-bold text-slate-900 tracking-tight uppercase">Wintryx</span>
+      <span class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]"
+        >Progess Maker</span
+      >
+    </div>
+  </div>
+
+  <!-- Navigation & Actions Section -->
+  <div class="flex items-center gap-3 md:gap-4">
+    @if (authFacade.isAuthenticated()) {
+      <nav class="hidden md:flex items-center gap-1 md:order-1">
+        <a
+          class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+          routerLink="/dashboard"
+          routerLinkActive="bg-slate-100 text-indigo-700"
+        >
+          Dashboard
+        </a>
+        @if (isDev) {
+          <a
+            class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+            routerLink="/notifications"
+            routerLinkActive="bg-slate-100 text-indigo-700"
+          >
+            Notifications
+          </a>
+        }
+      </nav>
+
+      <div class="hidden md:flex items-center md:order-2">
+        <div
+          class="flex items-center text-slate-400 text-xs font-medium bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 shadow-inner mr-3"
+        >
+          <mat-icon class="!text-[14px] !h-[14px] !w-[14px] mr-2">schedule</mat-icon>
+          {{ currentTime() | dateFormat }}
+        </div>
+
+        <!-- User Profile & Logout -->
+        <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+          <span class="text-sm font-medium text-slate-700">{{ authFacade.user()?.username }}</span>
+
+          <button
+            (click)="onLogout()"
+            class="!rounded-xl shadow-lg shadow-indigo-100"
+            color="primary"
+            mat-flat-button
+          >
+            <mat-icon class="mr-2">logout</mat-icon> Logout
+          </button>
+        </div>
+      </div>
+    } @else {
+      <button
+        class="hidden md:inline-flex !rounded-xl shadow-lg shadow-indigo-100"
+        color="primary"
+        mat-flat-button
+        routerLink="/login"
+      >
+        Sign In
+      </button>
+    }
+
+    <div
+      class="flex md:hidden items-center text-slate-400 text-[11px] font-medium bg-slate-50 px-2.5 py-1.5 rounded-full border border-slate-100 shadow-inner ml-auto mr-2"
+    >
+      <mat-icon class="!text-[14px] !h-[14px] !w-[14px] mr-1.5">schedule</mat-icon>
+      {{ currentTime() | dateFormat }}
+    </div>
+
+    <button
+      [matMenuTriggerFor]="mobileMenu"
+      aria-label="Open navigation menu"
+      class="md:!hidden order-2"
+      mat-icon-button
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+</header>
+
+<mat-menu #mobileMenu="matMenu">
+  @if (authFacade.isAuthenticated()) {
+    <button disabled mat-menu-item>
+      <mat-icon>account_circle</mat-icon>
+      <span>{{ authFacade.user()?.username }}</span>
+    </button>
+    <button mat-menu-item routerLink="/dashboard">
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </button>
+    @if (isDev) {
+      <button mat-menu-item routerLink="/notifications">
+        <mat-icon>notifications</mat-icon>
+        <span>Notifications</span>
+      </button>
+    }
+    <button (click)="onLogout()" mat-menu-item>
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  } @else {
+    <button mat-menu-item routerLink="/login">
+      <mat-icon>login</mat-icon>
+      <span>Sign In</span>
+    </button>
+  }
+</mat-menu>

@@ -1,38 +1,53 @@
-//   components only uses this Facade.
+//   components only use this Facade.
 //   Serves currentUser = computed(...), isAuthenticated = signal(...) and
-//   Methodes like login() oder logout().
+//   Methods like login() oder logout().
 //   Reason: Complexity reduction of the Service and App.
 
-
-import {computed, inject, Injectable} from '@angular/core';
-import {AuthService} from './auth.service';
-import {AuthStatus} from './auth.models';
+import {computed, inject, Injectable} from "@angular/core";
+import {AuthService} from "./data-access/auth.service";
+import {AuthStatus} from "./data-access/auth.models";
+import {Router} from "@angular/router";
+import {NotificationService} from "@core/notifications/notification.service";
 
 /**
  * @description
  * Facade for Authentication.
  * Decouples the UI from the underlying AuthService implementation.
  */
-@Injectable({providedIn: 'root'})
+@Injectable({providedIn: "root"})
 export class AuthFacade {
-  private readonly authService = inject(AuthService);
+    private readonly authService = inject(AuthService);
+    // Computed signals for reactive UI updates
+    readonly user = computed(() => {
+        const s = this.authService.state();
+        return s.status === AuthStatus.Authenticated ? s.user : null;
+    });
+    public readonly isAuthenticated = this.authService.isAuthenticated;
+    private readonly router = inject(Router); // Router injizieren
+    private readonly notificationService = inject(NotificationService);
 
-  // Computed signals for reactive UI updates
-  readonly user = computed(() => {
-    const s = this.authService.state();
-    return s.status === AuthStatus.Authenticated ? s.user : null;
-  });
+    /**
+     * @description
+     * Attempts login via AuthService, shows a snackbar on failure, and redirects on success.
+     */
+    login(username: string, password: string): void {
+        const result = this.authService.login(username, password);
+        if (!result.ok) {
+            this.notificationService.notifyError(result.error.message);
+            return;
+        }
+        // Centralized redirect after login
+        this.router.navigate(["/dashboard"]);
+    }
 
-  readonly isAuthenticated = computed(() =>
-    this.authService.state().status === AuthStatus.Authenticated
-  );
-
-  login(username: string, _password?: string): void {
-    // We only pass username for the mock, but the API is ready for password.
-    this.authService.login(username);
-  }
-
-  logout(): void {
-    this.authService.logout();
-  }
+    /**
+     * @description
+     * Centralized logout logic.
+     * Clears the state and ensures the user is redirected to a public page.
+     */
+    logout(): void {
+        this.authService.logout();
+        // Ensure the user is kicked out of protected areas immediately.
+        this.router.navigate(["/login"]);
+    }
 }

@@ -1,0 +1,13 @@
+@reference "tailwindcss";
+
+:host {
+  display: block;
+}
+
+.wtx-auth-page {
+  @apply flex flex-col items-center justify-center min-h-[60vh] px-4;
+}
+
+.wtx-auth-card {
+  @apply w-full max-w-md p-6 sm:p-8 bg-white rounded-2xl shadow-xl border border-slate-100;
+}

@@ -1,0 +1,29 @@
+@reference "tailwindcss";
+
+:host {
+  display: block;
+}
+
+.wtx-page {
+  @apply space-y-6;
+}
+
+.wtx-page-title {
+  @apply text-2xl font-bold text-slate-900 tracking-tight;
+}
+
+.wtx-page-subtitle {
+  @apply text-slate-500 text-sm;
+}
+
+.wtx-actions {
+  @apply flex flex-wrap items-center gap-2;
+}
+
+.wtx-panel {
+  @apply bg-white rounded-2xl shadow-sm border border-slate-200;
+}
+
+.wtx-page-header {
+  @apply flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between;
+}

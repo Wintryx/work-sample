@@ -1,26 +1,46 @@
-import {ApplicationConfig, provideBrowserGlobalErrorListeners} from '@angular/core';
-import {provideRouter} from '@angular/router';
+import {ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners,} from "@angular/core";
+import {provideRouter, withComponentInputBinding} from "@angular/router";
 
-import {routes} from './app.routes';
-import {provideClientHydration, withEventReplay} from '@angular/platform-browser';
-import {provideHttpClient, withInterceptors} from '@angular/common/http';
-import {authInterceptor} from '@core/auth';
-import {mockBackendInterceptor} from '@core/http/mock-backend.interceptor';
+import {routes} from "./app.routes";
+import {provideClientHydration, withEventReplay, withHttpTransferCacheOptions} from "@angular/platform-browser";
+import {provideHttpClient, withFetch, withInterceptors} from "@angular/common/http";
+import {authInterceptor, provideAuth} from "@core/auth";
+import {mockBackendInterceptor} from "@core/http/mock-backend.interceptor";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {notificationInterceptor} from "@core/notifications/notification.interceptor";
+import {API_BASE_URL} from "@core/http/api.tokens";
+import {environment} from "@env/environment";
+
+
+const httpInterceptors = environment.useMockBackend
+  ? [authInterceptor, notificationInterceptor, mockBackendInterceptor]
+  : [authInterceptor, notificationInterceptor];
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
-    /**
-     * @description Standard HttpClient configuration with functional interceptors.
-     * Order matters: authInterceptor attaches token before mockBackend intercepts it.
-     */
+    provideRouter(routes, withComponentInputBinding()),
+    {provide: API_BASE_URL, useValue: environment.apiBaseUrl},
+    provideAuth({
+      oidcIssuer: environment.oidc.issuer,
+      audience: environment.oidc.audience,
+      stateKeyPrefix: "wtx_oidc_state",
+      nonceKeyPrefix: "wtx_oidc_nonce"
+    }),
+    importProvidersFrom(MatSnackBarModule),
     provideHttpClient(
-      withInterceptors([
-        authInterceptor,
-        mockBackendInterceptor
-      ])
+      withFetch(),
+      /**
+       * Interceptor Chain Order is crucial:
+       * 1. Auth: Adds the Bearer Token to the request.
+       * 2. Notification: Listens for success/error events to show Snackbars.
+       * 3. MockBackend: Simulates the server response (dev-only, must be last to catch the modified request).
+       */
+      withInterceptors(httpInterceptors),
     ),
-    provideClientHydration(withEventReplay())
-  ]
+    provideClientHydration(
+      withEventReplay(),
+      withHttpTransferCacheOptions({}),
+    ),
+  ],
 };

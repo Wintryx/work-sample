@@ -1,0 +1,78 @@
+<table mat-table [dataSource]="items()" class="wtx-table">
+  <!-- ID Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef class="wtx-table-header-cell">
+      ID
+    </th>
+    <td mat-cell *matCellDef="let item" class="wtx-table-cell wtx-table-cell-id">
+      #{{ item.id }}
+    </td>
+  </ng-container>
+
+  <!-- Title Column -->
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef class="wtx-table-header-cell">
+      Title
+    </th>
+    <td mat-cell *matCellDef="let item" class="wtx-table-cell wtx-table-cell-title">
+      {{ item.title }}
+    </td>
+  </ng-container>
+
+  <!-- Status Column -->
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef class="wtx-table-header-cell">
+      Status
+    </th>
+    <td mat-cell *matCellDef="let item" class="wtx-table-cell">
+      <!-- Reusing the shared component -->
+      <app-status-badge
+        [variant]="statusBadgeFor(item.status).variant"
+        [label]="statusBadgeFor(item.status).label"
+      ></app-status-badge>
+    </td>
+  </ng-container>
+
+  <!-- Progress Column -->
+  <ng-container matColumnDef="progress">
+    <th mat-header-cell *matHeaderCellDef class="wtx-table-header-cell">
+      Completion
+    </th>
+    <td mat-cell *matCellDef="let item" class="wtx-table-cell wtx-table-cell-progress">
+      <div class="wtx-table-progress">
+        <mat-progress-bar
+          class="wtx-progress-bar"
+          mode="determinate"
+          [value]="item.progress"
+        ></mat-progress-bar>
+        <span class="wtx-progress-label">{{ item.progress }}%</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      class="wtx-table-header-cell"
+    ></th>
+    <td mat-cell *matCellDef="let item" class="wtx-table-cell wtx-table-cell-actions">
+      <button mat-icon-button (click)="selectItem.emit(item.id); $event.stopPropagation()">
+        <mat-icon class="wtx-action-icon">chevron_right</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr
+    mat-header-row
+    *matHeaderRowDef="displayedColumns; sticky: true"
+    class="wtx-table-header-row"
+  ></tr>
+  <tr
+    mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    (click)="selectItem.emit(row.id)"
+    class="wtx-table-row"
+  ></tr>
+  </table>

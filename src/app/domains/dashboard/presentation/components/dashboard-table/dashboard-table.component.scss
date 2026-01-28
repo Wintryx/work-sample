@@ -1,0 +1,66 @@
+@reference "tailwindcss";
+
+:host {
+  display: block;
+}
+
+.wtx-table {
+  @apply w-full min-w-[640px] bg-transparent;
+}
+
+.wtx-table-header-row {
+  @apply bg-white;
+}
+
+.wtx-table-header-cell {
+  @apply text-slate-400 font-semibold uppercase text-xs;
+}
+
+.wtx-table-cell {
+  @apply text-slate-600;
+}
+
+.wtx-table-cell-id {
+  @apply text-slate-500 font-mono text-xs;
+}
+
+.wtx-table-cell-title {
+  @apply font-medium text-slate-900;
+}
+
+.wtx-table-cell-progress {
+  @apply w-48;
+}
+
+.wtx-table-cell-actions {
+  @apply text-right;
+}
+
+.wtx-table-progress {
+  @apply flex items-center gap-3;
+}
+
+.wtx-progress-bar {
+  @apply rounded-full h-2;
+}
+
+.wtx-progress-label {
+  @apply text-xs font-bold text-slate-500;
+}
+
+.wtx-action-icon {
+  @apply text-slate-400;
+}
+
+.wtx-table-row {
+  @apply hover:bg-slate-50 cursor-pointer transition-colors;
+}
+
+.wtx-table-row:focus {
+  outline: 2px solid var(--color-indigo-500);
+  outline-offset: -2px;
+}
+
+.wtx-table-row:last-child .wtx-table-cell {
+  border-bottom: none;
+}

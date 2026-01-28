@@ -1,11 +1,8 @@
-import {InjectionToken} from '@angular/core';
+import {InjectionToken} from "@angular/core";
 
 /**
  * @description
  * Injection Token for the Base API URL.
- * Allows switching between dev/prod/mock environments easily.
+ * High-level abstraction to decouple services from environment files.
  */
-export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL', {
-  providedIn: 'root',
-  factory: () => '/api' // Default base path
-});
+export const API_BASE_URL = new InjectionToken<string>("API_BASE_URL");

@@ -4,22 +4,22 @@
   display: block;
 }
 
-.epm-detail-container {
+.wtx-detail-container {
   @apply space-y-6 max-w-5xl mx-auto;
 }
 
-.epm-detail-card {
+.wtx-detail-card {
   @apply w-full max-w-3xl mx-auto bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden;
 }
 
-.epm-card-header {
+.wtx-card-header {
   @apply border-b border-slate-50 bg-slate-50/30 flex justify-between items-start;
 }
 
-.epm-card-padding {
+.wtx-card-padding {
   @apply p-6 sm:p-8;
 }
 
-.epm-empty-state {
+.wtx-empty-state {
   @apply py-20 text-center bg-white rounded-3xl border-2 border-dashed border-slate-200;
 }

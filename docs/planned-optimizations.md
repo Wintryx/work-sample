@@ -1,4 +1,4 @@
-﻿# Planned Optimizations
+# Planned Optimizations
 
 ## Intent
 This document lists planned improvements to move the work sample toward a production-grade, senior-level architecture.
@@ -42,7 +42,7 @@ None at the moment.
 12. Notification registry safety
    - Added a UUID fallback when `crypto.randomUUID` is unavailable (mobile HTTP).
 13. Reduced template utility noise
-   - Introduced small `epm-*` classes via `@apply` in component-scoped SCSS for page headers, panels, cards, and auth layouts.
+   - Introduced small `wtx-*` classes via `@apply` in component-scoped SCSS for page headers, panels, cards, and auth layouts.
    - Kept the pattern scoped to shared building blocks to avoid overengineering.
 14. Error normalization + notification policy
    - Added `normalizeApiError(...)` as a single source of truth for error messages and codes.

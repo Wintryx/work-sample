@@ -19,34 +19,34 @@
   min-height: 0;
 }
 
-.epm-page {
+.wtx-page {
   @apply flex flex-col gap-6 h-full min-h-0;
 }
 
-.epm-page-title {
+.wtx-page-title {
   @apply text-2xl font-bold text-slate-900 tracking-tight;
 }
 
-.epm-page-subtitle {
+.wtx-page-subtitle {
   @apply text-slate-500 text-sm;
 }
 
-.epm-actions {
+.wtx-actions {
   @apply flex flex-wrap items-center gap-2;
 }
 
-.epm-panel {
+.wtx-panel {
   @apply bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col min-h-0;
 }
 
-.epm-page-header {
+.wtx-page-header {
   @apply flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between;
 }
 
-.epm-empty-state {
+.wtx-empty-state {
   @apply py-20 text-center bg-white rounded-3xl border-2 border-dashed border-slate-200;
 }
 
-.epm-table-scroll {
+.wtx-table-scroll {
   @apply flex-1 min-h-0 overflow-auto;
 }

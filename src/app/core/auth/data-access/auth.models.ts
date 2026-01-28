@@ -22,8 +22,8 @@ export const AUTH_CONFIG = new InjectionToken<AuthConfig>("AUTH_CONFIG");
 /**
  * @description Global constants for authentication storage keys.
  */
-export const AUTH_SESSION_KEY = "epm_auth_session";
-export const AUTH_COOKIE_NAME = "epm_authenticated";
+export const AUTH_SESSION_KEY = "wtx_auth_session";
+export const AUTH_COOKIE_NAME = "wtx_authenticated";
 
 /**
  * @description Authentication status constants to avoid magic strings.

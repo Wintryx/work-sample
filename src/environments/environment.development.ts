@@ -4,6 +4,6 @@ export const environment = {
   useMockBackend: true,
   oidc: {
     issuer: "https://fake-idp.example",
-    audience: "epm-progress-maker",
+    audience: "wintryx-progess-maker",
   }
 };

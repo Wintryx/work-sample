@@ -24,8 +24,8 @@ export const appConfig: ApplicationConfig = {
     provideAuth({
       oidcIssuer: environment.oidc.issuer,
       audience: environment.oidc.audience,
-      stateKeyPrefix: "epm_oidc_state",
-      nonceKeyPrefix: "epm_oidc_nonce"
+      stateKeyPrefix: "wtx_oidc_state",
+      nonceKeyPrefix: "wtx_oidc_nonce"
     }),
     importProvidersFrom(MatSnackBarModule),
     provideHttpClient(

@@ -3,7 +3,7 @@ export const environment = {
   apiBaseUrl: "/api",
   useMockBackend: false,
   oidc: {
-    issuer: "https://auth.epm-progress-maker.com",
-    audience: "epm-progress-maker",
+    issuer: "https://auth.wintryx-progess-maker.com",
+    audience: "wintryx-progess-maker",
   }
 };

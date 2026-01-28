@@ -4,63 +4,63 @@
   display: block;
 }
 
-.epm-table {
+.wtx-table {
   @apply w-full min-w-[640px] bg-transparent;
 }
 
-.epm-table-header-row {
+.wtx-table-header-row {
   @apply bg-white;
 }
 
-.epm-table-header-cell {
+.wtx-table-header-cell {
   @apply text-slate-400 font-semibold uppercase text-xs;
 }
 
-.epm-table-cell {
+.wtx-table-cell {
   @apply text-slate-600;
 }
 
-.epm-table-cell-id {
+.wtx-table-cell-id {
   @apply text-slate-500 font-mono text-xs;
 }
 
-.epm-table-cell-title {
+.wtx-table-cell-title {
   @apply font-medium text-slate-900;
 }
 
-.epm-table-cell-progress {
+.wtx-table-cell-progress {
   @apply w-48;
 }
 
-.epm-table-cell-actions {
+.wtx-table-cell-actions {
   @apply text-right;
 }
 
-.epm-table-progress {
+.wtx-table-progress {
   @apply flex items-center gap-3;
 }
 
-.epm-progress-bar {
+.wtx-progress-bar {
   @apply rounded-full h-2;
 }
 
-.epm-progress-label {
+.wtx-progress-label {
   @apply text-xs font-bold text-slate-500;
 }
 
-.epm-action-icon {
+.wtx-action-icon {
   @apply text-slate-400;
 }
 
-.epm-table-row {
+.wtx-table-row {
   @apply hover:bg-slate-50 cursor-pointer transition-colors;
 }
 
-.epm-table-row:focus {
+.wtx-table-row:focus {
   outline: 2px solid var(--color-indigo-500);
   outline-offset: -2px;
 }
 
-.epm-table-row:last-child .epm-table-cell {
+.wtx-table-row:last-child .wtx-table-cell {
   border-bottom: none;
 }

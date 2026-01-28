@@ -9,7 +9,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "epm-progress-maker": {
+    "wintryx-progess-maker": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -87,10 +87,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "epm-progress-maker:build:production"
+              "buildTarget": "wintryx-progess-maker:build:production"
             },
             "development": {
-              "buildTarget": "epm-progress-maker:build:development"
+              "buildTarget": "wintryx-progess-maker:build:development"
             }
           },
           "defaultConfiguration": "development"

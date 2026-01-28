@@ -131,7 +131,7 @@ export class AuthService {
      *
      * This method runs only in the browser (client-side) to restore the user's
      * previous session, allowing for a seamless "Stay Logged In" experience.
-     * * Note: Server-side validation relies on the `epm_authenticated` cookie instead.
+     * * Note: Server-side validation relies on the `wtx_authenticated` cookie instead.
      */
     private hydrate(): void {
         if (!this.isBrowser) return;

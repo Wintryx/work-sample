@@ -15,7 +15,7 @@ describe("AuthService", () => {
 
     const config = {
         oidcIssuer: "https://fake-idp.example",
-        audience: "epm-progress-maker",
+        audience: "wintryx-progess-maker",
         stateKeyPrefix: "test_oidc_state",
         nonceKeyPrefix: "test_oidc_nonce",
     };

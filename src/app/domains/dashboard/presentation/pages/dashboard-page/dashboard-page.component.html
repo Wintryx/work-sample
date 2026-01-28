@@ -1,12 +1,12 @@
-<div class="epm-page">
+<div class="wtx-page">
   <!-- Header with Title and Refresh Action -->
-  <header class="epm-page-header">
+  <header class="wtx-page-header">
     <div>
-      <h2 class="epm-page-title">Project Progress</h2>
-      <p class="epm-page-subtitle">Monitor and track current development milestones.</p>
+      <h2 class="wtx-page-title">Project Progress</h2>
+      <p class="wtx-page-subtitle">Monitor and track current development milestones.</p>
     </div>
 
-    <div class="epm-actions">
+    <div class="wtx-actions">
       <button (click)="dashboardFacade.refresh()" color="primary" mat-flat-button>
         <mat-icon class="mr-2">refresh</mat-icon> Refresh Data
       </button>
@@ -22,19 +22,19 @@
   }
 
   <!-- Main Content Card -->
-  <div class="epm-panel overflow-hidden">
+  <div class="wtx-panel overflow-hidden">
     @if (dashboardFacade.isLoading()) {
     <mat-progress-bar class="absolute top-0 w-full" mode="indeterminate"></mat-progress-bar>
     }
 
-    <div class="epm-table-scroll">
+    <div class="wtx-table-scroll">
       <!-- Delegating the complex table rendering to the dumb component -->
       <app-dashboard-table (selectItem)="navigateToDetail($event)" [items]="dashboardFacade.items()">
       </app-dashboard-table>
 
       <!-- Empty State -->
       @if (!dashboardFacade.isLoading() && !dashboardFacade.hasItems()) {
-      <div class="epm-empty-state flex flex-col items-center justify-center">
+      <div class="wtx-empty-state flex flex-col items-center justify-center">
         <mat-icon class="text-slate-200 !h-16 !w-16 !text-6xl mb-4">analytics</mat-icon>
         <p class="text-slate-400 font-medium">No progress items found.</p>
       </div>

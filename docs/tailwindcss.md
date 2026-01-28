@@ -1,4 +1,4 @@
-﻿# Tailwind CSS (lokale node_modules)
+# Tailwind CSS (lokale node_modules)
 
 Version: 4.1.18
 Paket: tailwindcss

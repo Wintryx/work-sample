@@ -1,4 +1,4 @@
-# EPM Progress Maker
+# Wintryx Progess Maker
 
 Enterprise-ready Angular 21 work sample showcasing a higher-level architecture with clear layering, typed contracts, and SSR-aware state handling.
 

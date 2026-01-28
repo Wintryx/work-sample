@@ -1,4 +1,4 @@
-﻿# Architectural Overview
+# Architectural Overview
 
 ## 1. Domain-Driven Design (DDD) & Layering
 To ensure scalability for a team of 2+ developers, the project follows a strict **Vertical Slicing** approach combined with specialized internal layering:

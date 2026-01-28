@@ -1,4 +1,4 @@
-﻿# Angular Material (lokale node_modules)
+# Angular Material (lokale node_modules)
 
 Version: 21.1.0
 Paket: @angular/material

@@ -26,12 +26,11 @@ Best when SSR is required.
 Typical pipeline for Angular projects:
 1. Install dependencies: `npm ci`
 2. Lint: `npm run lint`
-3. Unit tests: `npm run test`
+3. Unit tests: `npm run test -- --watch=false`
 4. Build: `npm run build`
 
-Optional:
-- Build artifacts as CI output
-- Add `npm run test:watch=false` for deterministic CI
+This repository provides a baseline workflow at:
+- `.github/workflows/ci.yml`
 
 ## CD Workflow (Hosting)
 - Connect the GitHub repo to the hosting platform.

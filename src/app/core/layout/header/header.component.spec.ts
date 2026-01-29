@@ -1,9 +1,8 @@
-import {Component} from "@angular/core";
+import {ChangeDetectionStrategy, Component, signal} from "@angular/core";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {By} from "@angular/platform-browser";
 import {provideRouter, Router, RouterLink, Routes} from "@angular/router";
 import {beforeEach, describe, expect, it, vi} from "vitest";
-import {signal} from "@angular/core";
 import {HeaderComponent} from "./header.component";
 import {AuthFacade} from "@core/auth";
 
@@ -14,10 +13,12 @@ import {AuthFacade} from "@core/auth";
  */
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: "",
     standalone: true,
 })
-class DummyRouteComponent {}
+class DummyRouteComponent {
+}
 
 const routes: Routes = [
     {path: "login", component: DummyRouteComponent},

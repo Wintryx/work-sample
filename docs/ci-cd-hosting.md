@@ -38,6 +38,12 @@ This repository provides a baseline workflow at:
 - Each push triggers an automatic deploy.
 - Each PR gets a preview URL (for review).
 
+## Vercel (Minimal Static Setup)
+Use this when you want the simplest setup without SSR runtime.
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist/wintryx-progess-maker/browser`
+- Result: Static deployment only; SSR bundle is not used.
+
 ## Suggested Choice for a Work Sample
 - **If SSR is not required**: Cloudflare Pages or Netlify (free + simple).
 - **If SSR is required**: Vercel (popular, reliable, strong previews).
@@ -46,6 +52,11 @@ This repository provides a baseline workflow at:
 - Public repos typically get free GitHub Actions minutes.
 - Most hosting platforms have free tiers with limits that are sufficient for a portfolio/work sample.
 - If SSR is used, watch runtime limits and request quotas.
+
+## Secrets and Variables (Future Note)
+- Not required for basic CI (lint/test/build).
+- Add only when integrating external services (e.g., deploy tokens, API keys).
+- Prefer repository secrets for shared keys; environment secrets only if you need environment-specific values.
 
 ## Minimal Setup Checklist
 - [ ] GitHub Actions workflow (lint/test/build)

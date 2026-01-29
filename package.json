@@ -1,5 +1,5 @@
 {
-  "name": "wintryx-progess-maker",
+  "name": "wintryx-progress-maker",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -8,7 +8,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:wintryx-progess-maker": "node dist/wintryx-progess-maker/server/server.mjs",
+    "serve:ssr:wintryx-progress-maker": "node dist/wintryx-progress-maker/server/server.mjs",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss}\"",

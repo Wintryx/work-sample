@@ -1,4 +1,4 @@
-# Wintryx Progess Maker
+# Wintryx Progress Maker
 
 Enterprise-ready Angular 21 work sample showcasing a higher-level architecture with clear layering, typed contracts, and SSR-aware state handling.
 
@@ -65,3 +65,4 @@ Run `ng generate component component-name` to generate a new component. You can 
 ### Further help
 To get more help on the Angular CLI use `ng help` or check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 </details>
+

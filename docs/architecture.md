@@ -28,7 +28,7 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 - **Interceptor Chain**: A strictly ordered pipeline:
     1. **Auth**: Injects JWT Bearer tokens.
     2. **Notification**: Monitors `HttpContext` for automated UI feedback.
-    3. **MockBackend**: Intercepts requests to simulate server responses for local development (enabled via `useMockBackend`).
+    3. **MockBackend**: Intercepts requests to simulate server responses for the work sample across environments (enabled via `useMockBackend`).
 - **Isomorphic Auth**: Combines `localStorage` (client persistence) with **Cookies** (SSR bridge) to eliminate auth-flicker and enable secure server-side guards.
 - **Fetch API**: Optimized for SSR using `withFetch()` for modern, high-performance network communication.
 
@@ -39,8 +39,8 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 ## 6. Configuration & Environments
 - **Token-based Injection**: Environment-specific variables are mapped to **Injection Tokens** (e.g., `API_BASE_URL`, `AUTH_CONFIG`) during bootstrap.
 - **Environment Parity**: Uses Angular's modern file-replacement strategy to swap `environment.ts` (Production) with `environment.development.ts` at build time.
-- **Feature Flags**: `useMockBackend` gates the mock interceptor so production builds always target real APIs.
-- **Dev-only Tooling**: Debug routes like `/notifications` are registered only when `environment.production` is false.
+- **Feature Flags**: `useMockBackend` keeps the mock interceptor enabled for the work sample; swap to real APIs by disabling it.
+- **Debug Tooling**: The `/notifications` playground is available in all environments to validate the toast pipeline.
 
 ## 7. UI, Styling & Accessibility
 - **Hybrid CSS Strategy**: Combines **Tailwind CSS v4** for rapid utility-first layouting with **Angular Material 3** for accessible, enterprise-ready components.

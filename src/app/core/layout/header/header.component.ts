@@ -5,8 +5,6 @@ import {MatMenuModule} from "@angular/material/menu";
 import {RouterLink, RouterLinkActive} from "@angular/router";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {DateFormatPipe} from "@shared/pipes/date-format-pipe";
-import {environment} from "@env/environment";
-
 @Component({
     selector: "app-header-component",
     imports: [MatIcon, MatMenuModule, RouterLink, RouterLinkActive, MatButton, DateFormatPipe, MatIconButton],
@@ -17,7 +15,6 @@ import {environment} from "@env/environment";
 })
 export class HeaderComponent {
     protected readonly authFacade = inject(AuthFacade);
-    protected readonly isDev = !environment.production;
     protected readonly currentTime = signal(new Date());
     private readonly timer = setInterval(() => this.currentTime.set(new Date()), 1000 * 60);
 

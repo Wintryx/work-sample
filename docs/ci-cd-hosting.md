@@ -1,4 +1,4 @@
-# CI/CD and Hosting Recommendations
+ï»¿# CI/CD and Hosting Recommendations
 
 ## Scope
 This document outlines pragmatic, cost-effective CI/CD and hosting options for a private work-sample project. The goal is a professional setup with minimal operational overhead.
@@ -10,13 +10,13 @@ This document outlines pragmatic, cost-effective CI/CD and hosting options for a
 
 ## Recommended Setups
 
-### Option A — Static/Prerender (lowest cost, simplest)
+### Option A â€” Static/Prerender (lowest cost, simplest)
 Best when SSR is not required.
 - **Hosting**: Cloudflare Pages, Netlify, or Azure Static Web Apps.
 - **Pros**: Free tiers, easy setup, fast global CDN.
 - **Cons**: No full SSR runtime.
 
-### Option B — SSR (full server rendering)
+### Option B â€” SSR (full server rendering)
 Best when SSR is required.
 - **Hosting**: Vercel or Netlify (Angular SSR support).
 - **Pros**: Simple Git-based deployment, preview deployments for PRs.
@@ -43,11 +43,6 @@ Use this when you want the simplest setup without SSR runtime.
 - **Build Command**: `npm run build`
 - **Output Directory**: `dist/wintryx-progess-maker/browser`
 - Result: Static deployment only; SSR bundle is not used.
-
-## SPA Deep-Link Refresh (Vercel)
-Static hosting needs a rewrite to serve `index.html` for client-side routes.
-- File: `vercel.json`
-- Purpose: refresh on routes like `/dashboard` or `/notifications` without 404
 
 ## Suggested Choice for a Work Sample
 - **If SSR is not required**: Cloudflare Pages or Netlify (free + simple).

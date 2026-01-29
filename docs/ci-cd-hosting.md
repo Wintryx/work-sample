@@ -47,7 +47,7 @@ Use this when you want the simplest setup without SSR runtime.
 ## SPA Deep-Link Refresh (Vercel)
 Static deployments need a rewrite so client-side routes work on refresh.
 - File: `vercel.json`
-- Purpose: serve `index.html` for routes like `/dashboard` or `/notifications`.
+- Purpose: serve `index.csr.html` for routes like `/dashboard` or `/notifications`.
 
 ## Suggested Choice for a Work Sample
 - **If SSR is not required**: Cloudflare Pages or Netlify (free + simple).

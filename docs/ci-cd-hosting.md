@@ -44,6 +44,39 @@ Use this when you want the simplest setup without SSR runtime.
 - **Output Directory**: `dist/wintryx-progress-maker/browser`
 - Result: Static deployment only; SSR bundle is not used.
 
+## Deployment Gating (Optional)
+By default, Vercel deploys immediately on push, independent of GitHub Actions.
+If you want deployments only after CI succeeds:
+- Disable Vercel auto-deploys and trigger deployments from GitHub Actions (requires a Vercel token).
+- Or use Vercel deployment checks if available on your plan.
+Recommended (CI-triggered deploy) setup:
+1. In Vercel, disable Git deployments for Production (Project Settings -> Git).
+2. Add GitHub Secrets:
+   - `VERCEL_TOKEN`
+   - `VERCEL_ORG_ID`
+   - `VERCEL_PROJECT_ID`
+3. Add a deploy job that runs after the CI job.
+
+Example GitHub Actions job:
+```yaml
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Deploy to Vercel (Production)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: npx vercel deploy --prod --yes --token $VERCEL_TOKEN
+```
+
 ## SPA Deep-Link Refresh (Vercel)
 Static deployments need a rewrite so client-side routes work on refresh.
 - File: `vercel.json`

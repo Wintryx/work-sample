@@ -1,6 +1,6 @@
-ï»¿# Leitfaden zur PrÃ¤sentation der Arbeitsprobe
+# Leitfaden zur Präsentation der Arbeitsprobe
 
-Dieses Dokument dient als roter Faden fuer die Vorstellung des Projekts "Wintryx Progess Maker". Der Fokus liegt auf der Demonstration von Senior-Kompetenzen in den Bereichen Architektur, Sicherheit und Skalierbarkeit.
+Dieses Dokument dient als roter Faden fuer die Vorstellung des Projekts "Wintryx Progress Maker". Der Fokus liegt auf der Demonstration von Senior-Kompetenzen in den Bereichen Architektur, Sicherheit und Skalierbarkeit.
 
 ---
 
@@ -35,14 +35,14 @@ Dieses Dokument dient als roter Faden fuer die Vorstellung des Projekts "Wintryx
     *   **Automatisierung**: Der `notificationInterceptor` zeigt Fehler immer an (Default-Konfiguration), waehrend Success-Toasts nur mit Ticket oder bewusstem Opt-in kommen. UI-Komponenten bleiben dadurch komplett frei von Messaging-Logik.
     *   **Notifications-Playground**: Eigene Seite mit Aktionen ("Simulate Error/Unauthorized"), um die Toast-Pipeline und Logout-Flow gezielt zu demonstrieren (in allen Umgebungen verfuegbar).
     *   **Error Normalization**: `normalizeApiError(...)` vereinheitlicht Message/Status/Code, sodass Fehlerfluesse konsistent und testbar bleiben.
-    *   **Typed API Error Codes**: `ApiError<TCode>` + Domain-Codes ermoeglichen deterministisches Error-Handling (z. B. Unauthorized -> logout + toast) â€“ ergaenzt durch `AuthErrorCode` fuer Auth-spezifische Fehler.
+    *   **Typed API Error Codes**: `ApiError<TCode>` + Domain-Codes ermoeglichen deterministisches Error-Handling (z. B. Unauthorized -> logout + toast) – ergaenzt durch `AuthErrorCode` fuer Auth-spezifische Fehler.
 
 ## 5. UI & Clean Code Standards
 *   **Thema**: Maintainability und Developer Experience (DX).
 *   **Punkte**:
     *   **Tailwind v4**: Modernste Utility-First Strategie.
     *   **Angular Material 3**: Zugriff auf barrierefreie, konsistente Enterprise-Komponenten (z. B. Buttons, Inputs, Snackbars).
-    *   **Lodash Utilities**: Konsistente Helper fuer Daten-Transformationen, Defaults und Guards â€“ macht Code kuerzer und lesbarer.
+    *   **Lodash Utilities**: Konsistente Helper fuer Daten-Transformationen, Defaults und Guards – macht Code kuerzer und lesbarer.
     *   **Sass-Abstraction**: Vermeidung von "Class Soup" im HTML durch Abstraktion in scoped SCSS via `@apply`.
     *   **Hybrid Utility Pattern**: Kleine, semantische `wtx-*` Klassen via `@apply` fuer wiederverwendbare Layout-Bausteine.
     *   **Strict Quality Gates**: Demonstration der ESLint-Regeln (600 Zeilen Limit, OnPush Pflicht) und automatisierte Formatierung via Prettier.
@@ -60,6 +60,7 @@ Dieses Dokument dient als roter Faden fuer die Vorstellung des Projekts "Wintryx
 
 ### Drei Saetze fuer den "Winning Impression":
 
-1.  **Zur Skalierbarkeit**: *"Ich habe die Architektur so gewaehlt, dass die kognitive Last fuer neue Entwickler minimal bleibtâ€œ jeder weiss durch die DDD-Struktur sofort, wo Code hingehoert."*
+1.  **Zur Skalierbarkeit**: *"Ich habe die Architektur so gewaehlt, dass die kognitive Last fuer neue Entwickler minimal bleibt“ jeder weiss durch die DDD-Struktur sofort, wo Code hingehoert."*
 2.  **Zur Technologie**: *"Wir nutzen das volle Potenzial von Angular 21, insbesondere Signal-based Inputs und Isomorphe Auth, um eine moderne, performante Web-App abzuliefern."*
 3.  **Zur Robustheit**: *"Fehlerbehandlung ist bei mir kein Afterthought, sondern durch Type-Guards und transaktionale Interceptoren tief in den Core-Workflow integriert."*
+

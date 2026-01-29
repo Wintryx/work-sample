@@ -41,7 +41,7 @@ This repository provides a baseline workflow at:
 ## Vercel (Minimal Static Setup)
 Use this when you want the simplest setup without SSR runtime.
 - **Build Command**: `npm run build`
-- **Output Directory**: `dist/wintryx-progess-maker/browser`
+- **Output Directory**: `dist/wintryx-progress-maker/browser`
 - Result: Static deployment only; SSR bundle is not used.
 
 ## SPA Deep-Link Refresh (Vercel)

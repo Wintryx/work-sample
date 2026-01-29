@@ -34,7 +34,7 @@ export const appConfig: ApplicationConfig = {
        * Interceptor Chain Order is crucial:
        * 1. Auth: Adds the Bearer Token to the request.
        * 2. Notification: Listens for success/error events to show Snackbars.
-       * 3. MockBackend: Simulates the server response (dev-only, must be last to catch the modified request).
+       * 3. MockBackend: Simulates server responses for the work sample (kept last to catch the modified request).
        */
       withInterceptors(httpInterceptors),
     ),

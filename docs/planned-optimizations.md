@@ -38,7 +38,7 @@ None at the moment.
    - Table container gets horizontal scroll on small screens.
    - Item detail and login cards use responsive padding (`p-6` -> `sm:p-8`).
 11. Mock backend isolation
-   - Mock interceptor is gated by `useMockBackend` so production builds always use real APIs.
+   - Mock interceptor remains enabled for the work sample in all environments; switching to real APIs is a `useMockBackend` toggle.
 12. Notification registry safety
    - Added a UUID fallback when `crypto.randomUUID` is unavailable (mobile HTTP).
 13. Reduced template utility noise
@@ -57,7 +57,7 @@ None at the moment.
 
 ## Test coverage additions
 - SSR guard behavior when the auth cookie is missing or invalid.
-- Mock interceptor registration in dev vs prod.
+- Mock interceptor registration when `useMockBackend` is disabled.
 - Resolver-based loading and in-flight deduplication to ensure a single request and predictable state.
 - Notification ticket flow for success and error paths.
 

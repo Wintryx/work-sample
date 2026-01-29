@@ -41,6 +41,7 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 - **Environment Parity**: Uses Angular's modern file-replacement strategy to swap `environment.ts` (Production) with `environment.development.ts` at build time.
 - **Feature Flags**: `useMockBackend` keeps the mock interceptor enabled for the work sample; swap to real APIs by disabling it.
 - **Debug Tooling**: The `/notifications` playground is available in all environments to validate the toast pipeline.
+- **SSR vs Static Hosting**: The app is built with SSR output enabled, but the work-sample deployment uses the browser bundle only. Client-side routes are served via `index.csr.html` to keep refreshes working without a Node runtime.
 
 ## 7. UI, Styling & Accessibility
 - **Hybrid CSS Strategy**: Combines **Tailwind CSS v4** for rapid utility-first layouting with **Angular Material 3** for accessible, enterprise-ready components.

@@ -1,6 +1,7 @@
+import {Component} from "@angular/core";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {By} from "@angular/platform-browser";
-import {provideRouter, RouterLink} from "@angular/router";
+import {provideRouter, Router, RouterLink, Routes} from "@angular/router";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {signal} from "@angular/core";
 import {HeaderComponent} from "./header.component";
@@ -12,9 +13,22 @@ import {AuthFacade} from "@core/auth";
  * Validates authenticated vs unauthenticated rendering and logout behavior.
  */
 
+@Component({
+    template: "",
+    standalone: true,
+})
+class DummyRouteComponent {}
+
+const routes: Routes = [
+    {path: "login", component: DummyRouteComponent},
+    {path: "dashboard", component: DummyRouteComponent},
+    {path: "notifications", component: DummyRouteComponent},
+];
+
 describe("HeaderComponent", () => {
     let component: HeaderComponent;
     let fixture: ComponentFixture<HeaderComponent>;
+    let router: Router;
     let authFacadeMock: {
         isAuthenticated: ReturnType<typeof signal<boolean>>;
         user: ReturnType<typeof signal<{ id: string; username: string } | null>>;
@@ -32,10 +46,11 @@ describe("HeaderComponent", () => {
             imports: [HeaderComponent],
             providers: [
                 {provide: AuthFacade, useValue: authFacadeMock},
-                provideRouter([]),
+                provideRouter(routes),
             ],
         }).compileComponents();
 
+        router = TestBed.inject(Router);
         fixture = TestBed.createComponent(HeaderComponent);
         component = fixture.componentInstance;
         await fixture.whenStable();
@@ -87,6 +102,18 @@ describe("HeaderComponent", () => {
         logoutButton?.click();
 
         expect(authFacadeMock.logout).toHaveBeenCalled();
+    });
+
+    /**
+     * @description
+     * Ensures the header hides all actions on the login route.
+     */
+    it("should hide the action area when on the login page", async () => {
+        await router.navigateByUrl("/login");
+        fixture.detectChanges();
+
+        const actions = fixture.nativeElement.querySelector(".wtx-header__actions");
+        expect(actions).toBeNull();
     });
 });
 

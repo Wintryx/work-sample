@@ -13,7 +13,8 @@
   </div>
 
   <!-- Navigation & Actions Section -->
-  <div class="flex items-center gap-3 md:gap-4">
+  @if (!isLoginRoute()) {
+    <div class="wtx-header__actions flex items-center gap-3 md:gap-4">
     @if (authFacade.isAuthenticated()) {
       <nav class="hidden md:flex items-center gap-1 md:order-1">
         <a
@@ -80,7 +81,8 @@
     >
       <mat-icon>menu</mat-icon>
     </button>
-  </div>
+    </div>
+  }
 </header>
 
 <mat-menu #mobileMenu="matMenu">

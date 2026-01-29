@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, DestroyRef, inject, signal} from "@a
 import {AuthFacade} from "@core/auth";
 import {MatIcon} from "@angular/material/icon";
 import {MatMenuModule} from "@angular/material/menu";
-import {RouterLink, RouterLinkActive} from "@angular/router";
+import {isActive, Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {DateFormatPipe} from "@shared/pipes/date-format-pipe";
 @Component({
@@ -16,6 +16,12 @@ import {DateFormatPipe} from "@shared/pipes/date-format-pipe";
 export class HeaderComponent {
     protected readonly authFacade = inject(AuthFacade);
     protected readonly currentTime = signal(new Date());
+    protected readonly isLoginRoute = isActive("/login", inject(Router), {
+        paths: "exact",
+        queryParams: "ignored",
+        fragment: "ignored",
+        matrixParams: "ignored",
+    });
     private readonly timer = setInterval(() => this.currentTime.set(new Date()), 1000 * 60);
 
     /**

@@ -1,7 +1,7 @@
 import {inject, Injectable, signal} from "@angular/core";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import defaults from "lodash/defaults";
-import omit from "lodash/omit";
+import defaults from "lodash-es/defaults";
+import omit from "lodash-es/omit";
 import {NotificationOptions, NotificationType,} from "./notification.models";
 
 @Injectable({providedIn: "root"})

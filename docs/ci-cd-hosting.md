@@ -44,6 +44,11 @@ Use this when you want the simplest setup without SSR runtime.
 - **Output Directory**: `dist/wintryx-progess-maker/browser`
 - Result: Static deployment only; SSR bundle is not used.
 
+## SPA Deep-Link Refresh (Vercel)
+Static hosting needs a rewrite to serve `index.html` for client-side routes.
+- File: `vercel.json`
+- Purpose: refresh on routes like `/dashboard` or `/notifications` without 404
+
 ## Suggested Choice for a Work Sample
 - **If SSR is not required**: Cloudflare Pages or Netlify (free + simple).
 - **If SSR is required**: Vercel (popular, reliable, strong previews).

@@ -7,11 +7,11 @@ Enterprise-ready Angular 21 work sample showcasing a higher-level architecture w
 - **Signals + Facades**: Reactive state via Angular Signals, orchestration via facades, SSR-safe resolver loading.
 - **Typed Contracts**: `Result<T, E>` and typed API error codes for explicit success/error flows.
 - **Error Normalization**: `normalizeApiError(...)` ensures consistent message/status/code handling.
-- **HTTP Pipeline**: Auth + Notification interceptors, mock backend gated by `useMockBackend`.
+- **HTTP Pipeline**: Auth + Notification interceptors, mock backend controlled by `useMockBackend` (enabled for the work sample).
 - **Notification Policy**: Errors always show with defaults; success toasts are ticket-driven (or explicitly opted-in).
-- **Notifications Playground**: Dedicated dev-only route to simulate error/unauthorized flows and validate interceptor behavior.
+- **Notifications Playground**: Dedicated route to simulate error/unauthorized flows and validate interceptor behavior.
 - **Utility Helpers**: Lodash for concise, readable transformations and safe defaults.
-- **SSR & Hydration**: Cookie-based auth bridge and client hydration support.
+- **SSR & Hydration**: Cookie-based auth bridge and client hydration support. Static hosting uses the CSR fallback (`index.csr.html`).
 - **UI Stack**: Tailwind CSS v4 for layout and Angular Material 3 for controls.
 - **Quality Gates**: ESLint + Prettier, tests via `npm run test`.
 
@@ -27,7 +27,7 @@ Run `npm run start` and open `http://localhost:4200/`.
 - **Production build/serve:** `ng serve --configuration production` (uses `environment.ts`).
 
 ### Mock backend switch
-Use `useMockBackend` in the environment files to control whether the mock interceptor is active.
+Use `useMockBackend` in the environment files to control whether the mock interceptor is active. It is enabled in both environments for the work sample.
 
 ### Key Scripts
 - `npm run start` - start dev server

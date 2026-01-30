@@ -3,11 +3,11 @@ import {HttpClient, HttpContext, HttpErrorResponse} from "@angular/common/http";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {of, throwError} from "rxjs";
 import {NotificationsFacade} from "./notifications.facade";
-import {AuthErrorCode} from "@core/auth";
-import {NotificationOptions, NotificationType, NOTIFICATION_TICKET} from "@core/notifications/notification.models";
+import {AuthErrorCode, AuthFacade} from "@core/auth";
+import {NotificationOptions, NotificationType} from "@core/notifications/notification.models";
 import {NotificationService} from "@core/notifications/notification.service";
-import {AuthFacade} from "@core/auth";
 import {API_BASE_URL} from "@core/http/api.tokens";
+import {NOTIFICATION_TICKET} from "@core/notifications";
 
 /**
  * @description

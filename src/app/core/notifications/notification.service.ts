@@ -3,6 +3,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import defaults from "lodash-es/defaults";
 import omit from "lodash-es/omit";
 import {NotificationOptions, NotificationType,} from "./notification.models";
+import {ToastComponent} from "./ui/toast.component";
 
 @Injectable({providedIn: "root"})
 export class NotificationService {
@@ -136,12 +137,14 @@ export class NotificationService {
 
     /**
      * @description
-     * Shows a snackbar with the resolved notification options.
+     * Shows a rich snackbar using the custom ToastComponent.
+     * We apply the type-specific class to the panel so Material overrides can color the container.
      */
     private notify(options: NotificationOptions): void {
         if (options.clearExisting) this.snackBar.dismiss();
 
-        this.snackBar.open(options.message, options.actionLabel ?? "OK", {
+        this.snackBar.openFromComponent(ToastComponent, {
+            data: options,
             duration: options.duration ?? 4000,
             horizontalPosition: "end",
             verticalPosition: "bottom",

@@ -36,6 +36,7 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 - **Hybrid Approach**: We use two strategies to handle user feedback, avoiding boilerplate for simple cases while supporting complex ones.
 - **Context-Driven Feedback (Fast-Track)**: For standard success messages, we attach a simple config directly to the request via `withFeedback('Saved!')`. The interceptor picks this up and shows a toast automatically.
 - **Ticket-Registry Pattern (Complex)**: For dynamic messages or complex error handling, actions are registered in a `NotificationService` map before execution. The resulting `Ticket ID` is passed via `HttpContext` to link the response back to the specific UI logic.
+- **Rich UI**: Notifications are rendered via a custom `ToastComponent` inside the Material Snackbar. This allows for rich content (Icons, Tailwind styling) while leveraging Material's overlay management and theming overrides for color-coding.
 
 ## 6. Configuration & Environments
 - **Token-based Injection**: Environment-specific variables are mapped to **Injection Tokens** (e.g., `API_BASE_URL`, `AUTH_CONFIG`) during bootstrap.

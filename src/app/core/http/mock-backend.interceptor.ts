@@ -100,5 +100,17 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
         );
     }
 
+    if (url === `${baseUrl}/debug/success` && method === "GET") {
+        return of(
+            new HttpResponse({
+                status: 200,
+                body: {
+                    status: 200,
+                    message: "Simulated success notification.",
+                },
+            }),
+        ).pipe(delay(800));
+    }
+
     return next(req);
 };

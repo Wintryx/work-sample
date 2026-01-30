@@ -14,6 +14,12 @@ export class NotificationService {
         clearExisting: true,
         duration: 4000
     };
+    private readonly defaultNotificationMessages: Record<NotificationType, string> = {
+        [NotificationType.Success]: "Action completed successfully.",
+        [NotificationType.Info]: "Here is an informational update.",
+        [NotificationType.Warning]: "Warning: Please double-check the result.",
+        [NotificationType.Error]: "An error occurred.",
+    };
     private readonly snackBar = inject(MatSnackBar);
     private readonly _registry = signal<Map<string, NotificationOptions>>(new Map());
 
@@ -103,6 +109,14 @@ export class NotificationService {
             omit(mergedOverrides, "message"),
         );
         this.notify(notificationObject);
+    }
+
+    /**
+     * @description
+     * Returns the default message for a given notification type.
+     */
+    getDefaultNotificationMessage(type: NotificationType): string {
+        return this.defaultNotificationMessages[type];
     }
 
     /**

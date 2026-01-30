@@ -9,7 +9,7 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
     - **`domain/`**: Pure logic, interfaces, and typed constants (e.g., `ItemStatus`).
     - **`application/`**: Orchestration layer using the **Facade Pattern**.
     - **`presentation/`**: UI logic, including `pages/` (smart) and `components/` (dumb).
-    - **Active Domains**: `auth`, `dashboard`, and `notifications` (debug UI for toast/unauthorized flows).
+    - **Active Domains**: `auth`, `dashboard`, and `notifications` (debug UI for success/error/unauthorized flows).
 - **`shared/`**: Reusable, stateless UI building blocks (Badges, Buttons) and Pipes.
 
 ## 2. Encapsulation & Public API

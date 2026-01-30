@@ -52,4 +52,46 @@
       </form>
     </div>
   </div>
+
+  <div class="wtx-panel">
+    <div class="p-6 space-y-6 text-sm text-slate-600">
+      <div class="space-y-1">
+        <p class="text-xs uppercase tracking-[0.2em] text-slate-400 font-semibold">
+          Simulate Notifications
+        </p>
+        <p>
+          Trigger success, info, or warning toasts through the notification interceptor.
+        </p>
+      </div>
+
+      <form (ngSubmit)="onSimulateNotification()" [formGroup]="notificationForm" class="grid gap-4">
+        <div class="grid gap-4 md:grid-cols-[2fr,1fr]">
+          <mat-form-field appearance="outline">
+            <mat-label>Custom message</mat-label>
+            <input
+              formControlName="message"
+              matInput
+              placeholder="Optional custom message for the toast"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Notification type</mat-label>
+            <mat-select formControlName="type">
+              @for (option of notificationTypes; track option.value) {
+                <mat-option [value]="option.value">{{ option.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button color="primary" mat-stroked-button type="submit">
+            <mat-icon class="mr-2">campaign</mat-icon>
+            Simulate Notification
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

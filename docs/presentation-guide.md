@@ -34,7 +34,7 @@ Dieses Dokument dient als roter Faden fuer die Vorstellung des Projekts "Wintryx
     *   **Ticket-System**: Optionales Registrieren von Nachrichten im `NotificationService` vor dem HTTP-Call, wenn ein Toast individuell gesteuert werden soll.
     *   **HttpContext**: Die Ticket-ID reist durch den Interceptor.
     *   **Automatisierung**: Der `notificationInterceptor` zeigt Fehler immer an (Default-Konfiguration), waehrend Success-Toasts nur mit Ticket oder bewusstem Opt-in kommen. UI-Komponenten bleiben dadurch komplett frei von Messaging-Logik.
-    *   **Notifications-Playground**: Eigene Seite mit Aktionen ("Simulate Error/Unauthorized"), um die Toast-Pipeline und Logout-Flow gezielt zu demonstrieren (in allen Umgebungen verfuegbar).
+    *   **Notifications-Playground**: Eigene Seite mit Aktionen ("Simulate Error/Unauthorized" und "Simulate Notifications" fuer Success/Info/Warn), um die Toast-Pipeline und Logout-Flow gezielt zu demonstrieren (in allen Umgebungen verfuegbar).
     *   **Error Normalization**: `normalizeApiError(...)` vereinheitlicht Message/Status/Code, sodass Fehlerfluesse konsistent und testbar bleiben.
     *   **Typed API Error Codes**: `ApiError<TCode>` + Domain-Codes ermoeglichen deterministisches Error-Handling (z. B. Unauthorized -> logout + toast) - ergaenzt durch `AuthErrorCode` fuer Auth-spezifische Fehler.
 

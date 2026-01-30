@@ -1,7 +1,7 @@
 import {TestBed} from "@angular/core/testing";
 import {HttpClient, HttpContext, HttpErrorResponse} from "@angular/common/http";
 import {beforeEach, describe, expect, it, vi} from "vitest";
-import {throwError} from "rxjs";
+import {of, throwError} from "rxjs";
 import {NotificationsFacade} from "./notifications.facade";
 import {AuthErrorCode} from "@core/auth";
 import {NotificationOptions, NotificationType, NOTIFICATION_TICKET} from "@core/notifications/notification.models";
@@ -20,6 +20,7 @@ const describeNotificationsFacade = (): void => {
     let notificationServiceMock: {
         registerTicket: ReturnType<typeof vi.fn>;
         defaultErrorNotificationObject: NotificationOptions;
+        getDefaultNotificationMessage: ReturnType<typeof vi.fn>;
     };
 
     const defaultErrorNotificationObject: NotificationOptions = {
@@ -93,10 +94,12 @@ const describeNotificationsFacade = (): void => {
     const createNotificationServiceMock = (): {
         registerTicket: ReturnType<typeof vi.fn>;
         defaultErrorNotificationObject: NotificationOptions;
+        getDefaultNotificationMessage: ReturnType<typeof vi.fn>;
     } => {
         return {
             registerTicket: vi.fn(),
             defaultErrorNotificationObject,
+            getDefaultNotificationMessage: vi.fn(),
         };
     };
 
@@ -191,5 +194,70 @@ const describeNotificationsFacade = (): void => {
     };
 
     it("should logout on unauthorized errors and attach the custom ticket", shouldLogoutOnUnauthorizedWithCustomTicket);
+
+    /**
+     * @description
+     * Verifies success/info/warning simulations register a ticket and attach the HttpContext.
+     */
+    const shouldRegisterTicketForNotificationSimulation = (): void => {
+        const customMessage = "Everything looks good.";
+        const ticketId = "ticket-3";
+
+        notificationServiceMock.registerTicket.mockReturnValue(ticketId);
+        httpClientMock.get.mockReturnValue(of({}));
+
+        facade.simulateNotification(customMessage, NotificationType.Info);
+
+        expect(notificationServiceMock.registerTicket).toHaveBeenCalledWith({
+            message: customMessage,
+            type: NotificationType.Info,
+            actionLabel: "OK",
+            clearExisting: true,
+            duration: 4000,
+        });
+        expect(httpClientMock.get).toHaveBeenCalledWith(
+            "https://api.test/debug/success",
+            expect.any(Object),
+        );
+
+        const context = extractContext(httpClientMock.get.mock.calls[0]);
+        expect(context?.get(NOTIFICATION_TICKET)).toBe(ticketId);
+    };
+
+    it(
+        "should register a ticket and attach context for notification simulations",
+        shouldRegisterTicketForNotificationSimulation,
+    );
+
+    /**
+     * @description
+     * Verifies empty messages fall back to the default message for the chosen type.
+     */
+    const shouldUseDefaultMessageForNotificationSimulation = (): void => {
+        const ticketId = "ticket-4";
+        const defaultMessage = "Default warning message.";
+
+        notificationServiceMock.registerTicket.mockReturnValue(ticketId);
+        httpClientMock.get.mockReturnValue(of({}));
+        notificationServiceMock.getDefaultNotificationMessage.mockReturnValue(defaultMessage);
+
+        facade.simulateNotification("   ", NotificationType.Warning);
+
+        expect(notificationServiceMock.getDefaultNotificationMessage).toHaveBeenCalledWith(
+            NotificationType.Warning,
+        );
+        expect(notificationServiceMock.registerTicket).toHaveBeenCalledWith({
+            message: defaultMessage,
+            type: NotificationType.Warning,
+            actionLabel: "OK",
+            clearExisting: true,
+            duration: 4000,
+        });
+    };
+
+    it(
+        "should use default messages when custom notification messages are empty",
+        shouldUseDefaultMessageForNotificationSimulation,
+    );
 };
 describe("NotificationsFacade", describeNotificationsFacade);

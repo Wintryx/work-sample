@@ -2,21 +2,9 @@ import {HttpInterceptorFn, HttpResponse} from "@angular/common/http";
 import {inject} from "@angular/core";
 import {tap} from "rxjs";
 import {NotificationService} from "./notification.service";
-import {FEEDBACK_CONTEXT, NOTIFICATION_TICKET, NotificationType} from "./notification.models";
+import {NotificationType} from "./notification.models";
+import {FEEDBACK_CONTEXT, NOTIFICATION_TICKET} from "./notification.context";
 import {normalizeApiError} from "@core/http/http-errors";
-
-/**
- * @description
- * Resolves a success message from the HTTP response body or falls back to a default.
- */
-const resolveSuccessMessage = (
-    event: HttpResponse<unknown>,
-    fallbackMessage: string,
-): string => {
-    const body = event.body as { message?: string } | null | undefined;
-    const message = typeof body?.message === "string" ? body.message.trim() : "";
-    return message || fallbackMessage;
-};
 
 /**
  * @description
@@ -33,17 +21,17 @@ export const notificationInterceptor: HttpInterceptorFn = (req, next) => {
                 if (event instanceof HttpResponse) {
                     // Priority 1: Ticket (Complex/Dynamic)
                     if (ticketId) {
-                        const fallbackMessage = notificationService.getDefaultNotificationMessage(
-                            NotificationType.Success,
-                        );
-                        const message = resolveSuccessMessage(event, fallbackMessage);
-                        notificationService.notifySuccess(ticketId, message);
+                        // If a ticket exists, we trust its configuration (message, type) completely.
+                        // We do NOT resolve the server message here, because it would override
+                        // the custom message defined in the ticket (e.g. from user input).
+                        notificationService.notifySuccess(ticketId);
                         return;
                     }
 
                     // Priority 2: Context Feedback (Simple/Static)
-                    if (feedbackConfig.successMessage) {
-                        notificationService.notifySuccess(null, feedbackConfig.successMessage);
+                    if (feedbackConfig.message) {
+                        const type = feedbackConfig.type ?? NotificationType.Success;
+                        notificationService.notifySuccess(null, feedbackConfig.message, type);
                     }
                 }
             },

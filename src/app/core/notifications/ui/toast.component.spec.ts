@@ -1,13 +1,14 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {ToastComponent} from "./toast.component";
 import {MAT_SNACK_BAR_DATA, MatSnackBarRef} from "@angular/material/snack-bar";
-import {NotificationOptions, NotificationType} from "../notification.models";
+import {NotificationOptions, NotificationType} from "@core/notifications";
 import {By} from "@angular/platform-browser";
 
 describe("ToastComponent", () => {
     let component: ToastComponent;
     let fixture: ComponentFixture<ToastComponent>;
-    let snackBarRefMock: any;
+    // Use a partial mock type instead of any for strict type safety
+    let snackBarRefMock: { dismissWithAction: ReturnType<typeof vi.fn> };
 
     const mockData: NotificationOptions = {
         message: "Test Message",

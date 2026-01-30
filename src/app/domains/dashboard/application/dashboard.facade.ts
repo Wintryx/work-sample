@@ -19,7 +19,7 @@ import {DashboardItem, DashboardItemDto} from "@domains/dashboard/domain/dashboa
 import {catchError, finalize, map, Observable, of, shareReplay, tap} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {API_BASE_URL} from "@core/http/api.tokens";
-import {NOTIFICATION_TICKET, withFeedback} from "@core/notifications/notification.models";
+import {NOTIFICATION_TICKET, withFeedback} from "@core/notifications";
 import {normalizeApiError} from "@core/http/http-errors";
 import {createLoadableSignal, createLoadableState} from "@core/state/loadable-state";
 import {toDashboardItems} from "./dashboard.mappers";

@@ -54,18 +54,31 @@ export class NotificationService {
      * Plays the successful notification for a ticket and cleans up.
      * Success toasts are only shown when a matching ticket is registered,
      * unless `displayAlwaysSuccessNotification` is enabled.
+     *
+     * @param ticketId - The ticket ID to resolve (optional).
+     * @param message - The message to display (overrides ticket or used as standalone).
+     * @param type - The notification type (defaults to Success).
      */
-    notifySuccess(ticketId?: string | null, message?: string): void {
+    notifySuccess(
+        ticketId?: string | null,
+        message?: string,
+        type: NotificationType = NotificationType.Success
+    ): void {
         let obj: NotificationOptions = {
             message: message ?? "",
-            type: NotificationType.Success,
+            type: type,
             actionLabel: "OK",
             clearExisting: true,
             duration: 4000
         };
+
         if (ticketId) {
             if (this._registry().get(ticketId) !== undefined) {
                 obj = this._registry().get(ticketId)!;
+                // If a message override was passed, apply it
+                if (message) {
+                    obj = {...obj, message};
+                }
                 this.notify(obj);
                 this.clear(ticketId);
             }

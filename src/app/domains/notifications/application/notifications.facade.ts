@@ -4,7 +4,7 @@ import {API_BASE_URL} from "@core/http/api.tokens";
 import {AuthErrorCode, AuthFacade} from "@core/auth";
 import {normalizeApiError} from "@core/http/http-errors";
 import {NotificationService} from "@core/notifications/notification.service";
-import {NOTIFICATION_TICKET, NotificationOptions, NotificationType} from "@core/notifications/notification.models";
+import {NOTIFICATION_TICKET, NotificationOptions, NotificationType} from "@core/notifications";
 
 type SimulatedNotificationType = Exclude<NotificationType, typeof NotificationType.Error>;
 

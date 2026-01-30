@@ -9,7 +9,7 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
     - **`domain/`**: Pure logic, interfaces, and typed constants (e.g., `ItemStatus`).
     - **`application/`**: Orchestration layer using the **Facade Pattern**.
     - **`presentation/`**: UI logic, including `pages/` (smart) and `components/` (dumb).
-    - **Active Domains**: `auth`, `dashboard`, and `notifications` (debug UI for toast/unauthorized flows).
+    - **Active Domains**: `auth`, `dashboard`, and `notifications` (debug UI for success/error/unauthorized flows).
 - **`shared/`**: Reusable, stateless UI building blocks (Badges, Buttons) and Pipes.
 
 ## 2. Encapsulation & Public API
@@ -33,8 +33,10 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 - **Fetch API**: Optimized for SSR using `withFetch()` for modern, high-performance network communication.
 
 ## 5. Transactional Notification System
-- **Ticket-Registry Pattern**: Implements a "Coat Check" system. Actions are registered in a `NotificationService` map before execution.
-- **HttpContext Integration**: A unique `NOTIFICATION_TICKET` is passed through the HTTP pipeline, allowing the Interceptor to trigger the correct UI feedback (Toast) based on the specific request's success or failure.
+- **Hybrid Approach**: We use two strategies to handle user feedback, avoiding boilerplate for simple cases while supporting complex ones.
+- **Context-Driven Feedback (Fast-Track)**: For standard messages, we attach a config directly to the request via `withFeedback('Saved!')` or `withFeedback({ message: 'Syncing...', type: NotificationType.Info })`. The interceptor picks this up and shows a toast automatically.
+- **Ticket-Registry Pattern (Complex)**: For dynamic messages or complex error handling, actions are registered in a `NotificationService` map before execution. The resulting `Ticket ID` is passed via `HttpContext`. Tickets take strict precedence over server responses, ensuring the UI always behaves as planned.
+- **Rich UI**: Notifications are rendered via a custom `ToastComponent` inside the Material Snackbar. This allows for rich content (Icons, Tailwind styling) while leveraging Material's overlay management and theming overrides for color-coding.
 
 ## 6. Configuration & Environments
 - **Token-based Injection**: Environment-specific variables are mapped to **Injection Tokens** (e.g., `API_BASE_URL`, `AUTH_CONFIG`) during bootstrap.
@@ -54,4 +56,3 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
     - **Unit**: Pure logic and type-guards (e.g., `http-errors`).
     - **Integration**: Interceptor middleware and Signal-based component interactions.
 - **Prettier**: Guarantees a consistent "Double Quote" code style across the entire team.
-

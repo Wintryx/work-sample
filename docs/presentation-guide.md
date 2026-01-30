@@ -31,12 +31,13 @@ Dieses Dokument dient als roter Faden fuer die Vorstellung des Projekts "Wintryx
 ## 4. Transactional Messaging (Innovation)
 *   **Thema**: Wie behandeln wir Feedback bei parallelen Requests?
 *   **Punkte**:
-    *   **Ticket-System**: Optionales Registrieren von Nachrichten im `NotificationService` vor dem HTTP-Call, wenn ein Toast individuell gesteuert werden soll.
-    *   **HttpContext**: Die Ticket-ID reist durch den Interceptor.
-    *   **Automatisierung**: Der `notificationInterceptor` zeigt Fehler immer an (Default-Konfiguration), waehrend Success-Toasts nur mit Ticket oder bewusstem Opt-in kommen. UI-Komponenten bleiben dadurch komplett frei von Messaging-Logik.
-    *   **Notifications-Playground**: Eigene Seite mit Aktionen ("Simulate Error/Unauthorized"), um die Toast-Pipeline und Logout-Flow gezielt zu demonstrieren (in allen Umgebungen verfuegbar).
+    *   **Hybrid-Strategie**: Wir unterscheiden zwischen einfachen und komplexen Fällen, um Boilerplate zu vermeiden.
+    *   **Fast-Track (Context)**: Für Standard-Feedback nutzen wir `withFeedback('Saved!')`. Das hängt die Nachricht direkt an den Request-Context, ohne dass ein Service injiziert werden muss.
+    *   **Ticket-System (Complex)**: Für dynamische Nachrichten registrieren wir ein Ticket im `NotificationService`. Die Ticket-ID reist durch den Interceptor und garantiert die Zuordnung bei Race Conditions.
+    *   **Rich UI (Custom Toasts)**: Statt einfacher Text-Snackbars nutzen wir eine eigene `ToastComponent` mit Icons und Tailwind-Styling, eingebettet in den nativen Material-Container. Das kombiniert die Robustheit von Material (Overlay-Management) mit modernem Design.
+    *   **Automatisierung**: Der `notificationInterceptor` zeigt Fehler immer an (Default-Konfiguration), waehrend Success-Toasts nur via Ticket oder Context-Feedback kommen.
+    *   **Notifications-Playground**: Eigene Seite mit Aktionen ("Simulate Error/Unauthorized" und "Simulate Notifications" fuer Success/Info/Warn), um die Toast-Pipeline und Logout-Flow gezielt zu demonstrieren.
     *   **Error Normalization**: `normalizeApiError(...)` vereinheitlicht Message/Status/Code, sodass Fehlerfluesse konsistent und testbar bleiben.
-    *   **Typed API Error Codes**: `ApiError<TCode>` + Domain-Codes ermoeglichen deterministisches Error-Handling (z. B. Unauthorized -> logout + toast) - ergaenzt durch `AuthErrorCode` fuer Auth-spezifische Fehler.
 
 ## 5. UI & Clean Code Standards
 *   **Thema**: Maintainability und Developer Experience (DX).

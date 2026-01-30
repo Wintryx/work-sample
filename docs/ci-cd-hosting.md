@@ -32,6 +32,15 @@ Typical pipeline for Angular projects:
 This repository provides a baseline workflow at:
 - `.github/workflows/ci.yml`
 
+## Dependency Updates (Dependabot)
+Automated dependency update PRs are configured via:
+- `.github/dependabot.yml`
+
+What it does:
+- Checks npm dependencies and GitHub Actions weekly (Mondays at 06:00).
+- Opens up to 5 PRs at a time with the `dependencies` label.
+- Ignores semver-major updates (to avoid breaking changes without explicit review).
+
 ## CD Workflow (Hosting)
 - Connect the GitHub repo to the hosting platform.
 - Configure build command and output directory.

@@ -1,3 +1,7 @@
+---
+apply: always
+---
+
 # AI Instructions (Project)
 
 ## Role & Goals

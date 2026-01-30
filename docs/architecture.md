@@ -33,8 +33,9 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 - **Fetch API**: Optimized for SSR using `withFetch()` for modern, high-performance network communication.
 
 ## 5. Transactional Notification System
-- **Ticket-Registry Pattern**: Implements a "Coat Check" system. Actions are registered in a `NotificationService` map before execution.
-- **HttpContext Integration**: A unique `NOTIFICATION_TICKET` is passed through the HTTP pipeline, allowing the Interceptor to trigger the correct UI feedback (Toast) based on the specific request's success or failure.
+- **Hybrid Approach**: We use two strategies to handle user feedback, avoiding boilerplate for simple cases while supporting complex ones.
+- **Context-Driven Feedback (Fast-Track)**: For standard success messages, we attach a simple config directly to the request via `withFeedback('Saved!')`. The interceptor picks this up and shows a toast automatically.
+- **Ticket-Registry Pattern (Complex)**: For dynamic messages or complex error handling, actions are registered in a `NotificationService` map before execution. The resulting `Ticket ID` is passed via `HttpContext` to link the response back to the specific UI logic.
 
 ## 6. Configuration & Environments
 - **Token-based Injection**: Environment-specific variables are mapped to **Injection Tokens** (e.g., `API_BASE_URL`, `AUTH_CONFIG`) during bootstrap.
@@ -54,4 +55,3 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
     - **Unit**: Pure logic and type-guards (e.g., `http-errors`).
     - **Integration**: Interceptor middleware and Signal-based component interactions.
 - **Prettier**: Guarantees a consistent "Double Quote" code style across the entire team.
-

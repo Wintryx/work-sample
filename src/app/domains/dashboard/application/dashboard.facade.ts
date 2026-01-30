@@ -19,8 +19,7 @@ import {DashboardItem, DashboardItemDto} from "@domains/dashboard/domain/dashboa
 import {catchError, finalize, map, Observable, of, shareReplay, tap} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {API_BASE_URL} from "@core/http/api.tokens";
-import {NOTIFICATION_TICKET, NotificationType} from "@core/notifications/notification.models";
-import {NotificationService} from "@core/notifications/notification.service";
+import {NOTIFICATION_TICKET, withFeedback} from "@core/notifications/notification.models";
 import {normalizeApiError} from "@core/http/http-errors";
 import {createLoadableSignal, createLoadableState} from "@core/state/loadable-state";
 import {toDashboardItems} from "./dashboard.mappers";
@@ -32,7 +31,6 @@ export class DashboardFacade {
     private readonly http = inject(HttpClient);
     private readonly destroyRef = inject(DestroyRef);
     private readonly baseUrl = inject(API_BASE_URL);
-    private readonly notificationService = inject(NotificationService);
     private readonly authFacade = inject(AuthFacade);
     /**
      * @description
@@ -71,12 +69,9 @@ export class DashboardFacade {
      * @description Example of a domain-specific action.
      */
     refresh(): void {
-        const ticket = this.notificationService.registerTicket({
-            message: "- Custom Message - " + "Dashboard data updated.",
-            type: NotificationType.Success,
-            clearExisting: true,
-        });
-        this.loadItems(ticket);
+        this.fetchItems$(null, true, undefined, "Dashboard data updated.")
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     /**
@@ -91,6 +86,7 @@ export class DashboardFacade {
         ticketId: string | null,
         force = false,
         debugCode?: DashboardErrorCode,
+        successMessage?: string
     ): Observable<DashboardItem[]> {
         const state = this._state();
         if (state.loading) return this.inFlightItems$ ?? of(state.data);
@@ -99,7 +95,13 @@ export class DashboardFacade {
         this._state.update((s) => ({...s, loading: true, error: null}));
         const url = `${this.baseUrl}/dashboard/items`;
         const params = debugCode ? new HttpParams().set("debug", debugCode) : undefined;
-        const context = ticketId ? new HttpContext().set(NOTIFICATION_TICKET, ticketId) : undefined;
+
+        let context = new HttpContext();
+        if (ticketId) {
+            context.set(NOTIFICATION_TICKET, ticketId);
+        } else if (successMessage) {
+            context = withFeedback(successMessage)(context);
+        }
 
         const request$ = this.http.get<DashboardItemDto[]>(url, {context, params}).pipe(
             map(toDashboardItems),

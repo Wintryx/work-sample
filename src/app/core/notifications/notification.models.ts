@@ -8,6 +8,31 @@ import {ValueOf} from "@core/types/value-of";
  */
 export const NOTIFICATION_TICKET = new HttpContextToken<string | null>(() => null);
 
+/**
+ * @description
+ * Context Token to carry simple feedback configuration directly on the request.
+ * This avoids the need to register tickets for standard success messages.
+ */
+export const FEEDBACK_CONTEXT = new HttpContextToken<FeedbackConfig>(() => ({}));
+
+export interface FeedbackConfig {
+    successMessage?: string;
+    suppressErrors?: boolean;
+}
+
+/**
+ * @description
+ * Helper to attach feedback configuration to an HTTP request context.
+ * Accepts either a simple success message string or a full config object.
+ */
+export function withFeedback(config: FeedbackConfig | string) {
+    const finalConfig = typeof config === "string" ? {successMessage: config} : config;
+    return (context: import("@angular/common/http").HttpContext) => {
+        context.set(FEEDBACK_CONTEXT, finalConfig);
+        return context;
+    };
+}
+
 export const NotificationType = {
     Success: "success",
     Error: "error",
@@ -29,11 +54,3 @@ export interface NotificationOptions {
     message: string;
     type: NotificationType;
 }
-
-/**
- * @description Represents a structured message internally.
- */
-// export interface NotificationObject extends NotificationOptions {
-//     message: string;
-//     type: NotificationType;
-// }

@@ -22,12 +22,20 @@ RxJS remains the standard for **asynchronous event streams**. We follow a "Strea
 
 ## 5. Advanced State Patterns used in this Project
 
-### Transactional Registry (Ticket-System)
-For global notifications, we use a **Reactive Map within a Signal**.
-- Actions are registered with a unique `Ticket ID`.
-- This prevents race conditions in complex UIs where multiple asynchronous operations occur simultaneously.
- - Errors can always fall back to the global default configuration even without a ticket.
- - Success toasts are ticket-driven by design (unless explicitly opted-in).
+### Transactional Notification System (Hybrid)
+We use a two-tiered approach to handle global notifications via `HttpContext`, avoiding boilerplate while maintaining flexibility.
+
+1.  **Context-Driven Feedback (Simple)**:
+    For standard CRUD operations, we use a lightweight helper: `withFeedback('Saved successfully')`.
+    - This attaches a config object directly to the request context.
+    - The interceptor reads this and triggers a success toast automatically.
+    - No service injection or manual ID management required.
+
+2.  **Ticket-Registry Pattern (Complex)**:
+    For scenarios requiring dynamic messages or specific error handling overrides, we use a **Reactive Map within a Signal**.
+    - Actions are registered with a unique `Ticket ID` (e.g., via `notificationService.registerTicket(...)`).
+    - This ID travels with the request and allows the interceptor to look up the exact notification configuration.
+    - Prevents race conditions in complex UIs where multiple asynchronous operations occur simultaneously.
 
 ### Signal-based Routing Inputs
 We utilize Angular's modern `withComponentInputBinding()` feature.

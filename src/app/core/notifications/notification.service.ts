@@ -69,7 +69,10 @@ export class NotificationService {
                 this.clear(ticketId);
             }
         } else {
-            if (message && this.displayAlwaysSuccessNotification()) {
+            // If no ticket, but we have a message (e.g. from withFeedback), show it.
+            if (message) {
+                this.notify({...obj, message});
+            } else if (this.displayAlwaysSuccessNotification()) {
                 this.notify(obj);
             }
         }

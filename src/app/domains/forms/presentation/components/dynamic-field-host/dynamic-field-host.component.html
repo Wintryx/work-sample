@@ -32,7 +32,13 @@
                 <app-radio [control]="asOptionControl()" [label]="field().label" [options]="field().options || []" [validators]="field().validators || []"></app-radio>
             }
             @case (FieldType.File) {
-                <app-file-upload [control]="asFileControl()" [label]="field().label" [validators]="field().validators || []"></app-file-upload>
+                <app-file-upload
+                    [control]="asFileControl()"
+                    [label]="field().label"
+                    [accept]="field().accept || 'image/*'"
+                    [multiple]="field().multiple ?? true"
+                    [validators]="field().validators || []"
+                ></app-file-upload>
             }
         }
     }

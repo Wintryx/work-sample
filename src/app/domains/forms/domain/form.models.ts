@@ -13,7 +13,7 @@ export const FieldType = {
 
 export type FieldType = ValueOf<typeof FieldType>;
 export type FieldOptionValue = string | number | boolean;
-export type FormFieldValue = FieldOptionValue | null;
+export type FormFieldValue = FieldOptionValue | string[] | null;
 export type FormValueMap = Record<string, FormFieldValue>;
 
 /**
@@ -57,6 +57,10 @@ export interface FormFieldConfig {
     value?: FormFieldValue;
     placeholder?: string;
     options?: FieldOption[];
+    /** Allowed MIME types for file inputs (e.g., "image/*"). */
+    accept?: string;
+    /** Enables multi-file uploads for file inputs. */
+    multiple?: boolean;
     validators?: FieldValidatorConfig[];
     permissions?: FieldPermissions;
     grid?: FieldGridProps;

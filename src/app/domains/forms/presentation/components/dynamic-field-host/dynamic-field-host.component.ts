@@ -158,6 +158,7 @@ export class DynamicFieldHostComponent {
         const field = this.field();
         const val = this.control().value;
         if (val === null || val === undefined) return "-";
+        if (Array.isArray(val)) return val.join(", ");
 
         // If it's a select/radio, try to find the label
         if (field.options) {
@@ -180,7 +181,7 @@ export class DynamicFieldHostComponent {
         return this.control() as FormControl<FieldOptionValue | null>;
     }
 
-    protected asFileControl(): FormControl<string | null> {
-        return this.control() as FormControl<string | null>;
+    protected asFileControl(): FormControl<string[] | null> {
+        return this.control() as FormControl<string[] | null>;
     }
 }

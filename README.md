@@ -10,6 +10,7 @@ Enterprise-ready Angular 21 work sample showcasing a higher-level architecture w
 - **HTTP Pipeline**: Auth + Notification interceptors, mock backend controlled by `useMockBackend` (enabled for the work sample).
 - **Notification Policy**: Errors always show with defaults; success toasts are ticket-driven (or explicitly opted-in).
 - **Notifications Playground**: Dedicated route to simulate error/unauthorized/success flows and validate interceptor behavior.
+- **Dynamic Forms**: Metadata-driven forms with schema validators and DI-based custom validators.
 - **Utility Helpers**: Lodash for concise, readable transformations and safe defaults.
 - **SSR & Hydration**: Cookie-based auth bridge and client hydration support. Static hosting uses the CSR fallback (`index.csr.html`).
 - **UI Stack**: Tailwind CSS v4 for layout and Angular Material 3 for controls.
@@ -50,6 +51,7 @@ Use `useMockBackend` in the environment files to control whether the mock interc
 - [State Management](./docs/state-management.md)
 - [Authentication Strategy](./docs/authentication-strategy.md)
 - [Testing Strategy](./docs/testing-strategy.md)
+- [Dynamic Forms](./docs/dynamic-forms.md)
 - [Planned Optimizations](./docs/planned-optimizations.md)
 - [Presentation Guide](./docs/presentation-guide.md)
 

@@ -1,0 +1,22 @@
+@reference "tailwindcss";
+
+:host {
+  display: block;
+}
+
+.wtx-field-shell {
+  @apply flex flex-col gap-1;
+}
+
+.wtx-field-shell__error {
+  @apply text-xs font-medium text-red-600 min-h-4;
+  visibility: hidden;
+}
+
+.wtx-field-shell__error--visible {
+  visibility: visible;
+}
+
+.wtx-field-shell__control--error {
+  @apply rounded-lg ring-1 ring-red-400/70 p-2;
+}

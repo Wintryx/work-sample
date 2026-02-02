@@ -1,14 +1,13 @@
 name: ci
 
 on:
-  push:
-    branches:
-      - main
-      - develop
   pull_request:
     branches:
       - main
       - develop
+  push:
+    branches:
+      - main
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -16,7 +15,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, windows, x64]
     timeout-minutes: 20
     env:
       CI: true

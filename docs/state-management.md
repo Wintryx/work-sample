@@ -42,6 +42,10 @@ We utilize Angular's modern `withComponentInputBinding()` feature.
 - Route parameters (like `:id`) are injected directly into components as **Signal Inputs** (`input.required()`).
 - This allows the UI to derive state reactively: `item = computed(() => facade.items().find(i => i.id === id()))`.
 
+### Signal Inputs in Presentation Components
+Standalone UI components use signal-based inputs/outputs (`input()` / `output()`), keeping templates reactive without manual `OnChanges` hooks.
+For Reactive Forms, `FormFieldShell` bridges `statusChanges`/`valueChanges` into signals to keep validation UI in sync.
+
 ### In-Flight Request Deduplication
 To avoid parallel HTTP calls when multiple consumers trigger the same load:
 - Facades cache the in-flight Observable and reuse it for concurrent requests.

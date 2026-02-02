@@ -24,6 +24,12 @@ export const routes: Routes = [
                 (m) => m.notificationsRoutes,
             ),
     },
+    {
+        path: "forms",
+        canMatch: [authGuard],
+        loadChildren: () =>
+            import("@domains/forms/presentation/forms.routes").then((m) => m.FORMS_ROUTES),
+    },
     // Fallback
     {path: "**", redirectTo: "dashboard"},
 ];

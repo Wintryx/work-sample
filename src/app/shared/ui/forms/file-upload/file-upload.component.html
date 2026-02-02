@@ -1,0 +1,32 @@
+<app-form-field-shell [control]="control()" [validators]="validators()" [decorateControl]="true">
+    <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-700" [attr.for]="inputId">{{ label() }}</label>
+
+        <div class="flex items-center gap-4">
+            <button mat-stroked-button type="button" (click)="fileInput.click()" [disabled]="uploading()">
+                <mat-icon>cloud_upload</mat-icon>
+                Select File
+            </button>
+            <input #fileInput [id]="inputId" type="file" class="hidden" (change)="onFileSelected($event)">
+
+            @if (fileName()) {
+                <span class="text-sm text-slate-600">{{ fileName() }}</span>
+            }
+        </div>
+
+        @if (uploading()) {
+            <mat-progress-bar mode="determinate" [value]="progress()"></mat-progress-bar>
+        }
+
+        @if (error()) {
+            <span class="text-xs text-red-600">{{ error() }}</span>
+        }
+
+        @if (control().value && !uploading() && !error()) {
+            <span class="text-xs text-green-600 flex items-center gap-1">
+                <mat-icon class="!w-4 !h-4 text-[16px]">check_circle</mat-icon>
+                Upload complete (ID: {{ control().value }})
+            </span>
+        }
+    </div>
+</app-form-field-shell>

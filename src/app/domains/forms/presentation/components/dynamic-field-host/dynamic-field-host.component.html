@@ -1,0 +1,39 @@
+<div class="w-full">
+    @if (field().permissions?.readonly) {
+        <!-- Readonly Output View -->
+        <div class="flex flex-col gap-1 opacity-70">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">{{ field().label }}</span>
+            <span class="text-sm font-medium text-slate-800 p-2 bg-slate-50 rounded border border-slate-200">
+                {{ getDisplayValue() }}
+            </span>
+        </div>
+    } @else {
+        <!-- Editable Input View -->
+        @switch (field().type) {
+            @case (FieldType.Text) {
+                <app-text-input [control]="asTextControl()" [label]="field().label" [placeholder]="field().placeholder || ''" [validators]="field().validators || []"></app-text-input>
+            }
+            @case (FieldType.Email) {
+                <app-text-input [control]="asTextControl()" [label]="field().label" type="email" [placeholder]="field().placeholder || ''" [validators]="field().validators || []"></app-text-input>
+            }
+            @case (FieldType.Phone) {
+                <app-text-input [control]="asTextControl()" [label]="field().label" type="tel" [placeholder]="field().placeholder || ''" [validators]="field().validators || []"></app-text-input>
+            }
+            @case (FieldType.Switch) {
+                <app-switch [control]="asBooleanControl()" [label]="field().label" [validators]="field().validators || []"></app-switch>
+            }
+            @case (FieldType.Select) {
+                <app-select [control]="asOptionControl()" [label]="field().label" [options]="field().options || []" [validators]="field().validators || []"></app-select>
+            }
+            @case (FieldType.Checkbox) {
+                <app-checkbox [control]="asBooleanControl()" [label]="field().label" [validators]="field().validators || []"></app-checkbox>
+            }
+            @case (FieldType.Radio) {
+                <app-radio [control]="asOptionControl()" [label]="field().label" [options]="field().options || []" [validators]="field().validators || []"></app-radio>
+            }
+            @case (FieldType.File) {
+                <app-file-upload [control]="asFileControl()" [label]="field().label" [validators]="field().validators || []"></app-file-upload>
+            }
+        }
+    }
+</div>

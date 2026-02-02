@@ -39,7 +39,7 @@ export type AuthStatus = ValueOf<typeof AuthStatus>;
 /**
  * @description Public User model.
  */
-interface AuthUser {
+export interface AuthUser {
     id: string;
     username: string;
 }

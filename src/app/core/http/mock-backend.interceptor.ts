@@ -109,6 +109,8 @@ const MOCK_FORM_USER_PROFILE: FormConfig = {
             key: "avatar",
             type: FieldType.File,
             label: "Profile Picture",
+            accept: "image/*",
+            multiple: true,
             grid: {default: 12},
             permissions: {hidden: false, readonly: false}
         },

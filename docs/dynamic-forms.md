@@ -92,8 +92,9 @@ All form widgets and containers use signal-based inputs/outputs (`input()` / `ou
 
 ### File Uploads
 - **Immediate Upload**: Files are uploaded immediately upon selection via a dedicated endpoint.
-- **Reference Storage**: The form control stores the returned `FileID` (and metadata), not the binary data.
+- **Reference Storage**: The form control stores the returned `FileID` list (and metadata), not the binary data.
 - **Submission**: When the form is submitted, only the file IDs are sent.
+- **Multi-Image Support**: File fields can enable `multiple` and restrict `accept` (e.g., `image/*`) to allow batch image uploads.
 
 ## 4. JSON Schema Example
 
@@ -123,6 +124,8 @@ All form widgets and containers use signal-based inputs/outputs (`input()` / `ou
       "key": "avatar",
       "type": "file",
       "label": "Profile Picture",
+      "accept": "image/*",
+      "multiple": true,
       "grid": { "default": 12 }
     }
   ]

@@ -24,6 +24,7 @@ Renders the UI.
 
 ### Public API (Barrel)
 Consumers should import form models from the `@domains/forms` barrel to avoid deep imports.
+This barrel also exports `FORMS_VALIDATOR_PROVIDERS` so app-level registration stays consistent.
 
 ## 3. Key Concepts
 

@@ -10,7 +10,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {notificationInterceptor} from "@core/notifications/notification.interceptor";
 import {API_BASE_URL} from "@core/http/api.tokens";
 import {environment} from "@env/environment";
-import {FORMS_VALIDATOR_PROVIDERS} from "@domains/forms/application/forms.validators";
+import {FORMS_VALIDATOR_PROVIDERS} from "@domains/forms";
 
 
 const httpInterceptors = environment.useMockBackend

@@ -1,7 +1,6 @@
 import {HttpErrorResponse, HttpInterceptorFn, HttpResponse} from "@angular/common/http";
 import {delay, mergeMap, of, throwError, timer} from "rxjs";
-import {DashboardItemDto, ItemStatus} from "@domains/dashboard/domain/dashboard.models";
-import {DashboardErrorCode} from "@domains/dashboard/domain/dashboard.error-codes";
+import {DashboardErrorCode, DashboardItemDto, ItemStatus} from "@domains/dashboard";
 import {inject} from "@angular/core";
 import {API_BASE_URL} from "@core/http/api.tokens";
 import {AuthErrorCode} from "@core/auth";

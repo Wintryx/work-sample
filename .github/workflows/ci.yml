@@ -1,14 +1,13 @@
 name: ci
 
 on:
-  push:
-    branches:
-      - main
-      - develop
   pull_request:
     branches:
       - main
       - develop
+  push:
+    branches:
+      - main
 
 concurrency:
   group: ci-${{ github.ref }}

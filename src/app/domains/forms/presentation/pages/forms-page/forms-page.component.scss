@@ -1,0 +1,31 @@
+@reference "tailwindcss";
+
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
+.wtx-page {
+  @apply flex flex-col gap-6 h-full min-h-0;
+}
+
+.wtx-page-title {
+  @apply text-2xl font-bold text-slate-900 tracking-tight;
+}
+
+.wtx-page-subtitle {
+  @apply text-slate-500 text-sm;
+}
+
+.wtx-page-header {
+  @apply flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between;
+}
+
+.wtx-form-panel {
+  @apply bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col flex-1 min-h-0;
+}
+
+.wtx-form-scroll {
+  @apply flex-1 min-h-0 overflow-auto p-6;
+}

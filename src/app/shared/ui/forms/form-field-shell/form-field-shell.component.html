@@ -1,0 +1,10 @@
+<div class="wtx-field-shell">
+    <div class="wtx-field-shell__control" [class.wtx-field-shell__control--error]="showError() && decorateControl()">
+        <ng-content></ng-content>
+    </div>
+    @if (showErrorMessage()) {
+        <div class="wtx-field-shell__error" [class.wtx-field-shell__error--visible]="showError() && errorMessage()" aria-live="polite">
+            {{ errorMessage() ?? "" }}
+        </div>
+    }
+</div>

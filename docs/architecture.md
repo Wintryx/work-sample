@@ -9,8 +9,8 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
     - **`domain/`**: Pure logic, interfaces, and typed constants (e.g., `ItemStatus`).
     - **`application/`**: Orchestration layer using the **Facade Pattern**.
     - **`presentation/`**: UI logic, including `pages/` (smart) and `components/` (dumb).
-    - **Active Domains**: `auth`, `dashboard`, and `notifications` (debug UI for toast/unauthorized flows).
-- **`shared/`**: Reusable, stateless UI building blocks (Badges, Buttons) and Pipes.
+    - **Active Domains**: `auth`, `dashboard`, `notifications`, and `forms` (metadata-driven dynamic forms).
+- **`shared/`**: Reusable, stateless UI building blocks (Badges, Buttons, Form widgets) and Pipes.
 
 ## 2. Encapsulation & Public API
 - **Barrel Files**: Each module folder exposes a **Public API** via `index.ts`. External consumers are forbidden from importing internal files directly.
@@ -28,19 +28,22 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
 - **Interceptor Chain**: A strictly ordered pipeline:
     1. **Auth**: Injects JWT Bearer tokens.
     2. **Notification**: Monitors `HttpContext` for automated UI feedback.
-    3. **MockBackend**: Intercepts requests to simulate server responses for local development (enabled via `useMockBackend`).
+    3. **MockBackend**: Intercepts requests to simulate server responses for the work sample across environments (enabled via `useMockBackend`).
 - **Isomorphic Auth**: Combines `localStorage` (client persistence) with **Cookies** (SSR bridge) to eliminate auth-flicker and enable secure server-side guards.
 - **Fetch API**: Optimized for SSR using `withFetch()` for modern, high-performance network communication.
 
 ## 5. Transactional Notification System
-- **Ticket-Registry Pattern**: Implements a "Coat Check" system. Actions are registered in a `NotificationService` map before execution.
-- **HttpContext Integration**: A unique `NOTIFICATION_TICKET` is passed through the HTTP pipeline, allowing the Interceptor to trigger the correct UI feedback (Toast) based on the specific request's success or failure.
+- **Hybrid Approach**: We use two strategies to handle user feedback, avoiding boilerplate for simple cases while supporting complex ones.
+- **Context-Driven Feedback (Fast-Track)**: For standard messages, we attach a config directly to the request via `withFeedback('Saved!')` or `withFeedback({ message: 'Syncing...', type: NotificationType.Info })`. The interceptor picks this up and shows a toast automatically.
+- **Ticket-Registry Pattern (Complex)**: For dynamic messages or complex error handling, actions are registered in a `NotificationService` map before execution. The resulting `Ticket ID` is passed via `HttpContext`. Tickets take strict precedence over server responses, ensuring the UI always behaves as planned.
+- **Rich UI**: Notifications are rendered via a custom `ToastComponent` inside the Material Snackbar. This allows for rich content (Icons, Tailwind styling) while leveraging Material's overlay management and theming overrides for color-coding.
 
 ## 6. Configuration & Environments
 - **Token-based Injection**: Environment-specific variables are mapped to **Injection Tokens** (e.g., `API_BASE_URL`, `AUTH_CONFIG`) during bootstrap.
 - **Environment Parity**: Uses Angular's modern file-replacement strategy to swap `environment.ts` (Production) with `environment.development.ts` at build time.
-- **Feature Flags**: `useMockBackend` gates the mock interceptor so production builds always target real APIs.
-- **Dev-only Tooling**: Debug routes like `/notifications` are registered only when `environment.production` is false.
+- **Feature Flags**: `useMockBackend` keeps the mock interceptor enabled for the work sample; swap to real APIs by disabling it.
+- **Debug Tooling**: The `/notifications` playground is available in all environments to validate the toast pipeline.
+- **SSR vs Static Hosting**: The app is built with SSR output enabled, but the work-sample deployment uses the browser bundle only. Client-side routes are served via `index.csr.html` to keep refreshes working without a Node runtime.
 
 ## 7. UI, Styling & Accessibility
 - **Hybrid CSS Strategy**: Combines **Tailwind CSS v4** for rapid utility-first layouting with **Angular Material 3** for accessible, enterprise-ready components.
@@ -53,4 +56,3 @@ To ensure scalability for a team of 2+ developers, the project follows a strict 
     - **Unit**: Pure logic and type-guards (e.g., `http-errors`).
     - **Integration**: Interceptor middleware and Signal-based component interactions.
 - **Prettier**: Guarantees a consistent "Double Quote" code style across the entire team.
-

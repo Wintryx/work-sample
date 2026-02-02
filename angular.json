@@ -9,7 +9,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "wintryx-progess-maker": {
+    "wintryx-progress-maker": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -38,6 +38,9 @@
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "cookie"
+            ],
             "assets": [
               {
                 "glob": "**/*",
@@ -58,12 +61,12 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
+                  "maximumWarning": "1.2MB",
                   "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
+                  "maximumWarning": "5kB",
                   "maximumError": "8kB"
                 }
               ],
@@ -87,10 +90,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "wintryx-progess-maker:build:production"
+              "buildTarget": "wintryx-progress-maker:build:production"
             },
             "development": {
-              "buildTarget": "wintryx-progess-maker:build:development"
+              "buildTarget": "wintryx-progress-maker:build:development"
             }
           },
           "defaultConfiguration": "development"

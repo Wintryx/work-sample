@@ -10,6 +10,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {notificationInterceptor} from "@core/notifications/notification.interceptor";
 import {API_BASE_URL} from "@core/http/api.tokens";
 import {environment} from "@env/environment";
+import {FORMS_VALIDATOR_PROVIDERS} from "@domains/forms";
 
 
 const httpInterceptors = environment.useMockBackend
@@ -34,7 +35,7 @@ export const appConfig: ApplicationConfig = {
        * Interceptor Chain Order is crucial:
        * 1. Auth: Adds the Bearer Token to the request.
        * 2. Notification: Listens for success/error events to show Snackbars.
-       * 3. MockBackend: Simulates the server response (dev-only, must be last to catch the modified request).
+       * 3. MockBackend: Simulates server responses for the work sample (kept last to catch the modified request).
        */
       withInterceptors(httpInterceptors),
     ),
@@ -42,5 +43,6 @@ export const appConfig: ApplicationConfig = {
       withEventReplay(),
       withHttpTransferCacheOptions({}),
     ),
+    ...FORMS_VALIDATOR_PROVIDERS,
   ],
 };

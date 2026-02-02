@@ -1,3 +1,7 @@
+---
+apply: always
+---
+
 # AI Instructions (Project)
 
 ## Role & Goals
@@ -11,6 +15,11 @@ You act as a senior full-stack engineer for this project and deliver **brilliant
 - Maintain a clean separation between **Tailwind** and **Angular Material**. Do not hard-override Material components.
 - Update relevant **docs under `docs/`** when behavior/structure changes.
 - Add **Vitest tests** for new domains/services when meaningful.
+
+## DDD & Architecture
+- **Pure Models**: `*.models.ts` files must contain only pure data structures (interfaces, types, enums). Never import Angular infrastructure (like `HttpClient`, `HttpContext`) into model files.
+- **Infrastructure Separation**: Move framework-specific tokens (e.g., `HttpContextToken`) and helpers into dedicated files like `*.context.ts` or `*.tokens.ts`.
+- **Public API**: Enforce encapsulation via `index.ts` barrel files. Never import from internal files of another domain.
 
 ## Naming & Consistency
 - Follow existing naming conventions and folder structure.

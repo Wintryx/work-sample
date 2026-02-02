@@ -1,10 +1,10 @@
 import {HttpErrorResponse, HttpInterceptorFn, HttpResponse} from "@angular/common/http";
 import {delay, mergeMap, of, throwError, timer} from "rxjs";
-import {DashboardItemDto, ItemStatus} from "@domains/dashboard/domain/dashboard.models";
-import {DashboardErrorCode} from "@domains/dashboard/domain/dashboard.error-codes";
+import {DashboardErrorCode, DashboardItemDto, ItemStatus} from "@domains/dashboard";
 import {inject} from "@angular/core";
 import {API_BASE_URL} from "@core/http/api.tokens";
 import {AuthErrorCode} from "@core/auth";
+import {FieldType, FormConfig} from "@domains/forms";
 
 /**
  * @description
@@ -33,6 +33,98 @@ const MOCK_DASHBOARD_DATA: DashboardItemDto[] = [
     {id: "20", title: "Feature: Release Checklist", status: ItemStatus.Todo, progress: 0},
 ];
 
+const MOCK_FORM_USER_PROFILE: FormConfig = {
+    id: "user-profile",
+    title: "User Profile",
+    description: "Edit your personal information and preferences.",
+    fields: [
+        {
+            key: "username",
+            type: FieldType.Text,
+            label: "Username",
+            placeholder: "jdoe",
+            grid: {default: 12, md: 6},
+            validators: [{type: "required"}, {type: "min", value: 2, message: "Username must be at least 2 characters."}],
+            permissions: {hidden: false, readonly: false}
+        },
+        {
+            key: "email",
+            type: FieldType.Email,
+            label: "Email Address",
+            placeholder: "john.doe@example.com",
+            grid: {default: 12, md: 6},
+            validators: [{type: "required"}, {type: "email"}],
+            permissions: {hidden: false, readonly: false}
+        },
+        {
+            key: "phone",
+            type: FieldType.Phone,
+            label: "Phone Number",
+            placeholder: "+1 234 567 890",
+            grid: {default: 12, md: 6},
+            permissions: {hidden: false, readonly: false}
+        },
+        {
+            key: "role",
+            type: FieldType.Select,
+            label: "Role",
+            grid: {default: 12, md: 6},
+            options: [
+                {label: "Admin", value: "admin"},
+                {label: "Editor", value: "editor"},
+                {label: "Viewer", value: "viewer"}
+            ],
+            validators: [{type: "required"}],
+            permissions: {hidden: false, readonly: false}
+        },
+        {
+            key: "notifications",
+            type: FieldType.Switch,
+            label: "Enable Notifications",
+            value: true,
+            grid: {default: 12},
+            permissions: {hidden: false, readonly: false}
+        },
+        {
+            key: "newsletter",
+            type: FieldType.Checkbox,
+            label: "Subscribe to Newsletter",
+            value: false,
+            grid: {default: 12},
+            permissions: {hidden: false, readonly: false}
+        },
+        {
+            key: "gender",
+            type: FieldType.Radio,
+            label: "Gender",
+            grid: {default: 12},
+            options: [
+                {label: "Male", value: "male"},
+                {label: "Female", value: "female"},
+                {label: "Other", value: "other"}
+            ],
+            permissions: {hidden: false, readonly: false}
+        },
+        {
+            key: "avatar",
+            type: FieldType.File,
+            label: "Profile Picture",
+            accept: "image/*",
+            multiple: true,
+            grid: {default: 12},
+            permissions: {hidden: false, readonly: false}
+        },
+        {
+            key: "internalId",
+            type: FieldType.Text,
+            label: "Internal ID (Readonly)",
+            value: "UUID-1234-5678",
+            grid: {default: 12},
+            permissions: {hidden: false, readonly: true}
+        }
+    ]
+};
+
 /**
  * @description
  * Mock Backend Interceptor to simulate REST API responses.
@@ -41,6 +133,8 @@ const MOCK_DASHBOARD_DATA: DashboardItemDto[] = [
 export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
     const {url, method} = req;
     const baseUrl = inject(API_BASE_URL);
+
+    // --- Dashboard Endpoints ---
 
     if (url.endsWith(`${baseUrl}/dashboard/items`) && method === "GET") {
         const debugCode = req.params.get("debug");
@@ -67,6 +161,43 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
             }),
         ).pipe(delay(800));
     }
+
+    // --- Dynamic Forms Endpoints ---
+
+    if (url.endsWith(`${baseUrl}/forms/user-profile`) && method === "GET") {
+        return of(
+            new HttpResponse({
+                status: 200,
+                body: MOCK_FORM_USER_PROFILE,
+            }),
+        ).pipe(delay(600));
+    }
+    
+    if (url.includes(`${baseUrl}/forms/`) && url.endsWith("/submit") && method === "POST") {
+        console.log("Mock Backend: Received form submission", req.body);
+        return of(
+            new HttpResponse({
+                status: 200,
+                body: { message: "Profile updated successfully!" },
+            }),
+        ).pipe(delay(1000));
+    }
+
+    if (url.endsWith(`${baseUrl}/upload`) && method === "POST") {
+        return of(
+            new HttpResponse({
+                status: 201,
+                body: {
+                    id: crypto.randomUUID(),
+                    url: "https://via.placeholder.com/150",
+                    filename: "uploaded-file.jpg",
+                    timestamp: new Date().toISOString()
+                },
+            }),
+        ).pipe(delay(1500)); // Simulate upload time
+    }
+
+    // --- Debug Endpoints ---
 
     if (url === `${baseUrl}/debug/error` && method === "GET") {
         return timer(800).pipe(
@@ -98,6 +229,18 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
                 })),
             ),
         );
+    }
+
+    if (url === `${baseUrl}/debug/success` && method === "GET") {
+        return of(
+            new HttpResponse({
+                status: 200,
+                body: {
+                    status: 200,
+                    message: "Simulated success notification.",
+                },
+            }),
+        ).pipe(delay(800));
     }
 
     return next(req);

@@ -4,7 +4,9 @@ import {API_BASE_URL} from "@core/http/api.tokens";
 import {AuthErrorCode, AuthFacade} from "@core/auth";
 import {normalizeApiError} from "@core/http/http-errors";
 import {NotificationService} from "@core/notifications/notification.service";
-import {NOTIFICATION_TICKET} from "@core/notifications/notification.models";
+import {NOTIFICATION_TICKET, NotificationOptions, NotificationType} from "@core/notifications";
+
+type SimulatedNotificationType = Exclude<NotificationType, typeof NotificationType.Error>;
 
 /**
  * @description
@@ -49,6 +51,23 @@ export class NotificationsFacade {
 
     /**
      * @description
+     * Triggers a simulated success response to exercise the notification interceptor.
+     * A ticket is always registered so success/info/warning toasts render deterministically.
+     */
+    simulateNotification(
+        customMessage?: string | null,
+        type: SimulatedNotificationType = NotificationType.Success,
+    ): void {
+        const ticketId = this.createNotificationTicket(type, customMessage);
+        const url = `${this.baseUrl}/debug/success`;
+        const context = new HttpContext().set(NOTIFICATION_TICKET, ticketId);
+        this.http.get(url, {context}).subscribe({
+            error: this.handleSimulatedError,
+        });
+    }
+
+    /**
+     * @description
      * Silently consumes simulated errors to avoid console noise.
      */
     private readonly handleSimulatedError = (): void => { /* empty */
@@ -79,5 +98,41 @@ export class NotificationsFacade {
             ...this.notificationService.defaultErrorNotificationObject,
             message,
         });
+    }
+
+    /**
+     * @description
+     * Registers a notification ticket for success/info/warning simulations.
+     */
+    private createNotificationTicket(
+        type: SimulatedNotificationType,
+        customMessage?: string | null,
+    ): string {
+        const message = this.resolveNotificationMessage(type, customMessage);
+        const notification: NotificationOptions = {
+            message,
+            type,
+            actionLabel: "OK",
+            clearExisting: true,
+            duration: 4000,
+        };
+
+        return this.notificationService.registerTicket(notification);
+    }
+
+    /**
+     * @description
+     * Resolves the final message for a simulated notification.
+     */
+    private resolveNotificationMessage(
+        type: SimulatedNotificationType,
+        customMessage?: string | null,
+    ): string {
+        const trimmed = customMessage?.trim();
+        if (trimmed) {
+            return trimmed;
+        }
+
+        return this.notificationService.getDefaultNotificationMessage(type);
     }
 }

@@ -1,12 +1,4 @@
-import {HttpContextToken} from "@angular/common/http";
 import {ValueOf} from "@core/types/value-of";
-
-/**
- * @description
- * Context Token to carry a unique Ticket ID through the HTTP pipeline.
- * This ID links the asynchronous HTTP response back to a prepared notification object.
- */
-export const NOTIFICATION_TICKET = new HttpContextToken<string | null>(() => null);
 
 export const NotificationType = {
     Success: "success",
@@ -29,11 +21,3 @@ export interface NotificationOptions {
     message: string;
     type: NotificationType;
 }
-
-/**
- * @description Represents a structured message internally.
- */
-// export interface NotificationObject extends NotificationOptions {
-//     message: string;
-//     type: NotificationType;
-// }

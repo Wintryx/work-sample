@@ -7,6 +7,12 @@ import {
 import express from "express";
 import { join } from "node:path";
 
+/**
+ * @description
+ * SSR entry point for Node-based deployments.
+ * For the work-sample hosting, only the browser bundle is deployed and client routes fall back to
+ * `index.csr.html`, so this server is not used unless a Node runtime is explicitly provisioned.
+ */
 const browserDistFolder = join(import.meta.dirname, "../browser");
 
 const app = express();

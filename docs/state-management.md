@@ -22,17 +22,29 @@ RxJS remains the standard for **asynchronous event streams**. We follow a "Strea
 
 ## 5. Advanced State Patterns used in this Project
 
-### Transactional Registry (Ticket-System)
-For global notifications, we use a **Reactive Map within a Signal**.
-- Actions are registered with a unique `Ticket ID`.
-- This prevents race conditions in complex UIs where multiple asynchronous operations occur simultaneously.
- - Errors can always fall back to the global default configuration even without a ticket.
- - Success toasts are ticket-driven by design (unless explicitly opted-in).
+### Transactional Notification System (Hybrid)
+We use a two-tiered approach to handle global notifications via `HttpContext`, avoiding boilerplate while maintaining flexibility.
+
+1.  **Context-Driven Feedback (Simple)**:
+    For standard operations, we use a lightweight helper: `withFeedback('Saved successfully')` or `withFeedback({ message: 'Syncing...', type: NotificationType.Info })`.
+    - This attaches a config object directly to the request context.
+    - The interceptor reads this and triggers a toast automatically.
+    - No service injection or manual ID management required.
+
+2.  **Ticket-Registry Pattern (Complex)**:
+    For scenarios requiring dynamic messages or specific error handling overrides, we use a **Reactive Map within a Signal**.
+    - Actions are registered with a unique `Ticket ID` (e.g., via `notificationService.registerTicket(...)`).
+    - This ID travels with the request and allows the interceptor to look up the exact notification configuration.
+    - **Precedence**: Tickets are the single source of truth. If a ticket is present, server responses are ignored to preserve the custom UI message.
 
 ### Signal-based Routing Inputs
 We utilize Angular's modern `withComponentInputBinding()` feature.
 - Route parameters (like `:id`) are injected directly into components as **Signal Inputs** (`input.required()`).
 - This allows the UI to derive state reactively: `item = computed(() => facade.items().find(i => i.id === id()))`.
+
+### Signal Inputs in Presentation Components
+Standalone UI components use signal-based inputs/outputs (`input()` / `output()`), keeping templates reactive without manual `OnChanges` hooks.
+For Reactive Forms, `FormFieldShell` bridges `statusChanges`/`valueChanges` into signals to keep validation UI in sync.
 
 ### In-Flight Request Deduplication
 To avoid parallel HTTP calls when multiple consumers trigger the same load:

@@ -7,13 +7,15 @@
     <div class="flex flex-col leading-tight text-left">
       <span class="font-bold text-slate-900 tracking-tight uppercase">Wintryx</span>
       <span class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]"
-        >Progess Maker</span
+        >Progress Maker</span
       >
     </div>
   </div>
 
+
   <!-- Navigation & Actions Section -->
-  <div class="flex items-center gap-3 md:gap-4">
+  @if (!isLoginRoute()) {
+    <div class="wtx-header__actions flex items-center gap-3 md:gap-4">
     @if (authFacade.isAuthenticated()) {
       <nav class="hidden md:flex items-center gap-1 md:order-1">
         <a
@@ -23,15 +25,20 @@
         >
           Dashboard
         </a>
-        @if (isDev) {
-          <a
-            class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
-            routerLink="/notifications"
-            routerLinkActive="bg-slate-100 text-indigo-700"
-          >
-            Notifications
-          </a>
-        }
+        <a
+          class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+          routerLink="/notifications"
+          routerLinkActive="bg-slate-100 text-indigo-700"
+        >
+          Notifications
+        </a>
+        <a
+          class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+          routerLink="/forms"
+          routerLinkActive="bg-slate-100 text-indigo-700"
+        >
+          Forms
+        </a>
       </nav>
 
       <div class="hidden md:flex items-center md:order-2">
@@ -82,7 +89,8 @@
     >
       <mat-icon>menu</mat-icon>
     </button>
-  </div>
+    </div>
+  }
 </header>
 
 <mat-menu #mobileMenu="matMenu">
@@ -95,12 +103,14 @@
       <mat-icon>dashboard</mat-icon>
       <span>Dashboard</span>
     </button>
-    @if (isDev) {
-      <button mat-menu-item routerLink="/notifications">
-        <mat-icon>notifications</mat-icon>
-        <span>Notifications</span>
-      </button>
-    }
+    <button mat-menu-item routerLink="/notifications">
+      <mat-icon>notifications</mat-icon>
+      <span>Notifications</span>
+    </button>
+    <button mat-menu-item routerLink="/forms">
+      <mat-icon>dynamic_form</mat-icon>
+      <span>Forms</span>
+    </button>
     <button (click)="onLogout()" mat-menu-item>
       <mat-icon>logout</mat-icon>
       <span>Logout</span>

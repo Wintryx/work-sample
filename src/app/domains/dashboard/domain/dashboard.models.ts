@@ -1,3 +1,5 @@
+import {ValueOf} from "@core/types/value-of";
+
 /**
  * @description
  * Progress status for Dashboard items.
@@ -9,7 +11,7 @@ export const ItemStatus = {
   Done: "done",
 } as const;
 
-export type ItemStatus = (typeof ItemStatus)[keyof typeof ItemStatus];
+export type ItemStatus = ValueOf<typeof ItemStatus>;
 
 /**
  * @description

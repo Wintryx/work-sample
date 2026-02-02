@@ -38,7 +38,7 @@ None at the moment.
    - Table container gets horizontal scroll on small screens.
    - Item detail and login cards use responsive padding (`p-6` -> `sm:p-8`).
 11. Mock backend isolation
-   - Mock interceptor is gated by `useMockBackend` so production builds always use real APIs.
+   - Mock interceptor remains enabled for the work sample in all environments; switching to real APIs is a `useMockBackend` toggle.
 12. Notification registry safety
    - Added a UUID fallback when `crypto.randomUUID` is unavailable (mobile HTTP).
 13. Reduced template utility noise
@@ -55,9 +55,90 @@ None at the moment.
   - Repository interfaces for DIP/LSP: Introduce domain repositories (e.g., `DashboardRepository`) so facades depend on abstractions and data sources can be swapped without touching UI/use-case code.
   - Query/command facade split for ISP: Separate read-only signals/queries from write actions to keep facades small and purpose-driven as the domain grows.
 
+## Backend expansion plan (Angular + .NET, DDD-conform)
+Goal: add a production-style backend while preserving the existing DDD boundaries in the frontend.
+
+### Phase 1 - Monorepo layout
+- Create a monorepo layout:
+  - `apps/web` (existing Angular app)
+  - `apps/api` (.NET Web API)
+  - `packages/contracts` (DTOs / OpenAPI types only, no domain models)
+- Keep frontend domains isolated (`domains/<feature>/{domain,application,presentation}`).
+- Backend domain models live only in `apps/api/Wintryx.Domain`.
+
+### Phase 2 - Backend DDD layering (.NET)
+- Structure:
+  - `Wintryx.Api` (presentation / controllers / minimal API)
+  - `Wintryx.Application` (use cases, orchestration, interfaces)
+  - `Wintryx.Domain` (entities, value objects, domain services)
+  - `Wintryx.Infrastructure` (DB, repositories, external integrations)
+- Enforce dependencies:
+  - `Domain` -> no dependencies
+  - `Application` -> depends on `Domain`
+  - `Infrastructure` -> depends on `Application` and `Domain`
+  - `Api` -> depends on `Application`
+
+### Phase 3 - Contracts and mapping
+- Define API DTOs in `packages/contracts`.
+- Use explicit mapping:
+  - Domain -> DTO (output)
+  - DTO -> Domain command/request (input)
+- Avoid sharing domain models across frontend/backed.
+ - Optional (contract-first): OpenAPI as the single source of truth.
+   - Generate Angular clients via `openapi-generator` (`typescript-angular`).
+   - Keep generated DTOs in `packages/contracts/generated`, map them to domain models in the application layer.
+   - Script snippet:
+     ```json
+     {
+       "scripts": {
+         "codegen:api": "npx openapi-generator-cli generate -i packages/contracts/openapi.yaml -g typescript-angular -o packages/contracts/generated --additional-properties=providedInRoot=true,ngVersion=21"
+       }
+     }
+     ```
+
+### Phase 4 - Minimal endpoints (dashboard)
+- `GET /api/dashboard` returns items (DTOs)
+- `GET /api/notifications/debug/error` and `/unauthorized` for parity with the work-sample notifications.
+- Add basic error envelope (status, code, message) to align with `ApiError<TCode>` in frontend.
+
+### Phase 5 - Auth strategy (simple but realistic)
+- Keep mock auth in frontend for now.
+- Backend supports bearer token validation (configurable) but can run in "mock" mode locally.
+- Document how to switch to real IdP (Keycloak/Auth0) later.
+
+### Phase 6 - Local dev + DB
+- Optional DB (Postgres) via `docker-compose.yml` under `/infra`.
+- Seed demo data for dashboard items.
+- Provide `.env.example` for local dev configuration.
+
+### Phase 7 - CI/CD
+- GitHub Actions:
+  - Job 1: Angular lint/test/build
+  - Job 2: `dotnet build` + `dotnet test`
+- Optional: publish artifacts or docker image for the API.
+
+### Phase 8 - Hosting (cost-effective)
+- Frontend: Vercel (static)
+- Backend options (cheap + simple):
+  - Render / Railway / Fly.io (container or .NET runtime)
+  - Azure App Service (fits .NET, free tier possible)
+- DB: Neon / Supabase / Railway Postgres (free tier)
+
+### Phase 9 - Docs and demo narrative
+- Document the split between frontend DDD and backend DDD.
+- Provide an architecture diagram and API contract summary.
+- Explain trade-offs (static hosting + external API) as a pragmatic choice for a work sample.
+
+### Phase 10 - Senior-level polish (optional, high value)
+- Add a short ADR-style note for key decisions (static hosting, mock backend in prod, contract strategy).
+- Contract-first option: OpenAPI as the single source of truth, generated DTOs for frontend.
+- Security basics: CORS allowlist, simple rate limits, and consistent error envelopes.
+- Environment strategy: `.env.example`, documented dev/staging/prod split.
+- Observability: structured logs + health endpoint for uptime checks.
+
 ## Test coverage additions
 - SSR guard behavior when the auth cookie is missing or invalid.
-- Mock interceptor registration in dev vs prod.
+- Mock interceptor registration when `useMockBackend` is disabled.
 - Resolver-based loading and in-flight deduplication to ensure a single request and predictable state.
 - Notification ticket flow for success and error paths.
 

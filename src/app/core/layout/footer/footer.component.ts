@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component} from "@angular/core";
+import {ChangeDetectionStrategy, Component, signal} from "@angular/core";
 import {CommonModule} from "@angular/common";
+import {environment} from "@env/environment";
 
 @Component({
     selector: "app-footer-component",
@@ -11,4 +12,5 @@ import {CommonModule} from "@angular/common";
 })
 export class FooterComponent {
     protected readonly currentYear = new Date().getFullYear();
+    protected readonly isDev = signal(!environment.production);
 }

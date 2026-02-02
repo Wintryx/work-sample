@@ -48,6 +48,7 @@ Dieses Dokument dient als roter Faden fuer die Vorstellung des Projekts "Wintryx
     *   **Sass-Abstraction**: Vermeidung von "Class Soup" im HTML durch Abstraktion in scoped SCSS via `@apply`.
     *   **Hybrid Utility Pattern**: Kleine, semantische `wtx-*` Klassen via `@apply` fuer wiederverwendbare Layout-Bausteine.
     *   **Strict Quality Gates**: Demonstration der ESLint-Regeln (600 Zeilen Limit, OnPush Pflicht) und automatisierte Formatierung via Prettier.
+    *   **Dynamic Forms**: Schema-getriebene UI mit DI-basierten Custom-Validatoren und konsistenter Error-UX (dirty/touched statt Submit).
 
 ## 6. Testing Strategie
 *   **Thema**: Sinnvolle Tests statt "Blind-Coverage".

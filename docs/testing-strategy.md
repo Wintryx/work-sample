@@ -15,6 +15,8 @@ We use **Vitest** as our primary test runner instead of Jest or Karma.
 Focuses on pure logic in isolation.
 - **Logic Utilities**: Verifying type-guards and data parsers (e.g., `http-errors.spec.ts`).
 - **Domain Models**: Ensuring business rules and typed constant unions behave correctly.
+- **Form Factory**: Ensuring JSON schema validators map correctly (including `min` as `minLength` for text fields).
+- **Custom Validators**: Ensuring form-specific validators return proper error messages for the UI.
 
 ### Integration Tests (15%)
 Validates the interaction between multiple units.
@@ -22,6 +24,7 @@ Validates the interaction between multiple units.
 - **Smart Components**: Verifying orchestration between Facades, Router, and UI (e.g., `dashboard-page.component.spec.ts`).
 - **Dumb Components**: Testing the "Contract" via Signal-based inputs and outputs (e.g., `dashboard-table.component.spec.ts`).
 - **Route Resolvers**: Ensuring resolver-driven data loading behaves correctly during navigation and refresh.
+- **Dynamic Forms UI**: Verifying validation UX (dirty/touched) and custom validator errors surface correctly.
 
 ### E2E Tests (5%)
 Reserved for critical user journeys like the Login Flow and Dashboard navigation.

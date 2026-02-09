@@ -2,6 +2,12 @@
 
 Enterprise-ready Angular 21 work sample showcasing a higher-level architecture with clear layering, typed contracts, and SSR-aware state handling.
 
+## 🚀 Live Demo
+The project is continuously deployed via GitHub Actions and Vercel:
+**[https://work-sample-weld.vercel.app/](https://work-sample-weld.vercel.app/)**
+
+---
+
 ## Architectural Highlights
 - **DDD Layering**: Clear separation between `core`, `domains`, and `shared` with strict public APIs.
 - **Signals + Facades**: Reactive state via Angular Signals, orchestration via facades, SSR-safe resolver loading.
@@ -67,4 +73,3 @@ Run `ng generate component component-name` to generate a new component. You can 
 ### Further help
 To get more help on the Angular CLI use `ng help` or check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 </details>
-

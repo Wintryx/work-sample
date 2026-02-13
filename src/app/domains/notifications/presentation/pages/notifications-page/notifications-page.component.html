@@ -31,20 +31,11 @@
         </mat-form-field>
 
         <div class="flex flex-wrap items-center gap-2">
-          <button
-            color="warn"
-            mat-stroked-button
-            type="submit"
-          >
+          <button color="warn" mat-stroked-button type="submit">
             <mat-icon class="mr-2">error_outline</mat-icon>
             Simulate Error
           </button>
-          <button
-            (click)="onSimulateUnauthorized()"
-            color="warn"
-            mat-stroked-button
-            type="button"
-          >
+          <button (click)="onSimulateUnauthorized()" color="warn" mat-stroked-button type="button">
             <mat-icon class="mr-2">lock</mat-icon>
             Simulate Unauthorized
           </button>
@@ -59,9 +50,7 @@
         <p class="text-xs uppercase tracking-[0.2em] text-slate-400 font-semibold">
           Simulate Notifications
         </p>
-        <p>
-          Trigger success, info, or warning toasts through the notification interceptor.
-        </p>
+        <p>Trigger success, info, or warning toasts through the notification interceptor.</p>
       </div>
 
       <form (ngSubmit)="onSimulateNotification()" [formGroup]="notificationForm" class="grid gap-4">

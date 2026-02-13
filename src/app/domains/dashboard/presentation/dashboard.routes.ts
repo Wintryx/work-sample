@@ -1,5 +1,5 @@
-import {Routes} from "@angular/router";
-import {dashboardItemsResolver} from "@domains/dashboard/application/dashboard.resolvers";
+import { Routes } from "@angular/router";
+import { dashboardItemsResolver } from "@domains/dashboard/application/dashboard.resolvers";
 
 /**
  * @description
@@ -7,25 +7,25 @@ import {dashboardItemsResolver} from "@domains/dashboard/application/dashboard.r
  * Keeps SSR refreshes stable and prevents per-page load duplication.
  */
 export const dashboardRoutes: Routes = [
-    {
+  {
+    path: "",
+    resolve: { items: dashboardItemsResolver },
+    children: [
+      {
         path: "",
-        resolve: {items: dashboardItemsResolver},
-        children: [
-            {
-                path: "",
-                pathMatch: "full",
-                loadComponent: () =>
-                    import(
-                        "@domains/dashboard/presentation/pages/dashboard-page/dashboard-page.component"
-                        ).then((m) => m.DashboardPageComponent),
-            },
-            {
-                path: "items/:id",
-                loadComponent: () =>
-                    import(
-                        "@domains/dashboard/presentation/pages/item-detail-page/item-detail-page.component"
-                        ).then((m) => m.ItemDetailPageComponent),
-            },
-        ],
-    },
+        pathMatch: "full",
+        loadComponent: () =>
+          import("@domains/dashboard/presentation/pages/dashboard-page/dashboard-page.component").then(
+            (m) => m.DashboardPageComponent,
+          ),
+      },
+      {
+        path: "items/:id",
+        loadComponent: () =>
+          import("@domains/dashboard/presentation/pages/item-detail-page/item-detail-page.component").then(
+            (m) => m.ItemDetailPageComponent,
+          ),
+      },
+    ],
+  },
 ];

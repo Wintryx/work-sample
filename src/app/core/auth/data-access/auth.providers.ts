@@ -1,6 +1,5 @@
-import {Provider} from "@angular/core";
-import {AUTH_CONFIG, AuthConfig} from "@core/auth";
-
+import { Provider } from "@angular/core";
+import { AUTH_CONFIG, AuthConfig } from "@core/auth";
 
 /**
  * @description

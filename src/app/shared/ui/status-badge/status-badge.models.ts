@@ -1,4 +1,4 @@
-import {ValueOf} from "@core/types/value-of";
+import { ValueOf } from "@core/types/value-of";
 
 export const StatusBadgeVariant = {
   Success: "success",

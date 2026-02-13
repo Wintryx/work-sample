@@ -1,39 +1,37 @@
 <div class="wtx-page">
-    <!-- Page Header -->
-    <header class="wtx-page-header">
-        <div>
-            <h1 class="wtx-page-title">Dynamic Forms</h1>
-            <p class="wtx-page-subtitle">
-                This feature demonstrates a metadata-driven UI approach where form layouts, fields,
-                and validation rules are loaded from a backend configuration.
-            </p>
-        </div>
-    </header>
-
-    <!-- Form Tabs -->
-    <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
-        <mat-tab label="User Profile"></mat-tab>
-        <mat-tab disabled label="Company Settings (TBD)"></mat-tab>
-        <mat-tab disabled label="Address Form (TBD)"></mat-tab>
-    </mat-tab-group>
-
-    <!-- Form Content -->
-    <div class="wtx-form-panel">
-        <div class="wtx-form-scroll">
-            @if (formsFacade.isLoading()) {
-                <div class="flex justify-center items-center h-64">
-                    <mat-spinner diameter="50"></mat-spinner>
-                </div>
-            } @else if (formsFacade.error()) {
-                <div class="text-red-600 bg-red-50 p-4 rounded-md">
-                    <strong>Error:</strong> {{ formsFacade.error() }}
-                </div>
-            } @else if (formsFacade.formConfig(); as config) {
-                <app-dynamic-form
-                    (formSubmit)="onFormSubmit(config.id, $event)"
-                    [formConfig]="config">
-                </app-dynamic-form>
-            }
-        </div>
+  <!-- Page Header -->
+  <header class="wtx-page-header">
+    <div>
+      <h1 class="wtx-page-title">Dynamic Forms</h1>
+      <p class="wtx-page-subtitle">
+        This feature demonstrates a metadata-driven UI approach where form layouts, fields, and
+        validation rules are loaded from a backend configuration.
+      </p>
     </div>
+  </header>
+
+  <!-- Form Tabs -->
+  <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
+    <mat-tab label="User Profile"></mat-tab>
+    <mat-tab disabled label="Company Settings (TBD)"></mat-tab>
+    <mat-tab disabled label="Address Form (TBD)"></mat-tab>
+  </mat-tab-group>
+
+  <!-- Form Content -->
+  <div class="wtx-form-panel">
+    <div class="wtx-form-scroll">
+      @if (formsFacade.isLoading()) {
+        <div class="flex justify-center items-center h-64">
+          <mat-spinner diameter="50"></mat-spinner>
+        </div>
+      } @else if (formsFacade.error()) {
+        <div class="text-red-600 bg-red-50 p-4 rounded-md">
+          <strong>Error:</strong> {{ formsFacade.error() }}
+        </div>
+      } @else if (formsFacade.formConfig(); as config) {
+        <app-dynamic-form (formSubmit)="onFormSubmit(config.id, $event)" [formConfig]="config">
+        </app-dynamic-form>
+      }
+    </div>
+  </div>
 </div>

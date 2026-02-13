@@ -15,29 +15,34 @@
 
   <!-- Global Error Display -->
   @if (dashboardFacade.error()) {
-  <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 flex items-center gap-3">
-    <mat-icon>error_outline</mat-icon>
-    <span>{{ dashboardFacade.error() }}</span>
-  </div>
+    <div
+      class="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 flex items-center gap-3"
+    >
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ dashboardFacade.error() }}</span>
+    </div>
   }
 
   <!-- Main Content Card -->
   <div class="wtx-panel overflow-hidden">
     @if (dashboardFacade.isLoading()) {
-    <mat-progress-bar class="absolute top-0 w-full" mode="indeterminate"></mat-progress-bar>
+      <mat-progress-bar class="absolute top-0 w-full" mode="indeterminate"></mat-progress-bar>
     }
 
     <div class="wtx-table-scroll">
       <!-- Delegating the complex table rendering to the dumb component -->
-      <app-dashboard-table (selectItem)="navigateToDetail($event)" [items]="dashboardFacade.items()">
+      <app-dashboard-table
+        (selectItem)="navigateToDetail($event)"
+        [items]="dashboardFacade.items()"
+      >
       </app-dashboard-table>
 
       <!-- Empty State -->
       @if (!dashboardFacade.isLoading() && !dashboardFacade.hasItems()) {
-      <div class="wtx-empty-state flex flex-col items-center justify-center">
-        <mat-icon class="text-slate-200 !h-16 !w-16 !text-6xl mb-4">analytics</mat-icon>
-        <p class="text-slate-400 font-medium">No progress items found.</p>
-      </div>
+        <div class="wtx-empty-state flex flex-col items-center justify-center">
+          <mat-icon class="text-slate-200 !h-16 !w-16 !text-6xl mb-4">analytics</mat-icon>
+          <p class="text-slate-400 font-medium">No progress items found.</p>
+        </div>
       }
     </div>
   </div>

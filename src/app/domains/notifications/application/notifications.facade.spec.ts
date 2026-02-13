@@ -1,263 +1,269 @@
-import {TestBed} from "@angular/core/testing";
-import {HttpClient, HttpContext, HttpErrorResponse} from "@angular/common/http";
-import {beforeEach, describe, expect, it, vi} from "vitest";
-import {of, throwError} from "rxjs";
-import {NotificationsFacade} from "./notifications.facade";
-import {AuthErrorCode, AuthFacade} from "@core/auth";
-import {NotificationOptions, NotificationType} from "@core/notifications/notification.models";
-import {NotificationService} from "@core/notifications/notification.service";
-import {API_BASE_URL} from "@core/http/api.tokens";
-import {NOTIFICATION_TICKET} from "@core/notifications";
+import { TestBed } from "@angular/core/testing";
+import { HttpClient, HttpContext, HttpErrorResponse } from "@angular/common/http";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { of, throwError } from "rxjs";
+import { NotificationsFacade } from "./notifications.facade";
+import { AuthErrorCode, AuthFacade } from "@core/auth";
+import { NotificationOptions, NotificationType } from "@core/notifications/notification.models";
+import { NotificationService } from "@core/notifications/notification.service";
+import { API_BASE_URL } from "@core/http/api.tokens";
+import { NOTIFICATION_TICKET } from "@core/notifications";
 
 /**
  * @description
  * Unit tests for NotificationsFacade.
  */
 const describeNotificationsFacade = (): void => {
-    let facade: NotificationsFacade;
-    let httpClientMock: { get: ReturnType<typeof vi.fn> };
-    let authFacadeMock: { logout: ReturnType<typeof vi.fn> };
-    let notificationServiceMock: {
-        registerTicket: ReturnType<typeof vi.fn>;
-        defaultErrorNotificationObject: NotificationOptions;
-        getDefaultNotificationMessage: ReturnType<typeof vi.fn>;
+  let facade: NotificationsFacade;
+  let httpClientMock: { get: ReturnType<typeof vi.fn> };
+  let authFacadeMock: { logout: ReturnType<typeof vi.fn> };
+  let notificationServiceMock: {
+    registerTicket: ReturnType<typeof vi.fn>;
+    defaultErrorNotificationObject: NotificationOptions;
+    getDefaultNotificationMessage: ReturnType<typeof vi.fn>;
+  };
+
+  const defaultErrorNotificationObject: NotificationOptions = {
+    message: "An error occurred.",
+    type: NotificationType.Error,
+    actionLabel: "OK",
+    clearExisting: true,
+    duration: 4000,
+  };
+
+  /**
+   * @description
+   * Creates a deterministic HttpErrorResponse for server errors.
+   */
+  const createServerError = (): HttpErrorResponse => {
+    return new HttpErrorResponse({
+      status: 500,
+      statusText: "Internal Server Error",
+    });
+  };
+
+  /**
+   * @description
+   * Creates a deterministic HttpErrorResponse for unauthorized errors.
+   */
+  const createUnauthorizedError = (): HttpErrorResponse => {
+    return new HttpErrorResponse({
+      status: 401,
+      statusText: "Unauthorized",
+      error: {
+        status: 401,
+        message: "Session expired",
+        code: AuthErrorCode.Unauthorized,
+      },
+    });
+  };
+
+  /**
+   * @description
+   * Extracts the HttpContext from a mocked HttpClient call.
+   */
+  const extractContext = (callArgs: unknown[]): HttpContext | undefined => {
+    const options = callArgs[1] as { context?: HttpContext } | undefined;
+    return options?.context;
+  };
+
+  /**
+   * @description
+   * Creates a minimal HttpClient mock used by the facade tests.
+   */
+  const createHttpClientMock = (): { get: ReturnType<typeof vi.fn> } => {
+    return {
+      get: vi.fn(),
     };
+  };
 
-    const defaultErrorNotificationObject: NotificationOptions = {
-        message: "An error occurred.",
-        type: NotificationType.Error,
-        actionLabel: "OK",
-        clearExisting: true,
-        duration: 4000,
+  /**
+   * @description
+   * Creates an AuthFacade mock with a logout spy.
+   */
+  const createAuthFacadeMock = (): { logout: ReturnType<typeof vi.fn> } => {
+    return {
+      logout: vi.fn(),
     };
+  };
 
-    /**
-     * @description
-     * Creates a deterministic HttpErrorResponse for server errors.
-     */
-    const createServerError = (): HttpErrorResponse => {
-        return new HttpErrorResponse({
-            status: 500,
-            statusText: "Internal Server Error",
-        });
+  /**
+   * @description
+   * Creates a NotificationService mock with default error options.
+   */
+  const createNotificationServiceMock = (): {
+    registerTicket: ReturnType<typeof vi.fn>;
+    defaultErrorNotificationObject: NotificationOptions;
+    getDefaultNotificationMessage: ReturnType<typeof vi.fn>;
+  } => {
+    return {
+      registerTicket: vi.fn(),
+      defaultErrorNotificationObject,
+      getDefaultNotificationMessage: vi.fn(),
     };
+  };
 
-    /**
-     * @description
-     * Creates a deterministic HttpErrorResponse for unauthorized errors.
-     */
-    const createUnauthorizedError = (): HttpErrorResponse => {
-        return new HttpErrorResponse({
-            status: 401,
-            statusText: "Unauthorized",
-            error: {
-                status: 401,
-                message: "Session expired",
-                code: AuthErrorCode.Unauthorized,
-            },
-        });
-    };
+  /**
+   * @description
+   * Configures the Angular TestBed with mocked dependencies.
+   */
+  const setupTestBed = (): void => {
+    httpClientMock = createHttpClientMock();
+    authFacadeMock = createAuthFacadeMock();
+    notificationServiceMock = createNotificationServiceMock();
 
-    /**
-     * @description
-     * Extracts the HttpContext from a mocked HttpClient call.
-     */
-    const extractContext = (callArgs: unknown[]): HttpContext | undefined => {
-        const options = callArgs[1] as { context?: HttpContext } | undefined;
-        return options?.context;
-    };
+    TestBed.configureTestingModule({
+      providers: [
+        NotificationsFacade,
+        { provide: HttpClient, useValue: httpClientMock },
+        { provide: AuthFacade, useValue: authFacadeMock },
+        { provide: NotificationService, useValue: notificationServiceMock },
+        { provide: API_BASE_URL, useValue: "https://api.test" },
+      ],
+    });
 
-    /**
-     * @description
-     * Creates a minimal HttpClient mock used by the facade tests.
-     */
-    const createHttpClientMock = (): { get: ReturnType<typeof vi.fn> } => {
-        return {
-            get: vi.fn(),
-        };
-    };
+    facade = TestBed.inject(NotificationsFacade);
+  };
 
-    /**
-     * @description
-     * Creates an AuthFacade mock with a logout spy.
-     */
-    const createAuthFacadeMock = (): { logout: ReturnType<typeof vi.fn> } => {
-        return {
-            logout: vi.fn(),
-        };
-    };
+  beforeEach(setupTestBed);
 
-    /**
-     * @description
-     * Creates a NotificationService mock with default error options.
-     */
-    const createNotificationServiceMock = (): {
-        registerTicket: ReturnType<typeof vi.fn>;
-        defaultErrorNotificationObject: NotificationOptions;
-        getDefaultNotificationMessage: ReturnType<typeof vi.fn>;
-    } => {
-        return {
-            registerTicket: vi.fn(),
-            defaultErrorNotificationObject,
-            getDefaultNotificationMessage: vi.fn(),
-        };
-    };
+  /**
+   * @description
+   * Verifies custom error messages register a ticket and attach the HttpContext.
+   */
+  const shouldRegisterTicketForCustomError = (): void => {
+    const customMessage = "Custom error message";
+    const ticketId = "ticket-1";
 
-    /**
-     * @description
-     * Configures the Angular TestBed with mocked dependencies.
-     */
-    const setupTestBed = (): void => {
-        httpClientMock = createHttpClientMock();
-        authFacadeMock = createAuthFacadeMock();
-        notificationServiceMock = createNotificationServiceMock();
+    notificationServiceMock.registerTicket.mockReturnValue(ticketId);
+    httpClientMock.get.mockReturnValue(throwError(createServerError));
 
-        TestBed.configureTestingModule({
-            providers: [
-                NotificationsFacade,
-                {provide: HttpClient, useValue: httpClientMock},
-                {provide: AuthFacade, useValue: authFacadeMock},
-                {provide: NotificationService, useValue: notificationServiceMock},
-                {provide: API_BASE_URL, useValue: "https://api.test"},
-            ],
-        });
+    facade.simulateError(customMessage);
 
-        facade = TestBed.inject(NotificationsFacade);
-    };
+    expect(notificationServiceMock.registerTicket).toHaveBeenCalledWith({
+      ...defaultErrorNotificationObject,
+      message: customMessage,
+    });
+    expect(httpClientMock.get).toHaveBeenCalledTimes(1);
 
-    beforeEach(setupTestBed);
+    const context = extractContext(httpClientMock.get.mock.calls[0]);
+    expect(context?.get(NOTIFICATION_TICKET)).toBe(ticketId);
+  };
 
-    /**
-     * @description
-     * Verifies custom error messages register a ticket and attach the HttpContext.
-     */
-    const shouldRegisterTicketForCustomError = (): void => {
-        const customMessage = "Custom error message";
-        const ticketId = "ticket-1";
+  it("should register a ticket for custom error simulations", shouldRegisterTicketForCustomError);
 
-        notificationServiceMock.registerTicket.mockReturnValue(ticketId);
-        httpClientMock.get.mockReturnValue(throwError(createServerError));
+  /**
+   * @description
+   * Verifies empty messages do not register tickets or contexts.
+   */
+  const shouldSkipTicketForEmptyErrorMessage = (): void => {
+    httpClientMock.get.mockReturnValue(throwError(createServerError));
 
-        facade.simulateError(customMessage);
+    facade.simulateError("   ");
 
-        expect(notificationServiceMock.registerTicket).toHaveBeenCalledWith({
-            ...defaultErrorNotificationObject,
-            message: customMessage,
-        });
-        expect(httpClientMock.get).toHaveBeenCalledTimes(1);
+    expect(notificationServiceMock.registerTicket).not.toHaveBeenCalled();
+    expect(httpClientMock.get).toHaveBeenCalledTimes(1);
 
-        const context = extractContext(httpClientMock.get.mock.calls[0]);
-        expect(context?.get(NOTIFICATION_TICKET)).toBe(ticketId);
-    };
+    const context = extractContext(httpClientMock.get.mock.calls[0]);
+    expect(context).toBeUndefined();
+  };
 
-    it("should register a ticket for custom error simulations", shouldRegisterTicketForCustomError);
+  it(
+    "should skip ticket registration when the custom message is empty",
+    shouldSkipTicketForEmptyErrorMessage,
+  );
 
-    /**
-     * @description
-     * Verifies empty messages do not register tickets or contexts.
-     */
-    const shouldSkipTicketForEmptyErrorMessage = (): void => {
-        httpClientMock.get.mockReturnValue(throwError(createServerError));
+  /**
+   * @description
+   * Verifies unauthorized simulations trigger logout and attach the custom ticket.
+   */
+  const shouldLogoutOnUnauthorizedWithCustomTicket = (): void => {
+    const customMessage = "Session expired";
+    const ticketId = "ticket-2";
 
-        facade.simulateError("   ");
+    notificationServiceMock.registerTicket.mockReturnValue(ticketId);
+    httpClientMock.get.mockReturnValue(throwError(createUnauthorizedError));
 
-        expect(notificationServiceMock.registerTicket).not.toHaveBeenCalled();
-        expect(httpClientMock.get).toHaveBeenCalledTimes(1);
+    facade.simulateUnauthorized(customMessage);
 
-        const context = extractContext(httpClientMock.get.mock.calls[0]);
-        expect(context).toBeUndefined();
-    };
+    expect(notificationServiceMock.registerTicket).toHaveBeenCalledWith({
+      ...defaultErrorNotificationObject,
+      message: customMessage,
+    });
+    expect(authFacadeMock.logout).toHaveBeenCalledTimes(1);
 
-    it("should skip ticket registration when the custom message is empty", shouldSkipTicketForEmptyErrorMessage);
+    const context = extractContext(httpClientMock.get.mock.calls[0]);
+    expect(context?.get(NOTIFICATION_TICKET)).toBe(ticketId);
+  };
 
-    /**
-     * @description
-     * Verifies unauthorized simulations trigger logout and attach the custom ticket.
-     */
-    const shouldLogoutOnUnauthorizedWithCustomTicket = (): void => {
-        const customMessage = "Session expired";
-        const ticketId = "ticket-2";
+  it(
+    "should logout on unauthorized errors and attach the custom ticket",
+    shouldLogoutOnUnauthorizedWithCustomTicket,
+  );
 
-        notificationServiceMock.registerTicket.mockReturnValue(ticketId);
-        httpClientMock.get.mockReturnValue(throwError(createUnauthorizedError));
+  /**
+   * @description
+   * Verifies success/info/warning simulations register a ticket and attach the HttpContext.
+   */
+  const shouldRegisterTicketForNotificationSimulation = (): void => {
+    const customMessage = "Everything looks good.";
+    const ticketId = "ticket-3";
 
-        facade.simulateUnauthorized(customMessage);
+    notificationServiceMock.registerTicket.mockReturnValue(ticketId);
+    httpClientMock.get.mockReturnValue(of({}));
 
-        expect(notificationServiceMock.registerTicket).toHaveBeenCalledWith({
-            ...defaultErrorNotificationObject,
-            message: customMessage,
-        });
-        expect(authFacadeMock.logout).toHaveBeenCalledTimes(1);
+    facade.simulateNotification(customMessage, NotificationType.Info);
 
-        const context = extractContext(httpClientMock.get.mock.calls[0]);
-        expect(context?.get(NOTIFICATION_TICKET)).toBe(ticketId);
-    };
-
-    it("should logout on unauthorized errors and attach the custom ticket", shouldLogoutOnUnauthorizedWithCustomTicket);
-
-    /**
-     * @description
-     * Verifies success/info/warning simulations register a ticket and attach the HttpContext.
-     */
-    const shouldRegisterTicketForNotificationSimulation = (): void => {
-        const customMessage = "Everything looks good.";
-        const ticketId = "ticket-3";
-
-        notificationServiceMock.registerTicket.mockReturnValue(ticketId);
-        httpClientMock.get.mockReturnValue(of({}));
-
-        facade.simulateNotification(customMessage, NotificationType.Info);
-
-        expect(notificationServiceMock.registerTicket).toHaveBeenCalledWith({
-            message: customMessage,
-            type: NotificationType.Info,
-            actionLabel: "OK",
-            clearExisting: true,
-            duration: 4000,
-        });
-        expect(httpClientMock.get).toHaveBeenCalledWith(
-            "https://api.test/debug/success",
-            expect.any(Object),
-        );
-
-        const context = extractContext(httpClientMock.get.mock.calls[0]);
-        expect(context?.get(NOTIFICATION_TICKET)).toBe(ticketId);
-    };
-
-    it(
-        "should register a ticket and attach context for notification simulations",
-        shouldRegisterTicketForNotificationSimulation,
+    expect(notificationServiceMock.registerTicket).toHaveBeenCalledWith({
+      message: customMessage,
+      type: NotificationType.Info,
+      actionLabel: "OK",
+      clearExisting: true,
+      duration: 4000,
+    });
+    expect(httpClientMock.get).toHaveBeenCalledWith(
+      "https://api.test/debug/success",
+      expect.any(Object),
     );
 
-    /**
-     * @description
-     * Verifies empty messages fall back to the default message for the chosen type.
-     */
-    const shouldUseDefaultMessageForNotificationSimulation = (): void => {
-        const ticketId = "ticket-4";
-        const defaultMessage = "Default warning message.";
+    const context = extractContext(httpClientMock.get.mock.calls[0]);
+    expect(context?.get(NOTIFICATION_TICKET)).toBe(ticketId);
+  };
 
-        notificationServiceMock.registerTicket.mockReturnValue(ticketId);
-        httpClientMock.get.mockReturnValue(of({}));
-        notificationServiceMock.getDefaultNotificationMessage.mockReturnValue(defaultMessage);
+  it(
+    "should register a ticket and attach context for notification simulations",
+    shouldRegisterTicketForNotificationSimulation,
+  );
 
-        facade.simulateNotification("   ", NotificationType.Warning);
+  /**
+   * @description
+   * Verifies empty messages fall back to the default message for the chosen type.
+   */
+  const shouldUseDefaultMessageForNotificationSimulation = (): void => {
+    const ticketId = "ticket-4";
+    const defaultMessage = "Default warning message.";
 
-        expect(notificationServiceMock.getDefaultNotificationMessage).toHaveBeenCalledWith(
-            NotificationType.Warning,
-        );
-        expect(notificationServiceMock.registerTicket).toHaveBeenCalledWith({
-            message: defaultMessage,
-            type: NotificationType.Warning,
-            actionLabel: "OK",
-            clearExisting: true,
-            duration: 4000,
-        });
-    };
+    notificationServiceMock.registerTicket.mockReturnValue(ticketId);
+    httpClientMock.get.mockReturnValue(of({}));
+    notificationServiceMock.getDefaultNotificationMessage.mockReturnValue(defaultMessage);
 
-    it(
-        "should use default messages when custom notification messages are empty",
-        shouldUseDefaultMessageForNotificationSimulation,
+    facade.simulateNotification("   ", NotificationType.Warning);
+
+    expect(notificationServiceMock.getDefaultNotificationMessage).toHaveBeenCalledWith(
+      NotificationType.Warning,
     );
+    expect(notificationServiceMock.registerTicket).toHaveBeenCalledWith({
+      message: defaultMessage,
+      type: NotificationType.Warning,
+      actionLabel: "OK",
+      clearExisting: true,
+      duration: 4000,
+    });
+  };
+
+  it(
+    "should use default messages when custom notification messages are empty",
+    shouldUseDefaultMessageForNotificationSimulation,
+  );
 };
 describe("NotificationsFacade", describeNotificationsFacade);

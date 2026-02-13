@@ -14,15 +14,15 @@ export * from "./notification.service";
  * @publicApi
  * Essential models and constants needed to interface with the notification system.
  */
-export {NotificationType} from "./notification.models";
-export type {NotificationOptions} from "./notification.models";
+export { NotificationType } from "./notification.models";
+export type { NotificationOptions } from "./notification.models";
 
 /**
  * @publicApi
  * HTTP Context tokens and helpers for the notification pipeline.
  */
-export {NOTIFICATION_TICKET, withFeedback, FEEDBACK_CONTEXT} from "./notification.context";
-export type {FeedbackConfig} from "./notification.context";
+export { NOTIFICATION_TICKET, withFeedback, FEEDBACK_CONTEXT } from "./notification.context";
+export type { FeedbackConfig } from "./notification.context";
 
 /**
  * @internalApi

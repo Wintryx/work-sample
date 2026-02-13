@@ -9,8 +9,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:wintryx-progress-maker": "node dist/wintryx-progress-maker/server/server.mjs",
-    "lint": "ng lint",
-    "lint:fix": "ng lint --fix",
+    "lint": "eslint \"src/**/*.{ts,html}\" --max-warnings=0",
+    "lint:fix": "npm run lint -- --fix",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss}\"",
     "format:fix": "prettier --write \"src/**/*.{ts,html,scss}\""
   },
@@ -46,7 +46,6 @@
     "cookie": "^1.1.1",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-boundaries": "^5.3.1",
     "eslint-plugin-prettier": "^5.5.5",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.6",

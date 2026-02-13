@@ -1,10 +1,10 @@
-import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {provideRouter, RouterLink} from "@angular/router";
-import {beforeEach, describe, expect, it} from "vitest";
-import {DashboardItem, ItemDetailPageComponent, ItemStatus} from "@domains/dashboard";
-import {DashboardFacade} from "@domains/dashboard/application/dashboard.facade";
-import {signal} from "@angular/core";
-import {By} from "@angular/platform-browser";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideRouter, RouterLink } from "@angular/router";
+import { beforeEach, describe, expect, it } from "vitest";
+import { DashboardItem, ItemDetailPageComponent, ItemStatus } from "@domains/dashboard";
+import { DashboardFacade } from "@domains/dashboard/application/dashboard.facade";
+import { signal } from "@angular/core";
+import { By } from "@angular/platform-browser";
 
 /**
  * @description
@@ -12,70 +12,65 @@ import {By} from "@angular/platform-browser";
  * Validates modern Signal-based routing inputs and reactive data binding.
  */
 describe("ItemDetailPage", () => {
-    let fixture: ComponentFixture<ItemDetailPageComponent>;
+  let fixture: ComponentFixture<ItemDetailPageComponent>;
 
-    // Tip: Ensure mock data is strictly typed
-    const MOCK_ITEM: DashboardItem = {
-        id: "p-101",
-        title: "Mock Feature",
-        status: ItemStatus.InProgress,
-        progress: 50
-    };
+  // Tip: Ensure mock data is strictly typed
+  const MOCK_ITEM: DashboardItem = {
+    id: "p-101",
+    title: "Mock Feature",
+    status: ItemStatus.InProgress,
+    progress: 50,
+  };
 
-    const facadeMock = {
-        // Initializing with the mock data to avoid 'Not Found' state during first render
-        items: signal<DashboardItem[]>([MOCK_ITEM]),
-    };
+  const facadeMock = {
+    // Initializing with the mock data to avoid 'Not Found' state during first render
+    items: signal<DashboardItem[]>([MOCK_ITEM]),
+  };
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [ItemDetailPageComponent],
-            providers: [
-                {provide: DashboardFacade, useValue: facadeMock},
-                provideRouter([]),
-            ],
-        }).compileComponents();
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ItemDetailPageComponent],
+      providers: [{ provide: DashboardFacade, useValue: facadeMock }, provideRouter([])],
+    }).compileComponents();
 
-        fixture = TestBed.createComponent(ItemDetailPageComponent);
-        // Note: No initial detectChanges() here to allow setInput() first.
-    });
+    fixture = TestBed.createComponent(ItemDetailPageComponent);
+    // Note: No initial detectChanges() here to allow setInput() first.
+  });
 
-    it("should find and display an item based on the ID input signal", () => {
-        // 1. Arrange: Simulating the Router providing the ID
-        fixture.componentRef.setInput("id", "p-101");
+  it("should find and display an item based on the ID input signal", () => {
+    // 1. Arrange: Simulating the Router providing the ID
+    fixture.componentRef.setInput("id", "p-101");
 
-        // 2. Act: Run change detection to resolve the 'item' computed signal
-        fixture.detectChanges();
+    // 2. Act: Run change detection to resolve the 'item' computed signal
+    fixture.detectChanges();
 
-        // 3. Assert: Querying semantically (using the class we defined in SCSS)
-        const host = fixture.nativeElement as HTMLElement;
-        const titleElement = host.querySelector<HTMLElement>(".main-title");
+    // 3. Assert: Querying semantically (using the class we defined in SCSS)
+    const host = fixture.nativeElement as HTMLElement;
+    const titleElement = host.querySelector<HTMLElement>(".main-title");
 
-        expect(titleElement).not.toBeNull();
-        if (titleElement) {
-            expect(titleElement.textContent).toContain("Mock Feature");
-        }
-    });
+    expect(titleElement).not.toBeNull();
+    if (titleElement) {
+      expect(titleElement.textContent).toContain("Mock Feature");
+    }
+  });
 
-    it("should show the 'Not Found' state if the ID does not match any item", () => {
-        fixture.componentRef.setInput("id", "non-existent-id");
-        fixture.detectChanges();
+  it("should show the 'Not Found' state if the ID does not match any item", () => {
+    fixture.componentRef.setInput("id", "non-existent-id");
+    fixture.detectChanges();
 
-        const host = fixture.nativeElement as HTMLElement;
-        const headings = Array.from(host.querySelectorAll<HTMLHeadingElement>("h3"));
-        const notFoundHeading = headings.find((el) =>
-            el.textContent?.includes("Feature not found"),
-        );
-        expect(notFoundHeading).toBeTruthy();
-    });
+    const host = fixture.nativeElement as HTMLElement;
+    const headings = Array.from(host.querySelectorAll<HTMLHeadingElement>("h3"));
+    const notFoundHeading = headings.find((el) => el.textContent?.includes("Feature not found"));
+    expect(notFoundHeading).toBeTruthy();
+  });
 
-    it("should have a functional 'Back to Dashboard' link", () => {
-        // Basic setup to render the navigation
-        fixture.componentRef.setInput("id", "p-101");
-        fixture.detectChanges();
+  it("should have a functional 'Back to Dashboard' link", () => {
+    // Basic setup to render the navigation
+    fixture.componentRef.setInput("id", "p-101");
+    fixture.detectChanges();
 
-        const backLink = fixture.debugElement.query(By.directive(RouterLink));
-        expect(backLink).toBeTruthy();
-        expect(backLink.attributes["routerLink"]).toBe("/dashboard");
-    });
+    const backLink = fixture.debugElement.query(By.directive(RouterLink));
+    expect(backLink).toBeTruthy();
+    expect(backLink.attributes["routerLink"]).toBe("/dashboard");
+  });
 });

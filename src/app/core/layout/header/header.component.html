@@ -12,83 +12,84 @@
     </div>
   </div>
 
-
   <!-- Navigation & Actions Section -->
   @if (!isLoginRoute()) {
     <div class="wtx-header__actions flex items-center gap-3 md:gap-4">
-    @if (authFacade.isAuthenticated()) {
-      <nav class="hidden md:flex items-center gap-1 md:order-1">
-        <a
-          class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
-          routerLink="/dashboard"
-          routerLinkActive="bg-slate-100 text-indigo-700"
-        >
-          Dashboard
-        </a>
-        <a
-          class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
-          routerLink="/notifications"
-          routerLinkActive="bg-slate-100 text-indigo-700"
-        >
-          Notifications
-        </a>
-        <a
-          class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
-          routerLink="/forms"
-          routerLinkActive="bg-slate-100 text-indigo-700"
-        >
-          Forms
-        </a>
-      </nav>
-
-      <div class="hidden md:flex items-center md:order-2">
-        <div
-          class="flex items-center text-slate-400 text-xs font-medium bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 shadow-inner mr-3"
-        >
-          <mat-icon class="!text-[14px] !h-[14px] !w-[14px] mr-2">schedule</mat-icon>
-          {{ currentTime() | dateFormat }}
-        </div>
-
-        <!-- User Profile & Logout -->
-        <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
-          <span class="text-sm font-medium text-slate-700">{{ authFacade.user()?.username }}</span>
-
-          <button
-            (click)="onLogout()"
-            class="!rounded-xl shadow-lg shadow-indigo-100"
-            color="primary"
-            mat-flat-button
+      @if (authFacade.isAuthenticated()) {
+        <nav class="hidden md:flex items-center gap-1 md:order-1">
+          <a
+            class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+            routerLink="/dashboard"
+            routerLinkActive="bg-slate-100 text-indigo-700"
           >
-            <mat-icon class="mr-2">logout</mat-icon> Logout
-          </button>
+            Dashboard
+          </a>
+          <a
+            class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+            routerLink="/notifications"
+            routerLinkActive="bg-slate-100 text-indigo-700"
+          >
+            Notifications
+          </a>
+          <a
+            class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+            routerLink="/forms"
+            routerLinkActive="bg-slate-100 text-indigo-700"
+          >
+            Forms
+          </a>
+        </nav>
+
+        <div class="hidden md:flex items-center md:order-2">
+          <div
+            class="flex items-center text-slate-400 text-xs font-medium bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 shadow-inner mr-3"
+          >
+            <mat-icon class="!text-[14px] !h-[14px] !w-[14px] mr-2">schedule</mat-icon>
+            {{ currentTime() | dateFormat }}
+          </div>
+
+          <!-- User Profile & Logout -->
+          <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+            <span class="text-sm font-medium text-slate-700">{{
+              authFacade.user()?.username
+            }}</span>
+
+            <button
+              (click)="onLogout()"
+              class="!rounded-xl shadow-lg shadow-indigo-100"
+              color="primary"
+              mat-flat-button
+            >
+              <mat-icon class="mr-2">logout</mat-icon> Logout
+            </button>
+          </div>
         </div>
-      </div>
-    } @else {
-      <button
-        class="hidden md:inline-flex !rounded-xl shadow-lg shadow-indigo-100"
-        color="primary"
-        mat-flat-button
-        routerLink="/login"
+      } @else {
+        <button
+          class="hidden md:inline-flex !rounded-xl shadow-lg shadow-indigo-100"
+          color="primary"
+          mat-flat-button
+          routerLink="/login"
+        >
+          Sign In
+        </button>
+      }
+
+      <div
+        class="flex md:hidden items-center text-slate-400 text-[11px] font-medium bg-slate-50 px-2.5 py-1.5 rounded-full border border-slate-100 shadow-inner ml-auto mr-2"
       >
-        Sign In
+        <mat-icon class="!text-[14px] !h-[14px] !w-[14px] mr-1.5">schedule</mat-icon>
+        {{ currentTime() | dateFormat }}
+      </div>
+
+      <button
+        [matMenuTriggerFor]="mobileMenu"
+        aria-label="Open navigation menu"
+        class="md:!hidden order-2"
+        mat-icon-button
+      >
+        <mat-icon>menu</mat-icon>
       </button>
-    }
-
-    <div
-      class="flex md:hidden items-center text-slate-400 text-[11px] font-medium bg-slate-50 px-2.5 py-1.5 rounded-full border border-slate-100 shadow-inner ml-auto mr-2"
-    >
-      <mat-icon class="!text-[14px] !h-[14px] !w-[14px] mr-1.5">schedule</mat-icon>
-      {{ currentTime() | dateFormat }}
-    </div>
-
-    <button
-      [matMenuTriggerFor]="mobileMenu"
-      aria-label="Open navigation menu"
-      class="md:!hidden order-2"
-      mat-icon-button
-    >
-      <mat-icon>menu</mat-icon>
-    </button>
     </div>
   }
 </header>

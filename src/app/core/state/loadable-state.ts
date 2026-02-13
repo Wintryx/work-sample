@@ -1,4 +1,4 @@
-import {signal} from "@angular/core";
+import { signal } from "@angular/core";
 
 /**
  * @description
@@ -6,10 +6,10 @@ import {signal} from "@angular/core";
  * Keeps loading/loaded/error flags consistent across domains and features.
  */
 export interface LoadableState<T> {
-    data: T;
-    loading: boolean;
-    loaded: boolean;
-    error: string | null;
+  data: T;
+  loading: boolean;
+  loaded: boolean;
+  error: string | null;
 }
 
 /**
@@ -17,12 +17,12 @@ export interface LoadableState<T> {
  * Creates a new loadable state with default flags.
  */
 export function createLoadableState<T>(data: T): LoadableState<T> {
-    return {
-        data,
-        loading: false,
-        loaded: false,
-        error: null,
-    };
+  return {
+    data,
+    loading: false,
+    loaded: false,
+    error: null,
+  };
 }
 
 /**
@@ -31,5 +31,5 @@ export function createLoadableState<T>(data: T): LoadableState<T> {
  * Keeps component/facade state initialization concise.
  */
 export function createLoadableSignal<T>(data: T) {
-    return signal<LoadableState<T>>(createLoadableState<T>(data));
+  return signal<LoadableState<T>>(createLoadableState<T>(data));
 }

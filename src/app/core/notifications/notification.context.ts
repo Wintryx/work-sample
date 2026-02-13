@@ -1,5 +1,5 @@
-import {HttpContextToken} from "@angular/common/http";
-import {NotificationType} from "./notification.models";
+import { HttpContextToken } from "@angular/common/http";
+import { NotificationType } from "./notification.models";
 
 /**
  * @description
@@ -14,12 +14,12 @@ export const NOTIFICATION_TICKET = new HttpContextToken<string | null>(() => nul
  * Allows defining a message and type directly on the request context.
  */
 export interface FeedbackConfig {
-    /** The message to display upon success. Replaces the old `successMessage`. */
-    message?: string;
-    /** The type of notification to show. Defaults to `NotificationType.Success`. */
-    type?: NotificationType;
-    /** If true, suppresses the automatic error toast for this request. */
-    suppressErrors?: boolean;
+  /** The message to display upon success. Replaces the old `successMessage`. */
+  message?: string;
+  /** The type of notification to show. Defaults to `NotificationType.Success`. */
+  type?: NotificationType;
+  /** If true, suppresses the automatic error toast for this request. */
+  suppressErrors?: boolean;
 }
 
 /**
@@ -47,12 +47,13 @@ export const FEEDBACK_CONTEXT = new HttpContextToken<FeedbackConfig>(() => ({}))
  * context: withFeedback({ suppressErrors: true })
  */
 export function withFeedback(config: FeedbackConfig | string) {
-    const finalConfig: FeedbackConfig = typeof config === "string"
-        ? {message: config, type: NotificationType.Success}
-        : {type: NotificationType.Success, ...config}; // Default type to Success if missing
+  const finalConfig: FeedbackConfig =
+    typeof config === "string"
+      ? { message: config, type: NotificationType.Success }
+      : { type: NotificationType.Success, ...config }; // Default type to Success if missing
 
-    return (context: import("@angular/common/http").HttpContext) => {
-        context.set(FEEDBACK_CONTEXT, finalConfig);
-        return context;
-    };
+  return (context: import("@angular/common/http").HttpContext) => {
+    context.set(FEEDBACK_CONTEXT, finalConfig);
+    return context;
+  };
 }

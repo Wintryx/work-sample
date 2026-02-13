@@ -16,8 +16,8 @@
           placeholder="Enter your username"
           autocomplete="username"
         />
-        @if (loginForm.controls.username.errors?.['required']) {
-        <mat-error>Username is required</mat-error>
+        @if (loginForm.controls.username.errors?.["required"]) {
+          <mat-error>Username is required</mat-error>
         }
       </mat-form-field>
 
@@ -30,8 +30,8 @@
           placeholder="********"
           autocomplete="current-password"
         />
-        @if (loginForm.controls.password.errors?.['required']) {
-        <mat-error>Password is required</mat-error>
+        @if (loginForm.controls.password.errors?.["required"]) {
+          <mat-error>Password is required</mat-error>
         }
       </mat-form-field>
 
@@ -54,4 +54,3 @@
     </div>
   </div>
 </div>
-

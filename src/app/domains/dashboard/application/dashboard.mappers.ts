@@ -1,4 +1,4 @@
-import {DashboardItem, DashboardItemDto} from "@domains/dashboard/domain/dashboard.models";
+import { DashboardItem, DashboardItemDto } from "@domains/dashboard/domain/dashboard.models";
 
 /**
  * @description

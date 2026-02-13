@@ -43,8 +43,12 @@ const MOCK_FORM_USER_PROFILE: FormConfig = {
             type: FieldType.Text,
             label: "Username",
             placeholder: "jdoe",
-            grid: {default: 12, md: 6},
-            validators: [{type: "required"}, {type: "min", value: 2, message: "Username must be at least 2 characters."}],
+            grid: {default: 6, md: 6},
+            validators: [{type: "required"}, {
+                type: "min",
+                value: 2,
+                message: "Username must be at least 2 characters."
+            }],
             permissions: {hidden: false, readonly: false}
         },
         {
@@ -52,7 +56,7 @@ const MOCK_FORM_USER_PROFILE: FormConfig = {
             type: FieldType.Email,
             label: "Email Address",
             placeholder: "john.doe@example.com",
-            grid: {default: 12, md: 6},
+            grid: {default: 6, md: 6},
             validators: [{type: "required"}, {type: "email"}],
             permissions: {hidden: false, readonly: false}
         },
@@ -61,14 +65,14 @@ const MOCK_FORM_USER_PROFILE: FormConfig = {
             type: FieldType.Phone,
             label: "Phone Number",
             placeholder: "+1 234 567 890",
-            grid: {default: 12, md: 6},
+            grid: {default: 6, md: 6},
             permissions: {hidden: false, readonly: false}
         },
         {
             key: "role",
             type: FieldType.Select,
             label: "Role",
-            grid: {default: 12, md: 6},
+            grid: {default: 6, md: 6},
             options: [
                 {label: "Admin", value: "admin"},
                 {label: "Editor", value: "editor"},
@@ -82,7 +86,7 @@ const MOCK_FORM_USER_PROFILE: FormConfig = {
             type: FieldType.Switch,
             label: "Enable Notifications",
             value: true,
-            grid: {default: 12},
+            grid: {default: 6},
             permissions: {hidden: false, readonly: false}
         },
         {
@@ -90,14 +94,14 @@ const MOCK_FORM_USER_PROFILE: FormConfig = {
             type: FieldType.Checkbox,
             label: "Subscribe to Newsletter",
             value: false,
-            grid: {default: 12},
+            grid: {default: 6},
             permissions: {hidden: false, readonly: false}
         },
         {
             key: "gender",
             type: FieldType.Radio,
             label: "Gender",
-            grid: {default: 12},
+            grid: {default: 6},
             options: [
                 {label: "Male", value: "male"},
                 {label: "Female", value: "female"},
@@ -111,7 +115,7 @@ const MOCK_FORM_USER_PROFILE: FormConfig = {
             label: "Profile Picture",
             accept: "image/*",
             multiple: true,
-            grid: {default: 12},
+            grid: {default: 6},
             permissions: {hidden: false, readonly: false}
         },
         {
@@ -172,13 +176,13 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
             }),
         ).pipe(delay(600));
     }
-    
+
     if (url.includes(`${baseUrl}/forms/`) && url.endsWith("/submit") && method === "POST") {
         console.log("Mock Backend: Received form submission", req.body);
         return of(
             new HttpResponse({
                 status: 200,
-                body: { message: "Profile updated successfully!" },
+                body: {message: "Profile updated successfully!"},
             }),
         ).pipe(delay(1000));
     }
